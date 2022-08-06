@@ -24,7 +24,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
   @override
   Widget build(BuildContext context) {
     return HiddenDrawerMenu(
-        disableAppBarDefault: true,
+        elevationAppBar: 0,
         contentCornerRadius: 0,
         initPositionSelected: 1,
         screens: _pages,
