@@ -30,7 +30,8 @@ class _MyAppState extends State<MyApp> {
               elevation: 0,
               scrolledUnderElevation: 5,
               centerTitle: true,
-              titleTextStyle: TextStyle(color: Colors.black),
+              titleTextStyle:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               actionsIconTheme: IconThemeData(color: Colors.black)),
         ),
         debugShowCheckedModeBanner: false,
