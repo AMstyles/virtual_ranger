@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/pages/Custom/DrawerContainer.dart';
 import 'package:virtual_ranger/pages/Custom/customDrawer.dart';
-import 'package:virtual_ranger/pages/news_and_deals_page.dart';
 
 class DrawerApp extends StatefulWidget {
   const DrawerApp({Key? key}) : super(key: key);
@@ -14,13 +14,23 @@ class DrawerApp extends StatefulWidget {
 class _DrawerAppState extends State<DrawerApp> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.green.shade800,
-      body: Stack(children: [
-        //!drawer
-        HiddenDrawer(),
-        DrawerContainer(),
-      ]),
+    return WillPopScope(
+      onWillPop: () async {
+        if (Provider.of<Anime>(context).isOpen) {
+          Provider.of<Anime>(context).closeDrawer;
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.green.shade800,
+        body: Stack(children: [
+          //!drawer
+          HiddenDrawer(),
+          const DrawerContainer(),
+        ]),
+      ),
     );
   }
 }
