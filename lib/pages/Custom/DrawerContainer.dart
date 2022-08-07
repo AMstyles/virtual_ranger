@@ -13,7 +13,9 @@ class DrawerContainer extends StatefulWidget {
 class _DrawerContainerState extends State<DrawerContainer> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeOutCubic,
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.5),
