@@ -14,6 +14,7 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,

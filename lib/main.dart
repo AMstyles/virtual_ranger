@@ -23,9 +23,18 @@ class _MyAppState extends State<MyApp> {
           create: (context) => Anime(),
         ),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              foregroundColor: Colors.black,
+              elevation: 0,
+              scrolledUnderElevation: 5,
+              centerTitle: true,
+              titleTextStyle: TextStyle(color: Colors.black),
+              actionsIconTheme: IconThemeData(color: Colors.black)),
+        ),
         debugShowCheckedModeBanner: false,
-        home: DrawerApp(),
+        home: const DrawerApp(),
       ),
     );
   }
