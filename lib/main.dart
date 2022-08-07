@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_ranger/pages/hidden_drawer.dart';
-import 'package:virtual_ranger/pages/news_and_deals_page.dart';
+import 'package:provider/provider.dart';
+import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
+import 'DrawerApp.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,9 +17,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HiddenDrawer(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Anime(),
+        ),
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: DrawerApp(),
+      ),
     );
   }
 }
