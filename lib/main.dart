@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 import 'DrawerApp.dart';
 
 void main() {
@@ -22,10 +23,14 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (context) => Anime(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => PageProvider(),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white,
               foregroundColor: Colors.black,
               elevation: 0,
               scrolledUnderElevation: 5,

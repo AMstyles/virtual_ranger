@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
-import 'package:virtual_ranger/pages/news_and_deals_page.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 
 class DrawerContainer extends StatefulWidget {
   const DrawerContainer({Key? key}) : super(key: key);
@@ -31,8 +31,9 @@ class _DrawerContainerState extends State<DrawerContainer> {
             0)
           ..scale(Provider.of<Anime>(context).scaleFactor),
         child: AbsorbPointer(
-            absorbing: Provider.of<Anime>(context).isOpen ? true : false,
-            child: NewsAndDealsPage()),
+          absorbing: Provider.of<Anime>(context).isOpen ? true : false,
+          child: Provider.of<PageProvider>(context).currentPage,
+        ),
       ),
     );
   }
