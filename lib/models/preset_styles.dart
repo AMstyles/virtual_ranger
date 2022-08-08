@@ -5,3 +5,6 @@ const drawerTextStyle =
 
 const profTextStyle =
     TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold);
+
+const drawerTextStyle2 =
+    TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400);
