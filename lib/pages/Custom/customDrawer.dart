@@ -4,12 +4,10 @@ import 'package:virtual_ranger/models/preset_styles.dart';
 import 'package:virtual_ranger/pages/Custom/drawerItems.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/widgets/drawerWidgets/profile_widg.dart';
-
-import '../news_and_deals_page.dart';
 import 'AnimeVals.dart';
 
 class HiddenDrawer extends StatefulWidget {
-  HiddenDrawer({Key? key}) : super(key: key);
+  const HiddenDrawer({Key? key}) : super(key: key);
 
   @override
   State<HiddenDrawer> createState() => _HiddenDrawerState();
@@ -27,8 +25,9 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             children: DrawerItems.all
                 .map(
                   (item) => ListTile(
+                    horizontalTitleGap: 0,
+                    contentPadding: const EdgeInsets.only(left: 8),
                     onTap: () {
-                      print('object');
                       Provider.of<PageProvider>(context, listen: false)
                           .switchPage(item.num);
                       Provider.of<Anime>(context, listen: false).closeDrawer();

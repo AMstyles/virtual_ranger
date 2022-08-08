@@ -18,14 +18,19 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          bottom: const TabBar(labelColor: Colors.black, tabs: [
-            Tab(
-              text: 'News',
-            ),
-            Tab(
-              text: 'Deals',
-            )
-          ]),
+          bottom: const TabBar(
+              automaticIndicatorColorAdjustment: true,
+              enableFeedback: true,
+              indicatorColor: Colors.green,
+              labelColor: Colors.black,
+              tabs: [
+                Tab(
+                  text: 'News',
+                ),
+                Tab(
+                  text: 'Deals',
+                )
+              ]),
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(Icons.menu),
