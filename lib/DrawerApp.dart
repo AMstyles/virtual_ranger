@@ -25,10 +25,10 @@ class _DrawerAppState extends State<DrawerApp> {
       },
       child: Scaffold(
         backgroundColor: Colors.green.shade800,
-        body: Stack(children: [
+        body: Stack(children: const [
           //!drawer
           HiddenDrawer(),
-          const DrawerContainer(),
+          DrawerContainer(),
         ]),
       ),
     );

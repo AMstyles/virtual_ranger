@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_ranger/models/news.dart';
+import 'package:virtual_ranger/widgets/NewsWidg.dart';
 
 class NewsTab extends StatefulWidget {
   NewsTab({Key? key}) : super(key: key);
@@ -10,6 +12,12 @@ class NewsTab extends StatefulWidget {
 class _NewsTabState extends State<NewsTab> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('hello, News'));
+    return ListView.builder(
+      //shrinkWrap: true,
+      itemCount: stories.length,
+      itemBuilder: ((context, index) {
+        return NewsWidg(story: stories[index]);
+      }),
+    );
   }
 }

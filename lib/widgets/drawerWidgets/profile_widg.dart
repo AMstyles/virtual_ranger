@@ -17,10 +17,13 @@ class DrawerProfile extends StatelessWidget {
         children: [
           Column(
             children: const [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
-                radius: 50,
+              Hero(
+                tag: 'pic',
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
+                  radius: 50,
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
