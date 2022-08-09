@@ -1,28 +1,27 @@
+import 'package:flutter/material.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/services/animal_search.dart';
 import 'package:virtual_ranger/widgets/CategoryWidg.dart';
+import 'package:virtual_ranger/widgets/SpecyWidget.dart';
 
 import 'Custom/AnimeVals.dart';
 
-class GuidePage extends StatefulWidget {
-  GuidePage({Key? key}) : super(key: key);
+class SpeciesPage extends StatefulWidget {
+  SpeciesPage({Key? key}) : super(key: key);
 
   @override
-  State<GuidePage> createState() => _GuidePageState();
+  State<SpeciesPage> createState() => _SpeciesPageState();
 }
 
-class _GuidePageState extends State<GuidePage> {
+class _SpeciesPageState extends State<SpeciesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
-        ),
         title: const Text("Guide"),
         actions: [
           CupertinoButton(
@@ -39,7 +38,7 @@ class _GuidePageState extends State<GuidePage> {
         ],
       ),
       body: ListView.builder(itemBuilder: ((context, index) {
-        return CategoryWidg();
+        return SpecyWidg();
       })),
     );
     ;

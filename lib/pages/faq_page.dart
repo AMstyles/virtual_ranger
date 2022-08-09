@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/widgets/FAQwidg.dart';
 
 import 'Custom/AnimeVals.dart';
 
@@ -19,8 +20,11 @@ class _FAQPageState extends State<FAQPage> {
           icon: const Icon(Icons.menu),
           onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
         ),
-        title: Text("FAQ"),
+        title: const Text("FAQ"),
       ),
+      body: ListView.builder(itemBuilder: ((context, index) {
+        return FAQWidg();
+      })),
     );
   }
 }
