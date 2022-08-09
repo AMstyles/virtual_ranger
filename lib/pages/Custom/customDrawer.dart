@@ -25,6 +25,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             children: DrawerItems.all
                 .map(
                   (item) => ListTile(
+                    style: ListTileStyle.drawer,
                     horizontalTitleGap: 0,
                     contentPadding: const EdgeInsets.only(left: 8),
                     onTap: () {

@@ -19,10 +19,11 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
       child: Scaffold(
         appBar: AppBar(
           bottom: const TabBar(
+              labelStyle: TextStyle(color: Colors.blue),
+              unselectedLabelColor: Colors.black,
               automaticIndicatorColorAdjustment: true,
               enableFeedback: true,
-              indicatorColor: Colors.green,
-              labelColor: Colors.black,
+              labelColor: Colors.blue,
               tabs: [
                 Tab(
                   text: 'News',
