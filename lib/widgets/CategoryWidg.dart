@@ -13,19 +13,21 @@ class CategoryWidg extends StatelessWidget {
           return SubcategoryPage();
         }));
       },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 120,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(stories[0].imageUrl), fit: BoxFit.fill),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 120,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: NetworkImage(''), fit: BoxFit.cover),
+          ),
+          child: const Center(
+              child: Text(
+            'INSECTS',
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          )),
         ),
-        child: const Center(
-            child: Text(
-          'INSECTS',
-          style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-        )),
       ),
     );
   }

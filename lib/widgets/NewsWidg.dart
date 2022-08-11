@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/pages/Home/stroy_page.dart';
+import '../models/constants.dart';
 import '../models/news.dart';
 import '../models/preset_styles.dart';
 
@@ -35,7 +36,8 @@ class _NewsWidgState extends State<NewsWidg> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(widget.story.imageUrl),
+                          image: NetworkImage(
+                              NEWS_IMAGE_URL + widget.story.news_image),
                         ),
                         color: Colors.black.withOpacity(0.4)),
                   ),
@@ -61,12 +63,14 @@ class _NewsWidgState extends State<NewsWidg> {
                           style: drawerTextStyle,
                         ),
                         Text(
-                          widget.story.date,
+                          widget.story.news_post_date,
                           style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          widget.story.body.toString(),
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
+                          widget.story.news_text,
                           style: const TextStyle(color: Colors.white),
                         )
                       ],

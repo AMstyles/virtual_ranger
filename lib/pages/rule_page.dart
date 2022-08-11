@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/services/getRequests.dart';
 
 import 'Custom/AnimeVals.dart';
 
@@ -11,7 +12,14 @@ class RulesPage extends StatefulWidget {
 }
 
 class _RulesPageState extends State<RulesPage> {
-  late String rules;
+  //late String rules;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //rules = something();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,16 +47,16 @@ class _RulesPageState extends State<RulesPage> {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(
+          Padding(
+            padding: const EdgeInsets.symmetric(
               vertical: 8,
               horizontal: 14,
             ),
             child: Text(
-              'okay',
+              'something',
               textAlign: TextAlign.center,
             ),
-          )
+          ),
         ],
       ),
     );

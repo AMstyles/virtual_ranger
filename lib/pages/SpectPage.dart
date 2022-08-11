@@ -11,7 +11,7 @@ class SpecyPage extends StatelessWidget {
         title: Text('specy Name'),
       ),
       body: ListView(shrinkWrap: true, children: [
-        Image.network(stories[0].imageUrl),
+        Image.network('https://picsum.photos/250?image=9'),
         SizedBox(
           height: 20,
         )
