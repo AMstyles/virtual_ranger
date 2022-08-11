@@ -19,7 +19,7 @@ class NewsPage extends StatelessWidget {
           Hero(
             tag: story.title,
             child: Image.network(
-              story.Imageurl,
+              story.imageUrl,
               fit: BoxFit.cover,
             ),
           ),

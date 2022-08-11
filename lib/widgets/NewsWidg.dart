@@ -3,11 +3,16 @@ import 'package:virtual_ranger/pages/Home/stroy_page.dart';
 import '../models/news.dart';
 import '../models/preset_styles.dart';
 
-class NewsWidg extends StatelessWidget {
+class NewsWidg extends StatefulWidget {
   NewsWidg({Key? key, required this.story}) : super(key: key);
 
   News story;
 
+  @override
+  State<NewsWidg> createState() => _NewsWidgState();
+}
+
+class _NewsWidgState extends State<NewsWidg> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,7 +20,7 @@ class NewsWidg extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return NewsPage(story: story);
+            return NewsPage(story: widget.story);
           }));
         },
         child: SizedBox(
@@ -25,12 +30,12 @@ class NewsWidg extends StatelessWidget {
               //alignment: Alignment.bottomCenter,
               children: [
                 Hero(
-                  tag: story.title,
+                  tag: widget.story.title,
                   child: Container(
                     decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(story.Imageurl),
+                          image: NetworkImage(widget.story.imageUrl),
                         ),
                         color: Colors.black.withOpacity(0.4)),
                   ),
@@ -52,16 +57,16 @@ class NewsWidg extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          story.title,
+                          widget.story.title,
                           style: drawerTextStyle,
                         ),
                         Text(
-                          story.date,
+                          widget.story.date,
                           style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          story.body.toString(),
+                          widget.story.body.toString(),
                           style: const TextStyle(color: Colors.white),
                         )
                       ],

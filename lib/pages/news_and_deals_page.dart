@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Home/deals_tab.dart';
 import 'package:virtual_ranger/pages/Home/news_tab.dart';
+import 'package:virtual_ranger/services/getRequests.dart';
 import 'Custom/AnimeVals.dart';
 
 class NewsAndDealsPage extends StatefulWidget {
@@ -12,6 +13,13 @@ class NewsAndDealsPage extends StatefulWidget {
 }
 
 class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getNews();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

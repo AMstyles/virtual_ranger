@@ -18,7 +18,7 @@ class CategoryWidg extends StatelessWidget {
         height: 120,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: NetworkImage(stories[0].Imageurl), fit: BoxFit.fill),
+              image: NetworkImage(stories[0].imageUrl), fit: BoxFit.fill),
         ),
         child: const Center(
             child: Text(
