@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/pages/Custom/DrawerContainer.dart';
 import 'package:virtual_ranger/pages/Custom/customDrawer.dart';
@@ -24,7 +25,7 @@ class _DrawerAppState extends State<DrawerApp> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.green.shade800,
+        backgroundColor: MyColors.primaryColor,
         body: Stack(children: const [
           //!drawer
           HiddenDrawer(),
