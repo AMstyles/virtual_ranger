@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-
 import '../models/constants.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -12,16 +12,20 @@ class SignUpPage extends StatelessWidget {
           title: const Text('SIGN UP'),
         ),
         body: ListView(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           children: [
             Image.asset(
               'lib/assets/mainLogo.png',
               color: Colors.grey.shade600,
               fit: BoxFit.cover,
             ),
-            _buildAppleSignInButton(context),
+            Platform.isIOS
+                ? _buildAppleSignInButton(context)
+                : const SizedBox(),
             _makeSpace(context),
             _buildFacebookSignInButton(context),
+            _makeSpace(context),
+            _buildGoogleSignInButton(context),
             const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
@@ -86,6 +90,36 @@ class SignUpPage extends StatelessWidget {
   }
 
   //!fancy
+  Widget _buildGoogleSignInButton(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 5),
+      alignment: Alignment.center,
+      height: 45,
+      width: 140,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade400,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            child: Image.asset(
+              'lib/assets/googleIcon.png',
+              width: 40,
+              height: 40,
+            ),
+          ),
+          const SizedBox(width: 20),
+          const Text(
+            "Sign in with Google",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildAppleSignInButton(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 5),
@@ -172,6 +206,10 @@ class SignUpPage extends StatelessWidget {
               const Text('female'),
             ],
           ),
+          const Text(
+            '(Optional)',
+            style: TextStyle(color: Colors.blueGrey),
+          )
         ],
       ),
     );

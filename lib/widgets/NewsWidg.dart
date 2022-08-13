@@ -59,6 +59,8 @@ class _NewsWidgState extends State<NewsWidg> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           widget.story.title,
                           style: drawerTextStyle,
                         ),
@@ -69,9 +71,10 @@ class _NewsWidgState extends State<NewsWidg> {
                         ),
                         Text(
                           maxLines: 2,
-                          overflow: TextOverflow.fade,
+                          overflow: TextOverflow.ellipsis,
                           widget.story.news_text,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 12),
                         )
                       ],
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/sign_up_page.dart';
+import 'dart:io' show Platform;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -38,7 +39,9 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.grey.shade600,
                 fit: BoxFit.cover,
               ),
-              _buildAppleSignInButton(context),
+              Platform.isIOS
+                  ? _buildAppleSignInButton(context)
+                  : const SizedBox(),
               const SizedBox(height: 12),
               _buildFacebookSignInButton(context),
               const SizedBox(height: 12),
@@ -158,8 +161,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
- 
 
   Widget _buildFacebookSignInButton(BuildContext context) {
     return Container(

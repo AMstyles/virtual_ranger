@@ -44,7 +44,7 @@ class _NewsTabState extends State<NewsTab> {
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-        return Center(child: const CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator.adaptive());
       },
     );
   }
