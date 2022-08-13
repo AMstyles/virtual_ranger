@@ -31,16 +31,15 @@ class _MyAppState extends State<MyApp> {
         themeMode: ThemeMode.light,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              elevation: 0,
-              scrolledUnderElevation: 1,
-              centerTitle: true,
-              titleTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 24),
-              actionsIconTheme: IconThemeData(color: Colors.black)),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            elevation: 0,
+            scrolledUnderElevation: 1,
+            centerTitle: true,
+            titleTextStyle: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.w400, fontSize: 24),
+            actionsIconTheme: IconThemeData(color: Colors.black),
+          ),
         ),
         debugShowCheckedModeBanner: false,
         home: const SplashScreen(),

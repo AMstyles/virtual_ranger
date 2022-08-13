@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:virtual_ranger/models/category.dart';
 import 'package:virtual_ranger/services/animal_search.dart';
-import 'package:virtual_ranger/widgets/CategoryWidg.dart';
-
+import '../models/subCategory.dart';
 import '../widgets/SubCategoryWidg.dart';
-import 'Custom/AnimeVals.dart';
+import '../apis/Animal&Plants_apis.dart';
 
 class SubcategoryPage extends StatefulWidget {
-  SubcategoryPage({Key? key}) : super(key: key);
+  SubcategoryPage({Key? key, required this.curr}) : super(key: key);
+
+  Category_ curr;
 
   @override
   State<SubcategoryPage> createState() => _SubcategoryPageState();
@@ -20,7 +20,7 @@ class _SubcategoryPageState extends State<SubcategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("subCat name"),
+        title: Text(widget.curr.name),
         actions: [
           CupertinoButton(
               onPressed: () {
@@ -35,9 +35,26 @@ class _SubcategoryPageState extends State<SubcategoryPage> {
               ))
         ],
       ),
-      body: ListView.builder(itemBuilder: ((context, index) {
-        return SubCategoryWidg();
-      })),
+      body: FutureBuilder<List<SubCategory>>(
+        future: SubCategoryapi.getSubCategories(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return snapshot.data![index].categoryId == widget.curr.id
+                    ? SubCategoryWidg(
+                        subCategory: snapshot.data![index],
+                      )
+                    : const SizedBox();
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return const Center(child: CircularProgressIndicator.adaptive());
+        },
+      ),
     );
     ;
   }

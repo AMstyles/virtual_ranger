@@ -37,14 +37,16 @@ class _NewsWidgState extends State<NewsWidg> {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                              NEWS_IMAGE_URL + widget.story.news_image),
+                            NEWS_IMAGE_URL + widget.story.news_image,
+                          ),
                         ),
                         color: Colors.black.withOpacity(0.4)),
                   ),
                 ),
                 Positioned(
                   bottom: 0,
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
                     padding: const EdgeInsets.only(left: 5),
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(

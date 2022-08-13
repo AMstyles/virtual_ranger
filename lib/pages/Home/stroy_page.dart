@@ -16,6 +16,7 @@ class NewsPage extends StatelessWidget {
         title: const Text('News Details'),
       ),
       body: ListView(
+        addAutomaticKeepAlives: true,
         children: [
           Hero(
             tag: story.title,
@@ -36,12 +37,15 @@ class NewsPage extends StatelessWidget {
                 Text(
                   story.news_post_date,
                   style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                      color: Colors.blueGrey, fontWeight: FontWeight.w400),
                 ),
+                const SizedBox(height: 10),
                 Text(
                   story.news_text,
                   style: const TextStyle(
                     color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ],

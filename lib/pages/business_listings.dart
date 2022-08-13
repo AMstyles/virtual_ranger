@@ -18,9 +18,36 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
           icon: const Icon(Icons.menu),
           onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
         ),
-        title: Text("BusinessListings"),
+        title: const Text("BusinessListings"),
+      ),
+      body: ListView(
+        children: [
+          _buildHeader(context, 'Emerging Contact Numbers'),
+          SizedBox(height: 10),
+          _buildHeader(context, 'Accomodation'),
+          SizedBox(height: 10),
+          _buildHeader(context, 'Restaurants'),
+          SizedBox(height: 10),
+          SizedBox(height: 10),
+          _buildHeader(context, 'Services'),
+        ],
       ),
     );
-    ;
+  }
+
+  Widget _buildHeader(BuildContext context, String title) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.green.shade700,
+      ),
+      child: Center(
+        child: Text(
+          title,
+          style: const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
+    );
   }
 }
