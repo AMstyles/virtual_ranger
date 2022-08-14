@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/services/getRequests.dart';
 
 import 'Custom/AnimeVals.dart';
@@ -34,7 +35,7 @@ class _RulesPageState extends State<RulesPage> {
           Container(
             //alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8),
-            color: Colors.brown.shade600,
+            color: MyColors.secondaryColor,
             child: const Center(
               child: Text(
                 textAlign: TextAlign.center,
@@ -53,8 +54,9 @@ class _RulesPageState extends State<RulesPage> {
               horizontal: 14,
             ),
             child: Text(
-              'something',
+              constRulesAndRegulations,
               textAlign: TextAlign.center,
+              style: TextStyle(color: MyColors.secondaryColor, fontSize: 16),
             ),
           ),
         ],

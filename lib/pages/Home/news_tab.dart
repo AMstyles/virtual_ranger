@@ -29,14 +29,6 @@ class _NewsTabState extends State<NewsTab>
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return NewsWidg(story: snapshot.data![index]);
-
-              /*ExpansionTile(
-                  title: Text(snapshot.data![index].question),
-                  children: <Widget>[
-                    Text(snapshot.data![index].answer),
-                  ],
-                )*/
-              ;
             },
           );
         } else if (snapshot.hasError) {

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../models/BL.dart';
+import '../models/constants.dart';
+
 class BusinessListingWidg extends StatelessWidget {
-  const BusinessListingWidg({Key? key}) : super(key: key);
+  BusinessListingWidg({Key? key, required this.businessListing})
+      : super(key: key);
+  BusinessListing businessListing;
 
   @override
   Widget build(BuildContext context) {
@@ -10,20 +15,38 @@ class BusinessListingWidg extends StatelessWidget {
       child: Row(
         children: [
           Image.network(
-            '',
-            cacheHeight: 50,
-            width: 50,
+            BUSINESS_LISTINGS_IMAGE_URL + businessListing.logo,
+            fit: BoxFit.contain,
+            height: 60,
+            width: 60,
           ),
-          Column(
-            children: [
-              Text(
-                "Heading",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    businessListing.name,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    businessListing.businesType,
+                    style: const TextStyle(),
+                  ),
+                  // ignore: unnecessary_string_interpolations
+                  Text(
+                    "${businessListing.firstNumber} ${businessListing.secondNumber}",
+                    style: const TextStyle(),
+                  ),
+                  (businessListing.email != '')
+                      ? Text(businessListing.address)
+                      : const SizedBox(),
+                  const Divider(),
+                ],
               ),
-              Text('data')
-            ],
+            ),
           )
         ],
       ),

@@ -1,22 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/models/Specy.dart';
+import 'package:virtual_ranger/models/animal_image.dart';
 
-class SpecyPage extends StatelessWidget {
+import '../models/constants.dart';
+
+class SpecyPage extends StatefulWidget {
   SpecyPage({Key? key, required this.specy}) : super(key: key);
   Specy specy;
+
+  @override
+  State<SpecyPage> createState() => _SpecyPageState();
+}
+
+class _SpecyPageState extends State<SpecyPage> {
+  final PageController _controller = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(specy.english_name),
+        title: Text(widget.specy.english_name),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 100),
         shrinkWrap: true,
         children: [
-          Image.network('https://picsum.photos/250?image=9'),
-          const SizedBox(
-            height: 20,
+          FutureBuilder<List<SpecyImage>>(
+            future: Imageapi.getImages(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                PageView.builder(
+                    controller: _controller,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      if (snapshot.data![index].animal_id == widget.specy.id) {
+                        print(snapshot.data![index].images);
+                        return Image.network(
+                          BASE_IMAGE_URL + snapshot.data![index].images,
+                          fit: BoxFit.cover,
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    });
+              } else if (snapshot.hasError) {
+                return Text("error: ${snapshot.error}");
+              }
+              return const Center(child: CircularProgressIndicator.adaptive());
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -32,7 +65,7 @@ class SpecyPage extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: specy.scientific_name,
+                    text: widget.specy.scientific_name,
                   ),
                 ],
               ),
@@ -52,7 +85,7 @@ class SpecyPage extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: specy.higher_classification,
+                    text: widget.specy.higher_classification,
                   ),
                 ],
               ),
@@ -72,7 +105,7 @@ class SpecyPage extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: specy.rank,
+                    text: widget.specy.rank,
                   ),
                 ],
               ),
@@ -90,7 +123,7 @@ class SpecyPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(specy.description)
+                Text(widget.specy.description)
               ],
             ),
           ),
@@ -106,7 +139,7 @@ class SpecyPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(specy.range_habitat)
+                Text(widget.specy.range_habitat)
               ],
             ),
           ),
@@ -122,7 +155,7 @@ class SpecyPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(specy.behaviour)
+                Text(widget.specy.behaviour)
               ],
             ),
           ),
@@ -138,12 +171,25 @@ class SpecyPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(specy.tags)
+                Text(widget.specy.tags)
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  //!Widgets
+  Widget _buildImagePageView(List<String> images) {
+    return PageView.builder(
+      itemCount: images.length,
+      itemBuilder: (context, index) {
+        return Image.network(
+          images[index],
+          fit: BoxFit.cover,
+        );
+      },
     );
   }
 }
