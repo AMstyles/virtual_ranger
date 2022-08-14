@@ -16,14 +16,17 @@ class EventWidg extends StatelessWidget {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => EventPage(event: event)));
         },
-        child: Container(
-          //height: 200,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: Image.network(
-            fit: BoxFit.cover,
-            NEWS_IMAGE_URL + event.event_image,
+        child: Hero(
+          tag: event.title,
+          child: Container(
+            //height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Image.network(
+              fit: BoxFit.cover,
+              NEWS_IMAGE_URL + event.event_image,
+            ),
           ),
         ),
       ),
