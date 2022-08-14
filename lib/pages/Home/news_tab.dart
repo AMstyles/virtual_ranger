@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:virtual_ranger/models/news.dart';
 import 'package:virtual_ranger/widgets/NewsWidg.dart';
 
+import '../../apis/newsapi.dart';
+
 class NewsTab extends StatefulWidget {
   NewsTab({Key? key}) : super(key: key);
 
@@ -9,15 +11,35 @@ class NewsTab extends StatefulWidget {
   State<NewsTab> createState() => _NewsTabState();
 }
 
-class _NewsTabState extends State<NewsTab> {
+class _NewsTabState extends State<NewsTab>
+    with AutomaticKeepAliveClientMixin<NewsTab> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      //shrinkWrap: true,
-      itemCount: stories.length,
-      itemBuilder: ((context, index) {
-        return NewsWidg(story: stories[index]);
-      }),
+    return FutureBuilder<List<News>>(
+      future: Newsapi.getNews(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return NewsWidg(story: snapshot.data![index]);
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return const Center(child: CircularProgressIndicator.adaptive());
+      },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Profile/textFieds.dart';
 
+import '../models/constants.dart';
 import 'Custom/AnimeVals.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -82,7 +83,39 @@ class _ProfilePageState extends State<ProfilePage> {
             controller: _cityController,
             hint: 'City',
           ),
+          _buildSignUpButton(context, 'UPDATE PROFILE'),
+          ProfileTextField(
+            controller: _cityController,
+            hint: 'Current Password',
+          ),
+          ProfileTextField(
+            controller: _cityController,
+            hint: 'New Password',
+          ),
+          ProfileTextField(
+            controller: _cityController,
+            hint: 'Re-enter New Password',
+          ),
+          _buildSignUpButton(context, 'CHANGE PASSWORD'),
         ]),
+      ),
+    );
+  }
+
+//! widgets
+  Widget _buildSignUpButton(BuildContext context, String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 25),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: MyColors.primaryColor,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 15, color: Colors.white),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/models/news.dart';
 
 import '../../models/preset_styles.dart';
@@ -15,11 +16,12 @@ class NewsPage extends StatelessWidget {
         title: const Text('News Details'),
       ),
       body: ListView(
+        addAutomaticKeepAlives: true,
         children: [
           Hero(
             tag: story.title,
             child: Image.network(
-              story.Imageurl,
+              NEWS_IMAGE_URL + story.news_image,
               fit: BoxFit.cover,
             ),
           ),
@@ -33,14 +35,17 @@ class NewsPage extends StatelessWidget {
                   style: drawerTextStyle2,
                 ),
                 Text(
-                  story.date,
+                  story.news_post_date,
                   style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                      color: Colors.blueGrey, fontWeight: FontWeight.w400),
                 ),
+                const SizedBox(height: 10),
                 Text(
-                  story.body.toString(),
+                  story.news_text,
                   style: const TextStyle(
                     color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ],

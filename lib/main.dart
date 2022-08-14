@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
+import 'package:virtual_ranger/pages/splash_screen.dart';
 import 'package:virtual_ranger/services/page_service.dart';
-import 'DrawerApp.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,21 +28,21 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       child: MaterialApp(
+        themeMode: ThemeMode.light,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              elevation: 0,
-              scrolledUnderElevation: 5,
-              centerTitle: true,
-              titleTextStyle: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24),
-              actionsIconTheme: IconThemeData(color: Colors.black)),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            elevation: 0,
+            scrolledUnderElevation: 1,
+            centerTitle: true,
+            titleTextStyle: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.w400, fontSize: 24),
+            actionsIconTheme: IconThemeData(color: Colors.black),
+          ),
         ),
         debugShowCheckedModeBanner: false,
-        home: const DrawerApp(),
+        home: const SplashScreen(),
       ),
     );
   }

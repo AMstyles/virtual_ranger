@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_ranger/models/faq.dart';
 
 class FAQWidg extends StatelessWidget {
-  const FAQWidg({Key? key}) : super(key: key);
+  const FAQWidg({Key? key, required this.faq}) : super(key: key);
+
+  final FAQ faq;
 
   @override
   Widget build(BuildContext context) {
@@ -9,17 +12,18 @@ class FAQWidg extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
-            '1. What is the speed limit?',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            faq.question,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
-              'General rules of road apply within the reserve and speed limit is 20km/h'),
-          Divider()
+            faq.answer,
+          ),
+          const Divider()
         ],
       ),
     );

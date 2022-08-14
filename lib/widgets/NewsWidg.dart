@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/pages/Home/stroy_page.dart';
+import '../models/constants.dart';
 import '../models/news.dart';
 import '../models/preset_styles.dart';
 
-class NewsWidg extends StatelessWidget {
+class NewsWidg extends StatefulWidget {
   NewsWidg({Key? key, required this.story}) : super(key: key);
 
   News story;
 
+  @override
+  State<NewsWidg> createState() => _NewsWidgState();
+}
+
+class _NewsWidgState extends State<NewsWidg> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,7 +21,7 @@ class NewsWidg extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return NewsPage(story: story);
+            return NewsPage(story: widget.story);
           }));
         },
         child: SizedBox(
@@ -25,19 +31,22 @@ class NewsWidg extends StatelessWidget {
               //alignment: Alignment.bottomCenter,
               children: [
                 Hero(
-                  tag: story.title,
+                  tag: widget.story.title,
                   child: Container(
                     decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(story.Imageurl),
+                          image: NetworkImage(
+                            NEWS_IMAGE_URL + widget.story.news_image,
+                          ),
                         ),
                         color: Colors.black.withOpacity(0.4)),
                   ),
                 ),
                 Positioned(
                   bottom: 0,
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
                     padding: const EdgeInsets.only(left: 5),
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -52,17 +61,22 @@ class NewsWidg extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          story.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          widget.story.title,
                           style: drawerTextStyle,
                         ),
                         Text(
-                          story.date,
+                          widget.story.news_post_date,
                           style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          story.body.toString(),
-                          style: const TextStyle(color: Colors.white),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          widget.story.news_text,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 12),
                         )
                       ],
                     ),

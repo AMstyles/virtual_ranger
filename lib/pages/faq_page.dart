@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/widgets/FAQwidg.dart';
 
+import '../models/faq.dart';
+import '../services/faqapi.dart';
 import 'Custom/AnimeVals.dart';
 
 class FAQPage extends StatefulWidget {
@@ -22,9 +24,22 @@ class _FAQPageState extends State<FAQPage> {
         ),
         title: const Text("FAQ"),
       ),
-      body: ListView.builder(itemBuilder: ((context, index) {
-        return FAQWidg();
-      })),
+      body: FutureBuilder<List<FAQ>>(
+        future: FAQapi.getFAQ(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return FAQWidg(faq: snapshot.data![index]);
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return const Center(child: CircularProgressIndicator.adaptive());
+        },
+      ),
     );
   }
 }

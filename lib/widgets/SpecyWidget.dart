@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_ranger/pages/SpectPage.dart';
+import 'package:virtual_ranger/pages/SpecyPage.dart';
+
+import '../models/Specy.dart';
 
 class SpecyWidg extends StatelessWidget {
-  const SpecyWidg({Key? key}) : super(key: key);
-
+  SpecyWidg({Key? key, required this.specy}) : super(key: key);
+  Specy specy;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return SpecyPage();
+          return SpecyPage(
+            specy: specy,
+          );
         }));
       },
       child: SizedBox(
@@ -19,12 +23,13 @@ class SpecyWidg extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
-                "Blue Waxbill",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                specy.english_name,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
-              Divider(),
+              const Divider(),
             ],
           ),
         ),
