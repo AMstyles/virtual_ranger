@@ -20,12 +20,13 @@ class EventWidg extends StatelessWidget {
           tag: event.title,
           child: Container(
             //height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Image.network(
-              fit: BoxFit.cover,
-              NEWS_IMAGE_URL + event.event_image,
+
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                fit: BoxFit.cover,
+                NEWS_IMAGE_URL + event.event_image,
+              ),
             ),
           ),
         ),

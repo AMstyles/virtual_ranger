@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 
 import '../../models/preset_styles.dart';
 
@@ -16,20 +18,17 @@ class DrawerProfile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
-            children: const [
-              Hero(
-                tag: 'pic',
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
-                  radius: 50,
-                ),
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                    Provider.of<UserProvider>(context).user!.image!),
+                radius: 50,
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: FittedBox(
                   child: Text(
-                    'NAME  SURNAME',
+                    Provider.of<UserProvider>(context).user!.name,
                     style: profTextStyle,
                   ),
                 ),

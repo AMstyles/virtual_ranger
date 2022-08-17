@@ -1,8 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
+import 'package:virtual_ranger/apis/In.dart';
+import 'package:virtual_ranger/services/page_service.dart';
+import '../models/constants.dart';
+import '../models/user.dart';
 import 'package:virtual_ranger/models/constants.dart';
+import 'package:virtual_ranger/models/user.dart';
 import 'package:virtual_ranger/pages/sign_up_page.dart';
 import 'dart:io' show Platform;
+
+import '../services/page_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,6 +22,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late User user;
+  late String data;
+
+  late String email;
+  late String password;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
 
@@ -54,8 +69,9 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   )),
               const SizedBox(height: 10),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
                   hintText: 'email',
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -63,9 +79,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
 
-              const TextField(
+              TextField(
+                controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'password',
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -95,10 +112,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildSignInButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const DrawerApp()));
-      },
+      onTap: () => handleSubmit2(),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
@@ -222,5 +236,51 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget space(BuildContext context) {
     return const SizedBox(width: 20);
+  }
+
+  //!Sign in method
+  void handleSubmit2() async {
+    email = _emailController.text;
+    password = _passwordController.text;
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const AlertDialog(
+        title: Text('Loading...'),
+        content: CircularProgressIndicator.adaptive(),
+      ),
+    );
+
+    data = await signUpAPI.signIn(email, password);
+    Navigator.pop(context);
+
+    final finalData = jsonDecode(data);
+
+    if (finalData['success'] == true) {
+      user = User.fromjson(finalData['data']);
+      Provider.of<UserProvider>(context, listen: false).setUser(user);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => DrawerApp()));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text(
+                  'Error',
+                  style: TextStyle(color: Colors.red),
+                ),
+                content: Text(finalData['data']),
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ));
+    }
+    //print(finalData['success']);
   }
 }

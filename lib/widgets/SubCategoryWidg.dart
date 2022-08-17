@@ -20,8 +20,9 @@ class SubCategoryWidg extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           width: MediaQuery.of(context).size.width,
-          height: 120,
+          height: 200,
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
                 image: NetworkImage(
                     SUBCATEGORY_IMAGE_URL + subCategory.BackgroundImage),
@@ -30,8 +31,11 @@ class SubCategoryWidg extends StatelessWidget {
           child: Center(
               child: Text(
             subCategory.name,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                backgroundColor: Colors.black.withOpacity(.1),
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold),
           )),
         ),
       ),
