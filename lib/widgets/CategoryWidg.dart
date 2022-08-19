@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/models/category.dart';
 import 'package:virtual_ranger/pages/SubcategoryPage.dart';
@@ -27,8 +28,9 @@ class CategoryWidg extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-                image:
-                    NetworkImage(CATEGORY_IMAGE_URL + category.backgroundImage),
+                image: CachedNetworkImageProvider(
+                  CATEGORY_IMAGE_URL + category.backgroundImage,
+                ),
                 fit: BoxFit.cover),
           ),
           child: Center(
