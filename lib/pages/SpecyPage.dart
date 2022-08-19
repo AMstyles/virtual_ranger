@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/models/Specy.dart';
 import 'package:virtual_ranger/models/animal_image.dart';
-
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/constants.dart';
 
 class SpecyPage extends StatefulWidget {
@@ -26,31 +27,46 @@ class _SpecyPageState extends State<SpecyPage> {
         padding: const EdgeInsets.only(bottom: 100),
         shrinkWrap: true,
         children: [
-          FutureBuilder<List<SpecyImage>>(
-            future: Imageapi.getImages(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                PageView.builder(
-                    controller: _controller,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      if (snapshot.data![index].animal_id == widget.specy.id) {
-                        print(snapshot.data![index].images);
-                        return Image.network(
-                          BASE_IMAGE_URL + snapshot.data![index].images,
-                          fit: BoxFit.cover,
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
-                    });
-              } else if (snapshot.hasError) {
-                return Text("error: ${snapshot.error}");
-              }
-              return const Center(child: CircularProgressIndicator.adaptive());
-            },
+          SizedBox(
+            height: 350,
+            child: FutureBuilder<List<SpecyImage>>(
+              future: Imageapi.getImages(widget.specy),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.length == 1) {
+                    return Pages(specyImage: snapshot.data![0]);
+                  } else {
+                    return Stack(
+                      alignment: const Alignment(0, .9),
+                      children: [
+                        PageView.builder(
+                          controller: _controller,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Pages(specyImage: snapshot.data![index]);
+                          },
+                        ),
+                        SmoothPageIndicator(
+                          effect: ExpandingDotsEffect(
+                            dotColor: Colors.black.withOpacity(.5),
+                            activeDotColor: Colors.white,
+                          ),
+                          controller: _controller,
+                          count: snapshot.data!.length,
+                        )
+                      ],
+                    );
+                  }
+                } else if (snapshot.hasError) {
+                  return Text("error: ${snapshot.error}");
+                }
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
+              },
+            ),
           ),
+          //!I'm defeated
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: RichText(
@@ -190,6 +206,20 @@ class _SpecyPageState extends State<SpecyPage> {
           fit: BoxFit.cover,
         );
       },
+    );
+  }
+}
+
+class Pages extends StatelessWidget {
+  Pages({Key? key, required this.specyImage}) : super(key: key);
+  SpecyImage specyImage;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: CachedNetworkImage(
+        imageUrl: BASE_IMAGE_URL + specyImage.images,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

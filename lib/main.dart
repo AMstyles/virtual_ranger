@@ -26,6 +26,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (context) => PageProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
+        ),
       ],
       child: MaterialApp(
         themeMode: ThemeMode.light,
@@ -42,7 +45,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+        home: const SplashScreen() /*const SplashScreen()*/,
       ),
     );
   }

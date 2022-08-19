@@ -1,9 +1,53 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:virtual_ranger/DrawerApp.dart';
+import 'package:virtual_ranger/apis/In.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 import '../models/constants.dart';
+import '../models/user.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  late String data;
+  late User user;
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+
+  late String name;
+  late String email;
+  late String password;
+  late String confirmPassword;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,35 +77,39 @@ class SignUpPage extends StatelessWidget {
                   'OR',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 )),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
                 hintText: 'Name and Surname',
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
             ),
             const SizedBox(height: 10),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
                 hintText: 'Email',
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
             ),
-            _buildRadioButtonGroup(context),
+            //_buildRadioButtonGroup(context),
             const SizedBox(height: 10),
-            const TextField(
+            TextField(
+              controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Password',
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
             ),
             const SizedBox(height: 10),
-            const TextField(
+            TextField(
+              controller: _confirmPasswordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'confirm password',
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -74,17 +122,19 @@ class SignUpPage extends StatelessWidget {
   }
 
   //!remakes
-
   Widget _buildSignUpButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: MyColors.primaryColor,
-      ),
-      child: const Text(
-        'REGISTER',
-        style: TextStyle(fontSize: 15, color: Colors.white),
+    return GestureDetector(
+      onTap: () => handleSubmit(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: MyColors.primaryColor,
+        ),
+        child: const Text(
+          'REGISTER',
+          style: TextStyle(fontSize: 15, color: Colors.white),
+        ),
       ),
     );
   }
@@ -181,7 +231,6 @@ class SignUpPage extends StatelessWidget {
   }
 
   //!experimental
-  //function that make a group of two radio buttons
   Widget _buildRadioButtonGroup(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -213,5 +262,49 @@ class SignUpPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  //!Sign in method
+  void handleSubmit() async {
+    name = _nameController.text;
+    email = _emailController.text;
+    password = _passwordController.text;
+    confirmPassword = _confirmPasswordController.text;
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const AlertDialog(
+        title: Text('Loading...'),
+        content: CircularProgressIndicator.adaptive(),
+      ),
+    );
+
+    data = await signUpAPI.signUp(name, email, password, confirmPassword);
+    Navigator.pop(context);
+
+    final finalData = jsonDecode(data);
+    if (finalData['success'] == true) {
+      user = User.fromjson(finalData['data']);
+      Provider.of<UserProvider>(context, listen: false).setUser(user);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => DrawerApp()));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: Text(finalData['data']),
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ));
+    }
+    //print(finalData['success']);
   }
 }

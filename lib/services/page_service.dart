@@ -9,6 +9,8 @@ import 'package:virtual_ranger/pages/rule_page.dart';
 import 'package:virtual_ranger/pages/settings_page.dart';
 import 'package:virtual_ranger/pages/sighting_list.dart';
 
+import '../models/user.dart';
+
 class PageProvider extends ChangeNotifier {
   var currentPage;
 
@@ -25,7 +27,7 @@ class PageProvider extends ChangeNotifier {
   final List<Widget> pages = [
     ProfilePage(),
     NewsAndDealsPage(),
-    GuidePage(),
+    const GuidePage(),
     Kestrel_club_page(),
     SightingslistPage(),
     FAQPage(),
@@ -33,4 +35,13 @@ class PageProvider extends ChangeNotifier {
     BusinessListingsPage(),
     SettingsPage(),
   ];
+}
+
+class UserProvider extends ChangeNotifier {
+  User? user;
+
+  void setUser(User x) {
+    user = x;
+    notifyListeners();
+  }
 }

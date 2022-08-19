@@ -49,15 +49,16 @@ class Specyapi {
 }
 
 class Imageapi {
-  static Future<List<SpecyImage>> getImages() async {
+  static Future<List<SpecyImage>> getImages(Specy specy) async {
     final response = await http.get(Uri.parse(SPECIES_IMAGE_URL));
     final pre_data = jsonDecode(response.body);
     final data = pre_data['data'];
     final List<dynamic> finalData = data;
     List<SpecyImage> species = [];
     for (var i = 0; i < finalData.length; i++) {
-      species.add(SpecyImage.fromJson(finalData[i]));
-      print(SpecyImage.fromJson(finalData[i]).images);
+      if (SpecyImage.fromJson(finalData[i]).animal_id == specy.id) {
+        species.add(SpecyImage.fromJson(finalData[i]));
+      }
     }
     return species;
   }

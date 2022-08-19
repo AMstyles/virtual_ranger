@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/models/event.dart';
 import '../models/constants.dart';
@@ -20,12 +21,13 @@ class EventWidg extends StatelessWidget {
           tag: event.title,
           child: Container(
             //height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Image.network(
-              fit: BoxFit.cover,
-              NEWS_IMAGE_URL + event.event_image,
+
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: NEWS_IMAGE_URL + event.event_image,
+              ),
             ),
           ),
         ),

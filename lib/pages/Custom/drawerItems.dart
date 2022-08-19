@@ -21,8 +21,6 @@ class DrawerItems {
       title: 'Business Listings', icon: Icons.business_rounded, num: 7);
   static final settings =
       DrawerItem(title: 'Settings', icon: Icons.settings, num: 8);
-  static final logOut =
-      DrawerItem(title: 'Log Out', icon: Icons.logout_rounded, num: 9);
 
   static final List<DrawerItem> all = [
     profile,
@@ -34,6 +32,5 @@ class DrawerItems {
     rules,
     businessListings,
     settings,
-    logOut
   ];
 }
