@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/models/constants.dart';
 
@@ -21,7 +22,9 @@ class EventPage extends StatelessWidget {
         children: [
           Hero(
               tag: event.title,
-              child: Image.network(NEWS_IMAGE_URL + event.event_image)),
+              child: CachedNetworkImage(
+                imageUrl: NEWS_IMAGE_URL + event.event_image,
+              )),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(

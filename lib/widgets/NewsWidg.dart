@@ -3,6 +3,7 @@ import 'package:virtual_ranger/pages/Home/stroy_page.dart';
 import '../models/constants.dart';
 import '../models/news.dart';
 import '../models/preset_styles.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NewsWidg extends StatefulWidget {
   NewsWidg({Key? key, required this.story}) : super(key: key);
@@ -29,9 +30,7 @@ class _NewsWidgState extends State<NewsWidg> {
           child: SizedBox(
             height: 300,
             width: 300,
-            child: Stack(
-              
-              fit: StackFit.expand,
+            child: Stack(fit: StackFit.expand,
                 //alignment: Alignment.bottomCenter,
                 children: [
                   Hero(
@@ -40,7 +39,7 @@ class _NewsWidgState extends State<NewsWidg> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(
+                          image: CachedNetworkImageProvider(
                             NEWS_IMAGE_URL + widget.story.news_image,
                           ),
                         ),

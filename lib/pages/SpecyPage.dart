@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/models/Specy.dart';
@@ -215,8 +216,8 @@ class Pages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Image.network(
-        BASE_IMAGE_URL + specyImage.images,
+      child: CachedNetworkImage(
+        imageUrl: BASE_IMAGE_URL + specyImage.images,
         fit: BoxFit.cover,
       ),
     );

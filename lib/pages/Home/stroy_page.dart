@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/models/news.dart';
@@ -20,8 +21,8 @@ class NewsPage extends StatelessWidget {
         children: [
           Hero(
             tag: story.title,
-            child: Image.network(
-              NEWS_IMAGE_URL + story.news_image,
+            child: CachedNetworkImage(
+              imageUrl: NEWS_IMAGE_URL + story.news_image,
               fit: BoxFit.cover,
             ),
           ),

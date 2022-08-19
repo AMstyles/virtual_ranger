@@ -39,6 +39,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _passwordController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -46,63 +54,59 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-            children: [
-              Image.asset(
-                'lib/assets/mainLogo.png',
-                color: Colors.grey.shade600,
-                fit: BoxFit.cover,
-              ),
-              Platform.isIOS
-                  ? _buildAppleSignInButton(context)
-                  : const SizedBox(),
-              const SizedBox(height: 12),
-              _buildFacebookSignInButton(context),
-              const SizedBox(height: 12),
-              _buildGoogleSignInButton(context),
-              const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    'OR',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  )),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  hintText: 'email',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: 'password',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
+        child: ListView(children: [
+          Image.asset(
+            'lib/assets/mainLogo.png',
+            color: Colors.grey.shade600,
+            fit: BoxFit.cover,
+          ),
+          Platform.isIOS ? _buildAppleSignInButton(context) : const SizedBox(),
+          const SizedBox(height: 12),
+          _buildFacebookSignInButton(context),
+          const SizedBox(height: 12),
+          _buildGoogleSignInButton(context),
+          const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
                 textAlign: TextAlign.center,
-                'Forgot Password?',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(height: 20),
-              _buildSignInButton(context),
-              const SizedBox(height: 20),
-              _buildSignUpButton(context),
-              const SizedBox(height: 20),
-              //_buildRow(context),
-            ]),
+                'OR',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              )),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _emailController,
+            decoration: const InputDecoration(
+              hintText: 'email',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          TextField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              hintText: 'password',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            textAlign: TextAlign.center,
+            'Forgot Password?',
+            style: TextStyle(
+              fontSize: 15,
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildSignInButton(context),
+          const SizedBox(height: 20),
+          _buildSignUpButton(context),
+          const SizedBox(height: 20),
+          //_buildRow(context),
+        ]),
       ),
     );
   }
@@ -255,13 +259,13 @@ class _LoginPageState extends State<LoginPage> {
     data = await signUpAPI.signIn(email, password);
     Navigator.pop(context);
 
-    final finalData = jsonDecode(data);
+    final finalData = jsonDecode(data)!;
 
     if (finalData['success'] == true) {
       user = User.fromjson(finalData['data']);
       Provider.of<UserProvider>(context, listen: false).setUser(user);
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => DrawerApp()));
+          .push(MaterialPageRoute(builder: (context) => const DrawerApp()));
     } else {
       showDialog(
           context: context,
