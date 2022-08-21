@@ -2,17 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../apis/Animal&Plants_apis.dart';
+import '../models/Specy.dart';
+import '../widgets/SpecyWidget.dart';
+
 class CustomSearchDelegate extends SearchDelegate {
-  List<String> searchItems = [
-    'Elephant',
-    'Zebra',
-    'Lion',
-    'Heyna',
-    'Tiger',
-    'Rhino',
-    'monkey',
-    'Wild Dog',
-  ];
+  late List<Specy> searchItems = [];
+
   @override
   List<Widget>? buildActions(BuildContext context) {
     // TODO: implement buildActions
@@ -29,6 +25,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget? buildLeading(BuildContext context) {
     // TODO: implement buildLeading
+
     IconButton(
       icon: Platform.isAndroid
           ? const Icon(Icons.arrow_back)
@@ -42,39 +39,90 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    List<String> match = [];
-    for (String fruit in searchItems) {
-      if (fruit.contains(query)) {
-        match.add(fruit);
+    List<Specy> match = [];
+    for (var i = 0; i < searchItems.length; i++) {
+      if (searchItems[i]
+          .english_name
+          .toLowerCase()
+          .contains(query.toLowerCase())) {
+        match.add(searchItems[i]);
       }
     }
-    return ListView.builder(
-        itemCount: match.length,
-        itemBuilder: ((context, index) {
-          String result = match[index];
-          return ListTile(
-            title: Text(result),
-          );
-        }));
+    return FutureBuilder<List<Specy>>(
+      future: Specyapi.getSpecies(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (query.isEmpty) {
+            return const Center(
+                child: Text(
+              'Your Text query is empty',
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ));
+          } else {
+            return ListView.builder(
+              padding: const EdgeInsets.only(top: 10),
+              shrinkWrap: true,
+              reverse: true,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                //searchItems.add(snapshot.data![index]);
+                if (snapshot.data![index].english_name
+                    .toLowerCase()
+                    .contains(query.toLowerCase())) {
+                  return SpecyWidg(
+                    specy: snapshot.data![index],
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            );
+          }
+        }
+        return const Center(child: CircularProgressIndicator.adaptive());
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    List<String> match = [];
-    for (String fruit in searchItems) {
-      if (fruit.contains(query)) {
-        match.add(fruit);
-      }
-    }
-    return ListView.builder(
-        itemCount: match.length,
-        itemBuilder: ((context, index) {
-          String result = match[index];
-          return ListTile(
-            onTap: () {},
-            title: Text(result),
-          );
-        }));
+
+    return FutureBuilder<List<Specy>>(
+      future: Specyapi.getSpecies(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (query.isEmpty) {
+            return ListView.builder(
+              padding: const EdgeInsets.only(top: 23),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return SpecyWidg(
+                  specy: snapshot.data![index],
+                );
+              },
+            );
+          } else {
+            return ListView.builder(
+              padding: const EdgeInsets.only(top: 23),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                //searchItems.add(snapshot.data![index]);
+                if (snapshot.data![index].english_name
+                    .toLowerCase()
+                    .contains(query.toLowerCase())) {
+                  return SpecyWidg(
+                    specy: snapshot.data![index],
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            );
+          }
+        }
+        return const Center(child: CircularProgressIndicator.adaptive());
+      },
+    );
   }
 }

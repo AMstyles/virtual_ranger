@@ -84,6 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     _phoneController.text =
         Provider.of<UserProvider>(context, listen: false).user!.mobile!;
+
     _ageController.text =
         Provider.of<UserProvider>(context, listen: false).user!.age_range!;
   }
@@ -114,12 +115,15 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 18.0),
-                  child: CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      backgroundImage: NetworkImage(
-                        Provider.of<UserProvider>(context).user!.image!,
-                      ),
-                      radius: 80),
+                  child: Provider.of<UserProvider>(context).user!.isImageNull()
+                      ? const CircleAvatar(
+                          backgroundColor: Colors.grey, radius: 80)
+                      : CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(
+                            Provider.of<UserProvider>(context).user!.image!,
+                          ),
+                          radius: 80),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -153,9 +157,15 @@ class _ProfilePageState extends State<ProfilePage> {
             controller: _phoneController,
             hint: 'phone Number',
           ),
-          ProfileTextField(
-            controller: _ageController,
-            hint: 'Age thingy',
+          GestureDetector(
+            onTap: buildAgeSheet,
+            child: IgnorePointer(
+              ignoring: true,
+              child: ProfileTextField(
+                controller: _ageController,
+                hint: 'Age thingy',
+              ),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -233,6 +243,13 @@ class _ProfilePageState extends State<ProfilePage> {
             hint: 'City',
           ),
           _buildSignUpButton(context, 'UPDATE PROFILE'),
+          const Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+              'CHANGE PASSWORD',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
           ProfileTextField(
             controller: _currPassController,
             hint: 'Current Password',
@@ -284,10 +301,8 @@ class _ProfilePageState extends State<ProfilePage> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => const AlertDialog(
-        title: Text('Loading...'),
-        content: CircularProgressIndicator.adaptive(),
-      ),
+      builder: (context) =>
+          const Center(child: CircularProgressIndicator.adaptive()),
     );
 
     data = await signUpAPI.updateProfile(
@@ -299,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage> {
       makeGender(),
       _countryController.text,
       _cityController.text,
-      userProvider.user!.secret_key,
+      userProvider.user!.secret_key!,
     );
     Navigator.pop(context);
     final finalData = jsonDecode(data)!;
@@ -312,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Success',
                   style: TextStyle(color: Colors.green),
                 ),
-                content: const Text("password updated"),
+                content: const Text("profile updated"),
                 actions: <Widget>[
                   FlatButton(
                     child: const Text('Ok'),
@@ -348,10 +363,8 @@ class _ProfilePageState extends State<ProfilePage> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => const AlertDialog(
-        title: Text('Loading...'),
-        content: CircularProgressIndicator.adaptive(),
-      ),
+      builder: (context) =>
+          const Center(child: CircularProgressIndicator.adaptive()),
     );
 
     data = await signUpAPI.updatePassword(
@@ -360,7 +373,7 @@ class _ProfilePageState extends State<ProfilePage> {
       //_currPassController.text,
       _newPassController.text,
       _reNewPassController.text,
-      userProvider.user!.secret_key,
+      userProvider.user!.secret_key!,
     );
     Navigator.pop(context);
 
@@ -459,5 +472,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: const Text('Cancel')),
           );
         }));
+  }
+
+  void buildAgeSheet() {
+    showBottomSheet(
+        context: context,
+        builder: (context) {
+          return const SizedBox(
+            height: 300,
+            child: Center(child: Text('yey')),
+          );
+        });
   }
 }

@@ -9,6 +9,7 @@ class BusinessListing {
   String address;
   String openingHours;
   String type;
+  String? bookLink;
 
   BusinessListing({
     required this.logo,
@@ -21,6 +22,7 @@ class BusinessListing {
     required this.address,
     required this.openingHours,
     required this.type,
+    this.bookLink,
   });
 
   static BusinessListing fromJson(Map<String, dynamic> json) => BusinessListing(
@@ -34,5 +36,6 @@ class BusinessListing {
         address: json['address'],
         openingHours: json['openingHours'],
         type: json['type'],
+        bookLink: json['bookLink'],
       );
 }

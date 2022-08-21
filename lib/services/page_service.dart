@@ -13,15 +13,21 @@ import '../models/user.dart';
 
 class PageProvider extends ChangeNotifier {
   var currentPage;
+  late int currentPageNum;
 
   PageProvider() {
     currentPage = pages[1];
+    currentPageNum = 1;
     notifyListeners();
   }
 
   void switchPage(int num) {
     currentPage = pages[num];
+    currentPageNum = num;
+
     notifyListeners();
+    setState() {}
+    print(currentPageNum);
   }
 
   final List<Widget> pages = [

@@ -1,9 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-
-import '../services/page_service.dart';
 
 class signUpAPI {
   static Future<String> signUp(String name, String email, String password,
@@ -13,10 +8,13 @@ class signUpAPI {
       'accept_term': '1',
       'name': name,
       'email': email,
-      'mobile': '0711281932',
+      'mobile': '0000000000',
       'password': password,
       'confirm_password': password_confirm,
-      'user_role': 'Attendee'
+      'user_role': 'Attendee',
+      'age_range': 'none',
+      'country': 'Unknown',
+      'gender': 'none',
     });
     final data = response.body;
 
@@ -44,7 +42,7 @@ class signUpAPI {
       'password': password,
       'confirm_password': password_confirm,
       'secret_key': secret_key,
-      'user_role': 'Attendee'
+      'user_role': 'Attendee',
     });
     final data = response.body;
     print(data);

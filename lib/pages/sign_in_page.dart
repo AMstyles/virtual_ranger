@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Text(
                 textAlign: TextAlign.center,
                 'OR',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30, color: Colors.blueGrey),
               )),
           const SizedBox(height: 10),
           TextField(
@@ -250,16 +250,15 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => const AlertDialog(
-        title: Text('Loading...'),
-        content: CircularProgressIndicator.adaptive(),
-      ),
+      builder: (context) =>
+          const Center(child: CircularProgressIndicator.adaptive()),
     );
 
     data = await signUpAPI.signIn(email, password);
     Navigator.pop(context);
 
     final finalData = jsonDecode(data)!;
+    print(data);
 
     if (finalData['success'] == true) {
       user = User.fromjson(finalData['data']);

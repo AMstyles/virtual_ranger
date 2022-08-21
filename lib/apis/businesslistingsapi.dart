@@ -8,6 +8,7 @@ class BusinessListingsapi {
     final response = await http.get(Uri.parse(BUSINESS_LISTINGS_URL));
     final pre_data = jsonDecode(response.body);
     final data = pre_data['data'];
+    print(data);
     final List<dynamic> finalData = data;
     List<BusinessListing> events = [];
     for (var i = 0; i < finalData.length; i++) {

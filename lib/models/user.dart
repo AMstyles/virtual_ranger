@@ -9,8 +9,16 @@ class User {
 
   //String? password;
   String? image;
-  late String secret_key;
-  String gender;
+  String? secret_key;
+  String? gender;
+
+  bool isImageNull() {
+    return image == null;
+  }
+
+  isAgeRangeNull() {
+    return age_range == null;
+  }
 
   User({
     required this.id,
@@ -22,7 +30,7 @@ class User {
     this.age_range,
     this.image,
     required this.secret_key,
-    required this.gender,
+    this.gender,
   });
 
   static User fromjson(json) {

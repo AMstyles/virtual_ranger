@@ -16,21 +16,24 @@ class SpecyWidg extends StatelessWidget {
           );
         }));
       },
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                specy.english_name,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-              const Divider(),
-            ],
+      child: Container(
+        color: Colors.transparent,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  specy.english_name,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w400),
+                ),
+                const Divider(),
+              ],
+            ),
           ),
         ),
       ),

@@ -284,6 +284,7 @@ class _SignUpPageState extends State<SignUpPage> {
     Navigator.pop(context);
 
     final finalData = jsonDecode(data);
+    print(data);
     if (finalData['success'] == true) {
       user = User.fromjson(finalData['data']);
       Provider.of<UserProvider>(context, listen: false).setUser(user);
