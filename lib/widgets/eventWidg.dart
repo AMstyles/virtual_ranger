@@ -17,17 +17,66 @@ class EventWidg extends StatelessWidget {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => EventPage(event: event)));
         },
-        child: Hero(
-          tag: event.title,
-          child: Container(
-            //height: 200,
+        child: Container(
+          //height: 200,
 
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                imageUrl: NEWS_IMAGE_URL + event.event_image,
-              ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Stack(
+              children: [
+                CachedNetworkImage(
+                  fadeInDuration: const Duration(milliseconds: 0),
+                  fit: BoxFit.cover,
+                  imageUrl: NEWS_IMAGE_URL + event.event_image,
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    padding:
+                        const EdgeInsets.only(left: 5, bottom: 2, right: 12),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.black.withOpacity(0.7)
+                        ])),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          //maxLines: 1,
+                          //overflow: TextOverflow.ellipsis,
+                          event.title,
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          '${event.start_date}  -  ${event.end_date}',
+                          //event.description,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            //fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        const Text(
+                          'Dinokeng Game Reserve',
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

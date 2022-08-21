@@ -19,11 +19,16 @@ class DrawerProfile extends StatelessWidget {
         children: [
           Column(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                    Provider.of<UserProvider>(context).user!.image!),
-                radius: 50,
-              ),
+              Provider.of<UserProvider>(context).user!.isImageNull()
+                  ? const CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      radius: 50,
+                    )
+                  : CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          Provider.of<UserProvider>(context).user!.image!),
+                      radius: 50,
+                    ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: FittedBox(

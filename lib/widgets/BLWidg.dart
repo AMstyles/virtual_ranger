@@ -65,7 +65,18 @@ class BusinessListingWidg extends StatelessWidget {
                                 CupertinoButton(
                                   color: CupertinoColors.activeGreen,
                                   child: const Text('book now'),
-                                  onPressed: () => _makeBooking,
+                                  onPressed: () async {
+                                    final url =
+                                        Uri.parse('https://dinokengapp.co.za');
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(
+                                        url,
+                                        //mode: LaunchMode.inAppWebView,
+                                      );
+                                    } else {
+                                      throw 'Could not launch $url';
+                                    }
+                                  },
                                 ),
                                 CupertinoButton(
                                   color: CupertinoColors.destructiveRed,

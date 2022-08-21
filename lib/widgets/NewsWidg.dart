@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:virtual_ranger/pages/Home/stroy_page.dart';
 import '../models/constants.dart';
 import '../models/news.dart';
-import '../models/preset_styles.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class NewsWidg extends StatefulWidget {
@@ -51,7 +50,8 @@ class _NewsWidgState extends State<NewsWidg> {
                     bottom: 0,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 500),
-                      padding: const EdgeInsets.only(left: 5),
+                      padding:
+                          const EdgeInsets.only(left: 5, bottom: 2, right: 12),
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -59,29 +59,37 @@ class _NewsWidgState extends State<NewsWidg> {
                               end: Alignment.topCenter,
                               colors: [
                             Colors.black.withOpacity(0.7),
-                            Colors.black.withOpacity(0.1)
+                            Colors.black.withOpacity(0.7)
                           ])),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            //maxLines: 1,
+                            //overflow: TextOverflow.ellipsis,
                             widget.story.title,
-                            style: drawerTextStyle,
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          const SizedBox(
+                            height: 5,
                           ),
                           Text(
                             widget.story.news_post_date,
                             style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              color: Colors.white,
+                              //fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 4,
                           ),
                           Text(
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             widget.story.news_text,
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
+                                color: Colors.white, fontSize: 15),
                           )
                         ],
                       ),
