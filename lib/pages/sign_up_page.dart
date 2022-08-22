@@ -23,11 +23,15 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController _mobileController = TextEditingController();
 
   late String name;
   late String email;
   late String password;
   late String confirmPassword;
+  late String age_range;
+  late String gender;
+  late String mobile;
 
   @override
   void initState() {
@@ -94,6 +98,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
             ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _mobileController,
+              decoration: const InputDecoration(
+                hintText: 'Phone Number',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              ),
+            ),
+            const SizedBox(height: 10),
+            buildGender(context),
+            const SizedBox(height: 10),
+            buildAgeRange(context),
             //_buildRadioButtonGroup(context),
             const SizedBox(height: 10),
             TextField(
@@ -264,23 +281,107 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+//!drop down for gender
+  Widget buildGender(BuildContext context) {
+    return DropdownButtonFormField(
+        decoration: const InputDecoration(
+          hintText: 'Gender',
+          border: OutlineInputBorder(),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        ),
+        isExpanded: false,
+        items: const [
+          DropdownMenuItem<String>(
+            value: 'none',
+            child: Text('none'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'male',
+            child: Text('male'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'female',
+            child: Text('female'),
+          ),
+        ],
+        onChanged: ((value) {
+          setState(() {
+            gender = value.toString();
+          });
+        }));
+  }
+
+//!dropdown
+  Widget buildAgeRange(BuildContext context) {
+    return DropdownButtonFormField(
+        decoration: const InputDecoration(
+          hintText: 'Age Range',
+          border: OutlineInputBorder(),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        ),
+        isExpanded: false,
+        items: const [
+          DropdownMenuItem<String>(
+            value: 'under 12',
+            child: Text('under 12'),
+          ),
+          DropdownMenuItem<String>(
+            value: '12 to 17',
+            child: Text('12 to 17'),
+          ),
+          DropdownMenuItem<String>(
+            value: '18 to 24',
+            child: Text('18-24'),
+          ),
+          DropdownMenuItem<String>(
+            value: '25-34',
+            child: Text('25-34'),
+          ),
+          DropdownMenuItem<String>(
+            value: '35 - 44',
+            child: Text('35 - 44'),
+          ),
+          DropdownMenuItem<String>(
+            value: '45 - 54',
+            child: Text('45 - 54'),
+          ),
+          DropdownMenuItem<String>(
+            value: '55 - 64',
+            child: Text('55 - 64'),
+          ),
+          DropdownMenuItem<String>(
+            value: '65 - 75',
+            child: Text('65 - 74'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'over 75',
+            child: Text('over 75'),
+          ),
+        ],
+        onChanged: ((value) {
+          setState(() {
+            age_range = value.toString();
+          });
+        }));
+  }
+
   //!Sign in method
   void handleSubmit() async {
     name = _nameController.text;
     email = _emailController.text;
     password = _passwordController.text;
     confirmPassword = _confirmPasswordController.text;
+    mobile = _mobileController.text;
 
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => const AlertDialog(
-        title: Text('Loading...'),
-        content: CircularProgressIndicator.adaptive(),
-      ),
+      builder: (context) =>
+          const Center(child: CircularProgressIndicator.adaptive()),
     );
 
-    data = await signUpAPI.signUp(name, email, password, confirmPassword);
+    data = await signUpAPI.signUp(
+        name, email, mobile, gender, age_range, password, confirmPassword);
     Navigator.pop(context);
 
     final finalData = jsonDecode(data);

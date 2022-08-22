@@ -320,6 +320,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final finalData = jsonDecode(data)!;
 
     if (finalData['success'] == true) {
+      Provider.of<UserProvider>(context, listen: false)
+          .setUser(User.fromjson(finalData['data']));
       showDialog(
           context: context,
           builder: (context) => AlertDialog(

@@ -29,10 +29,6 @@ class _Kestrel_club_pageState extends State<Kestrel_club_page> {
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: [
-          /*Image.asset(
-            'lib/assets/kestrel_club_logo.png',
-            height: 60,
-          ),*/
           KestrelBirds(),
           _buildSignUpButton(
             context,

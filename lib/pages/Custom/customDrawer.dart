@@ -24,7 +24,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
         padding: const EdgeInsets.all(0),
         //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const DrawerProfile(),
+          const Center(child: DrawerProfile()),
           Column(
             children: DrawerItems.all
                 .map(

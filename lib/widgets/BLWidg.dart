@@ -62,22 +62,28 @@ class BusinessListingWidg extends StatelessWidget {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                CupertinoButton(
-                                  color: CupertinoColors.activeGreen,
-                                  child: const Text('book now'),
-                                  onPressed: () async {
-                                    final url =
-                                        Uri.parse('https://dinokengapp.co.za');
-                                    if (await canLaunchUrl(url)) {
-                                      await launchUrl(
-                                        url,
-                                        //mode: LaunchMode.inAppWebView,
-                                      );
-                                    } else {
-                                      throw 'Could not launch $url';
-                                    }
-                                  },
-                                ),
+                                (businessListing.bookLink != null)
+                                    ? CupertinoButton(
+                                        color: CupertinoColors.activeGreen,
+                                        child: const Text('book now'),
+                                        onPressed: () async {
+                                          final url = Uri.parse(
+                                              businessListing.bookLink!);
+                                          if (await canLaunchUrl(url)) {
+                                            await launchUrl(
+                                              url,
+                                              mode: LaunchMode
+                                                  .externalApplication,
+                                              webOnlyWindowName: '_blank',
+
+                                              //mode: LaunchMode.inAppWebView,
+                                            );
+                                          } else {
+                                            throw 'Could not launch $url';
+                                          }
+                                        },
+                                      )
+                                    : const SizedBox(),
                                 CupertinoButton(
                                   color: CupertinoColors.destructiveRed,
                                   child: const Text('Close'),
