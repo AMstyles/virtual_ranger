@@ -31,6 +31,17 @@ class BusinessListingWidg extends StatelessWidget {
                   child: Center(
                       child: Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                            child: Text(
+                          businessListing.name,
+                          style: TextStyle(
+                              color: Colors.blueGrey,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        )),
+                      ),
                       businessListing.firstNumber != ''
                           ? ListTile(
                               onTap: () {
@@ -38,7 +49,13 @@ class BusinessListingWidg extends StatelessWidget {
                               },
                               iconColor: Colors.blue,
                               leading: const Icon(Icons.phone),
-                              title: Text(businessListing.firstNumber))
+                              title: Text(
+                                businessListing.firstNumber,
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
                           : const SizedBox(),
                       businessListing.secondNumber != ''
                           ? ListTile(
@@ -47,7 +64,12 @@ class BusinessListingWidg extends StatelessWidget {
                               },
                               iconColor: Colors.blue,
                               leading: const Icon(Icons.phone),
-                              title: Text(businessListing.secondNumber))
+                              title: Text(
+                                businessListing.secondNumber,
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold),
+                              ))
                           : const SizedBox(),
                       businessListing.email != ''
                           ? ListTile(
@@ -55,10 +77,17 @@ class BusinessListingWidg extends StatelessWidget {
                                 _makeEmail(businessListing.email);
                               },
                               iconColor: Colors.green,
-                              leading: const Icon(Icons.email),
-                              title: Text(businessListing.email))
+                              leading: const Icon(
+                                Icons.email,
+                              ),
+                              title: Text(
+                                businessListing.email,
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold),
+                              ))
                           : const SizedBox(),
-                      (businessListing.type == 'Accommodation')
+                      (businessListing.bookLink != null)
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -130,11 +159,17 @@ class BusinessListingWidg extends StatelessWidget {
                     ),
                     // ignore: unnecessary_string_interpolations
                     Text(
-                      "${businessListing.firstNumber} ${businessListing.secondNumber}",
-                      style: const TextStyle(),
+                      "${businessListing.firstNumber}   ,   ${businessListing.secondNumber}",
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     (businessListing.email != '')
-                        ? Text(businessListing.email)
+                        ? Text(
+                            businessListing.email,
+                            style: TextStyle(color: Colors.green.shade800),
+                          )
                         : const SizedBox(),
                     Text(businessListing.address),
 
