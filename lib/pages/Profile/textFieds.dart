@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ProfileTextField extends StatelessWidget {
   const ProfileTextField(
@@ -11,8 +10,21 @@ class ProfileTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(
+        vertical: 8,
+      ),
       child: CupertinoTextField(
+        style: TextStyle(
+          color: Colors.grey.shade600,
+          //fontSize: 14,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
         controller: controller,
         placeholder: hint,
       ),

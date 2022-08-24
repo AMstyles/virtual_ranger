@@ -1,20 +1,26 @@
 import 'package:http/http.dart' as http;
 
 class signUpAPI {
-  static Future<String> signUp(String name, String email, String password,
+  static Future<String> signUp(
+      String name,
+      String email,
+      String mobile,
+      String gender,
+      String age_ranger,
+      String password,
       String password_confirm) async {
     final response =
         await http.post(Uri.parse('https://dinokengapp.co.za/signup'), body: {
       'accept_term': '1',
       'name': name,
       'email': email,
-      'mobile': '0000000000',
+      'mobile': mobile,
       'password': password,
       'confirm_password': password_confirm,
       'user_role': 'Attendee',
-      'age_range': 'none',
+      'age_range': age_ranger,
       'country': 'Unknown',
-      'gender': 'none',
+      'gender': gender,
     });
     final data = response.body;
 
@@ -68,7 +74,8 @@ class signUpAPI {
       'id': id,
       'name': name,
       'email': email,
-      'mobile': '0711281932',
+      'mobile': phone,
+      'country': country,
       'age_range': age_range,
       'secret_key': secretKey,
       'user_role': 'Attendee',

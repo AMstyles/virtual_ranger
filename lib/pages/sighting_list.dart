@@ -11,6 +11,15 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
+  late GoogleMapController _googleMapController;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _googleMapController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,10 +29,27 @@ class _SightingslistPageState extends State<SightingslistPage> {
             onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
           ),
           title: const Text('Sightings List')),
-      body: const Center(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _googleMapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              const CameraPosition(
+                target: LatLng(0, 0),
+                zoom: 2,
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.my_location),
+      ),
+      body: Center(
         child: GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: LatLng(33, 18),
+          zoomControlsEnabled: false,
+          onMapCreated: (controller) => _googleMapController = controller,
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(-25.452076, 28.483199),
             zoom: 13,
           ),
         ),

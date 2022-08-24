@@ -40,15 +40,31 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   image_picker:
   url_launcher: ^6.1.5
+  shared_preferences: ^2.0.15
   #qr_flutter: ^4.0.0
   #qr_code_scanner: ^1.0.0
   cached_network_image: ^3.2.1
   google_maps_flutter: ^2.1.12
+  firebase_auth: ^3.6.4
+  firebase_core: ^1.21.0
+  firebase_dart: ^1.0.11
+  google_sign_in: ^5.4.1
+  firebase: ^9.0.3
   #font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_launcher_icons: ^0.10.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "lib/assets/playstore-icon.png"
+  adaptive_icon_foreground: "lib/assets/ic_launcher_adaptive_fore.png"
+  adaptive_icon_background: "lib/assets/ic_launcher_adaptive_back.png"
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

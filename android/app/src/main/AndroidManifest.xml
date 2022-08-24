@@ -2,13 +2,29 @@
     package="com.example.virtual_ranger">
 
         <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-
-    <queries>
+   <queries>
   <!-- If your app checks for SMS support -->
   <intent>
     <action android:name="android.intent.action.VIEW" />
     <data android:scheme="sms" />
+  </intent>
+
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <data android:scheme="http" />
   </intent>
   <!-- If your app checks for call support -->
   <intent>
@@ -16,7 +32,6 @@
     <data android:scheme="tel" />
   </intent>
 </queries>
-
 
    <application
         android:label="virtual_ranger"
@@ -48,5 +63,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+               <meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="AIzaSyDFoTz-E6mSYfJq97xL2ilr5ZM0SSu0Cno" />
     </application>
 </manifest>
