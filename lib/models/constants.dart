@@ -7,7 +7,6 @@ String NEWS_URL = 'https://dinokengapp.co.za/news_list/?user_id=0';
 String FAQ_URL = 'https://dinokengapp.co.za/get_content?title=FAQ';
 String NEWS_IMAGE_URL = 'http://dinokengapp.co.za/admin/';
 String EVENT_URL = 'http://dinokengapp.co.za/event_list/?user_id=0';
-
 String CATEGORY_URL =
     'https://dinokengapp.co.za/animal_category_list/?user_id=0';
 String SUBCATEGORY_URL = 'https://dinokengapp.co.za/all_animal_sublist';
@@ -21,6 +20,8 @@ String BUSINESS_LISTINGS_URL = 'https://dinokengapp.co.za/business_list';
 String BUSINESS_LISTINGS_IMAGE_URL =
     'http://dinokengapp.co.za/admin/business_listings/';
 String BASE_IMAGE_URL = 'http://dinokengapp.co.za/admin/animal_image/';
+String GET_USER_URL = 'https://dinokengapp.co.za/get_user';
+String GET_GOOGLE_USER_URL = 'http://dinokengapp.co.za/google_login';
 
 class MyColors {
   static Color primaryColor = const Color(0xff364d19);
