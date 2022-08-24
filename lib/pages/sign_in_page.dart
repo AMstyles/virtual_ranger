@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 import 'package:virtual_ranger/models/constants.dart';
@@ -262,6 +263,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (finalData['success'] == true) {
       user = User.fromjson(finalData['data']);
+      UserData.setUser(user);
       Provider.of<UserProvider>(context, listen: false).setUser(user);
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const DrawerApp()));

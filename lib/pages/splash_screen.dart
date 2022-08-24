@@ -1,10 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:virtual_ranger/DrawerApp.dart';
+import 'package:virtual_ranger/pages/settings_page.dart';
 import 'package:virtual_ranger/pages/sign_in_page.dart';
-
+import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/services/shared_preferences.dart';
+import '../models/user.dart';
 import 'sign_up_page.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startUser();
+  }
+
+  Future<void> startUser() async {
+    print(await UserData.isLoggedIn());
+    if (await UserData.isLoggedIn() == true) {
+      print(await UserData.isLoggedIn());
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => DrawerApp()));
+    }
+    Future<User> user = UserData.getUser();
+    Provider.of<UserProvider>(context, listen: false).setUser(await user);
+  }
 
   @override
   Widget build(BuildContext context) {

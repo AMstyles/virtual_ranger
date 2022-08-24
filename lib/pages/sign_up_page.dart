@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
+import 'package:virtual_ranger/services/LoginProviders.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 
@@ -70,6 +74,8 @@ class _SignUpPageState extends State<SignUpPage> {
             Platform.isIOS
                 ? _buildAppleSignInButton(context)
                 : const SizedBox(),
+            const SizedBox(height: 16),
+            _buildLogOut(context),
             _makeSpace(context),
             _buildFacebookSignInButton(context),
             _makeSpace(context),
@@ -156,33 +162,58 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  //! signOut google
+  Widget _buildLogOut(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        await auth.FirebaseAuth.instance.signOut();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: MyColors.primaryColor,
+        ),
+        child: const Text(
+          'logOut',
+          style: TextStyle(fontSize: 15, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   //!fancy
   Widget _buildGoogleSignInButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5),
-      alignment: Alignment.center,
-      height: 45,
-      width: 140,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            child: Image.asset(
-              'lib/assets/googleIcon.png',
-              width: 40,
-              height: 40,
+    return GestureDetector(
+      onTap: () {
+        Provider.of<GoogleSignInProvider>(context, listen: false).googleLogin();
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 5),
+        alignment: Alignment.center,
+        height: 45,
+        width: 140,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade400,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              child: Image.asset(
+                'lib/assets/googleIcon.png',
+                width: 40,
+                height: 40,
+              ),
             ),
-          ),
-          const SizedBox(width: 20),
-          const Text(
-            "Sign in with Google",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
+            const SizedBox(width: 20),
+            const Text(
+              "Sign in with Google",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -242,40 +273,6 @@ class _SignUpPageState extends State<SignUpPage> {
             "Sign in with Facebook",
             style: TextStyle(fontSize: 18, color: Colors.white),
           ),
-        ],
-      ),
-    );
-  }
-
-  //!experimental
-  Widget _buildRadioButtonGroup(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(
-            children: [
-              Radio(
-                value: 1,
-                groupValue: 1,
-                onChanged: (value) {},
-              ),
-              const Text('male'),
-            ],
-          ),
-          Row(
-            children: [
-              Radio(value: 2, groupValue: 1, onChanged: (value) {}),
-              const Text('female'),
-            ],
-          ),
-          const Text(
-            '(Optional)',
-            style: TextStyle(color: Colors.blueGrey),
-          )
         ],
       ),
     );
@@ -388,6 +385,7 @@ class _SignUpPageState extends State<SignUpPage> {
     print(data);
     if (finalData['success'] == true) {
       user = User.fromjson(finalData['data']);
+      UserData.setUser(user);
       Provider.of<UserProvider>(context, listen: false).setUser(user);
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => DrawerApp()));

@@ -11,7 +11,8 @@ class DealsTab extends StatefulWidget {
   State<DealsTab> createState() => _DealsTabState();
 }
 
-class _DealsTabState extends State<DealsTab> {
+class _DealsTabState extends State<DealsTab>
+    with AutomaticKeepAliveClientMixin<DealsTab> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Event>>(
@@ -31,4 +32,8 @@ class _DealsTabState extends State<DealsTab> {
       },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

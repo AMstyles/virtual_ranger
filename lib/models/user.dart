@@ -47,4 +47,19 @@ class User {
       gender: json['gender'],
     );
   }
+
+  //methods called tojson
+  Map<String, String> tojson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'mobile': mobile ?? '',
+      'country': country ?? '',
+      'city': city ?? '',
+      'age_range': age_range ?? '',
+      'profile_image': image ?? '',
+      'secret_key': secret_key ?? '',
+    };
+  }
 }

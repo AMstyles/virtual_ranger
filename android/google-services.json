@@ -1,47 +1,36 @@
 {
   "project_info": {
-    "project_number": "494184654115",
-    "firebase_url": "https://myeventpal.firebaseio.com",
-    "project_id": "dinokeng-virtual-ranger",
-    "storage_bucket": "myeventpal.appspot.com"
+    "project_number": "734421281531",
+    "project_id": "virtualranger",
+    "storage_bucket": "virtualranger.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:494184654115:android:a220ed12a9af7b78",
+        "mobilesdk_app_id": "1:734421281531:android:fd700f7a4b850cdff55e5e",
         "android_client_info": {
-          "package_name": "za.co.dinokengreserve.androidapp"
+          "package_name": "com.example.virtual_ranger"
         }
       },
       "oauth_client": [
         {
-          "client_id": "494184654115-1crdpfeqjabtjlt6m0d3cpie2tn9pnr9.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "za.co.dinokengreserve.androidapp",
-            "certificate_hash": "4002515f0008f2e91dae4d7ba9701b3202a50eb3"
-          }
-        },
-        {
-          "client_id": "494184654115-q13bpsqi4tp9erhnumdhbo5sg99297i4.apps.googleusercontent.com",
+          "client_id": "734421281531-ddg5g74ejabn1flgo4qi6aj1h9lgs6bq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBPInTVc5hl07eNKXvFthmU_eQdJRCJ7Ho"
+          "current_key": "AIzaSyBH5lvj0oKmCEhJfbI4_NoRqFk1VCRYl9s"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734421281531-ddg5g74ejabn1flgo4qi6aj1h9lgs6bq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

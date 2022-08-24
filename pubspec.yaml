@@ -40,10 +40,16 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   image_picker:
   url_launcher: ^6.1.5
+  shared_preferences: ^2.0.15
   #qr_flutter: ^4.0.0
   #qr_code_scanner: ^1.0.0
   cached_network_image: ^3.2.1
   google_maps_flutter: ^2.1.12
+  firebase_auth: ^3.6.4
+  firebase_core: ^1.21.0
+  firebase_dart: ^1.0.11
+  #google_sign_in: ^5.4.1
+  firebase: ^9.0.3
   #font_awesome_flutter:
 
 dev_dependencies:
