@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
@@ -63,84 +63,88 @@ class _SignUpPageState extends State<SignUpPage> {
         appBar: AppBar(
           title: const Text('SIGN UP'),
         ),
-        body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          children: [
-            Image.asset(
-              'lib/assets/mainLogo.png',
-              color: Colors.grey.shade600,
-              fit: BoxFit.cover,
-            ),
-            Platform.isIOS
-                ? _buildAppleSignInButton(context)
-                : const SizedBox(),
-            const SizedBox(height: 16),
-            _buildLogOut(context),
-            _makeSpace(context),
-            _buildFacebookSignInButton(context),
-            _makeSpace(context),
-            _buildGoogleSignInButton(context),
-            const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'OR',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                )),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                hintText: 'Name and Surname',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        body: SafeArea(
+          bottom: true,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            children: [
+              Image.asset(
+                'lib/assets/mainLogo.png',
+                color: Colors.grey.shade600,
+                fit: BoxFit.cover,
               ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                hintText: 'Email',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              Platform.isIOS
+                  ? _buildAppleSignInButton(context)
+                  : const SizedBox(),
+
+              _makeSpace(context),
+              _buildFacebookSignInButton(context),
+              _makeSpace(context),
+              _buildGoogleSignInButton(context),
+              const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'OR',
+                    style: TextStyle(fontSize: 30, color: Colors.blueGrey),
+                  )),
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  hintText: 'Name and Surname',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _mobileController,
-              decoration: const InputDecoration(
-                hintText: 'Phone Number',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  hintText: 'Email',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            buildGender(context),
-            const SizedBox(height: 10),
-            buildAgeRange(context),
-            //_buildRadioButtonGroup(context),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                hintText: 'Password',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _mobileController,
+                decoration: const InputDecoration(
+                  hintText: 'Phone Number',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                hintText: 'confirm password',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              const SizedBox(height: 10),
+              buildGender(context),
+              const SizedBox(height: 10),
+              buildAgeRange(context),
+              //_buildRadioButtonGroup(context),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  hintText: 'Password',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                ),
               ),
-            ),
-            _makeSpace(context),
-            _buildSignUpButton(context),
-          ],
+              const SizedBox(height: 10),
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  hintText: 'confirm password',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                ),
+              ),
+              _makeSpace(context),
+              _buildSignUpButton(context),
+              _makeSpace(context),
+              _makeSpace(context)
+            ],
+          ),
         ));
   }
 
@@ -167,6 +171,13 @@ class _SignUpPageState extends State<SignUpPage> {
     return GestureDetector(
       onTap: () async {
         await auth.FirebaseAuth.instance.signOut();
+        String name = auth.FirebaseAuth.instance.currentUser!.displayName ??
+            "didn't work";
+        String email =
+            auth.FirebaseAuth.instance.currentUser!.email ?? "didn't work";
+        Fluttertoast.showToast(
+          msg: name + " " + email,
+        );
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -185,8 +196,42 @@ class _SignUpPageState extends State<SignUpPage> {
   //!fancy
   Widget _buildGoogleSignInButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Provider.of<GoogleSignInProvider>(context, listen: false).googleLogin();
+      onTap: () async {
+        await Provider.of<GoogleSignInProvider>(context, listen: false)
+            .googleLogin();
+        if (auth.FirebaseAuth.instance.currentUser != null) {
+          final nice = auth.FirebaseAuth.instance.currentUser;
+
+          final vedict = await signUpAPI.signInWithGoogle(nice!.email ?? '');
+          final finalVedict = jsonDecode(vedict);
+
+          if (finalVedict['success'] == true) {
+            final userToBe = User.fromjson((finalVedict['data']));
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          } else {
+            final things = await signUpAPI.signUp(
+                nice.displayName ?? "",
+                nice.email ?? '',
+                nice.phoneNumber ?? '  ',
+                'none',
+                'none',
+                '000000',
+                '000000');
+
+            await auth.FirebaseAuth.instance.signOut();
+
+            print(things);
+            final perfectThings = jsonDecode(things);
+
+            final userToBe = User.fromjson(perfectThings['data']);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          }
+        } else {}
+        auth.FirebaseAuth.instance.signOut();
       },
       child: Container(
         padding: const EdgeInsets.only(left: 5),

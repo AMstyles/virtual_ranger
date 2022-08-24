@@ -39,6 +39,16 @@ class signUpAPI {
     return data;
   }
 
+  static Future<String> signInWithGoogle(String email) async {
+    final response = await http
+        .post(Uri.parse('https://dinokengapp.co.za/google_login'), body: {
+      'email': email,
+    });
+    print(response.body);
+    final data = response.body;
+    return data;
+  }
+
   static Future<String> updatePassword(String id, String email, String password,
       String password_confirm, String secret_key) async {
     final response = await http
