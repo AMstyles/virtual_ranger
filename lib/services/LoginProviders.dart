@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
@@ -31,14 +32,6 @@ class GoogleSignInProvider extends ChangeNotifier {
 
     final user = FirebaseAuth.instance.currentUser;
     userIn = user;
-/*
-    print(user?.displayName!);
-    print(user?.email!);
-    print(user?.photoURL);
-    print(user?.uid);
-    print(user?.phoneNumber);
-    print(user?.providerData);
-    print(user?.isAnonymous);*/
   }
 
   Future<void> googleLogout() async {
@@ -46,5 +39,17 @@ class GoogleSignInProvider extends ChangeNotifier {
     googleSignIn.signOut();
     _currentUser = null;
     notifyListeners();
+  }
+}
+
+class FacebookLoginProvider extends ChangeNotifier {
+  static Future<UserCredential> signInWithFacebook() async {
+    final LoginResult loginResult = await FacebookAuth.instance
+        .login(permissions: ['email', 'public_profile']);
+
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 }

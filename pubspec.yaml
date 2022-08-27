@@ -52,6 +52,7 @@ dependencies:
   firebase: ^9.0.3
   fluttertoast: ^8.0.9
   flutter_login_facebook: ^1.6.0
+  flutter_facebook_auth: ^4.4.1
   #font_awesome_flutter:
 
 dev_dependencies:

@@ -1,0 +1,8 @@
+<resources>
+    <string name="facebook_app_id">394839172762400</string>
+    <string name="app_name">virtual_ranger</string>
+    <string name="fb_login_protocol_scheme">fb394839172762400</string>
+    <string name="facebook_client_token">ee084aad8496e322de233e881611f86e</string>
+</resources>
+
+
