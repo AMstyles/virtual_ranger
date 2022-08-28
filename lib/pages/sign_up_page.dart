@@ -207,6 +207,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
           if (finalVedict['success'] == true) {
             final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));

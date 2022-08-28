@@ -52,4 +52,8 @@ class FacebookLoginProvider extends ChangeNotifier {
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
+
+  Future<void> facebookLogout() async {
+    await FacebookAuth.instance.logOut();
+  }
 }

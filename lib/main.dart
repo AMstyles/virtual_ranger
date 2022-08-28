@@ -38,6 +38,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => DownloadProvider(),
+        ),
       ],
       child: MaterialApp(
         themeMode: ThemeMode.light,

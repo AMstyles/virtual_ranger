@@ -45,9 +45,42 @@ class PageProvider extends ChangeNotifier {
 
 class UserProvider extends ChangeNotifier {
   User? user;
+  bool? isOffLine;
 
   void setUser(User x) {
     user = x;
+    notifyListeners();
+  }
+}
+
+class DownloadProvider extends ChangeNotifier {
+  int _imagesToDownload = 0;
+  int _imagesDownloaded = 0;
+  double percentage = 0.0;
+  bool _downloading = false;
+  bool isOffline = false;
+
+  void incrementImagesToDownload() {
+    _imagesDownloaded++;
+    notifyListeners();
+  }
+
+  void setImagesToDownload(int x) {
+    _imagesToDownload = x;
+    notifyListeners();
+  }
+
+  DownloadProvider() {
+    notifyListeners();
+  }
+
+  void setImagesDownloaded(int x) {
+    _imagesDownloaded = x;
+    notifyListeners();
+  }
+
+  void setOffline(bool x) {
+    isOffline = x;
     notifyListeners();
   }
 }

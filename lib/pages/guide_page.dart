@@ -40,7 +40,8 @@ class _GuidePageState extends State<GuidePage> {
         ],
       ),
       body: FutureBuilder<List<Category_>>(
-        future: Categoryapi.getCategories(),
+        future:
+            Categoryapi.getCategoriesFromLocal(), //Categoryapi.getCategories(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

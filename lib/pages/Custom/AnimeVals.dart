@@ -16,7 +16,7 @@ class Anime extends ChangeNotifier {
   }
 
   void openDrawer() {
-    xOffset = 330;
+    xOffset = 310;
     yOffset = 50;
     scaleFactor = 0.9;
     isOpen = !isOpen;

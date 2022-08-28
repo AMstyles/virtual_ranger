@@ -62,7 +62,6 @@ class signUpAPI {
     });
     final data = response.body;
     print(data);
-
     return data;
   }
 
