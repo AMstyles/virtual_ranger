@@ -245,7 +245,8 @@ class _PagesState extends State<Pages> {
     return Container(
       child: Provider.of<UserProvider>(context).isOffLine ?? false
           ? Image.file(
-              File('${UserData.path}/images/${widget.specyImage.images}'),
+              File('${UserData.path}/${widget.specyImage.images}'),
+              fit: BoxFit.cover,
             )
           : CachedNetworkImage(
               imageUrl: BASE_IMAGE_URL + widget.specyImage.images,
