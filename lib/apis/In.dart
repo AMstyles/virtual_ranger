@@ -75,26 +75,44 @@ class signUpAPI {
     String country,
     String city,
     String secretKey,
+    String file,
 
     //String thing,
   ) async {
-    final response = await http
-        .post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
-      'id': id,
-      'name': name,
-      'email': email,
-      'mobile': phone,
-      'country': country,
-      'age_range': age_range,
-      'secret_key': secretKey,
-      'user_role': 'Attendee',
-      'city': city,
-      //'country': country,
-      //'age_range':age_range,
-    });
-    final data = response.body;
-    print(data);
+    var postUri = Uri.parse("<APIUrl>");
+    var request = new http.MultipartRequest("POST", postUri);
+    request.fields['id'] = id;
+    request.fields['name'] = name;
+    request.fields['email'] = email;
+    request.fields['mobile'] = phone;
+    request.fields['country'] = country;
+    request.fields['age_range'] = age_range;
+    request.fields['secret_key'] =  secretKey;
+    request.fields['user_role'] = 'Attendee';
+    request.fields['city'] = city;
+    request.files.add(new http.MultipartFile.fromBytes('file', file))
+  final response  = await  request.send();
+    // final response = await http
+    //     .post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
+    //   'id': id,
+    //   'name': name,
+    //   'email': email,
+    //   'mobile': phone,
+    //   'country': country,
+    //   'age_range': age_range,
+    //   'secret_key': secretKey,
+    //   'user_role': 'Attendee',
+    //   'city': city,
+    // });
 
-    return data;
+      request.send().then((response) {
+      if (response.statusCode == 200) ;
+
+      
+     });
+    // final data = response.body;
+    // print(data);
+
+    //return null;
   }
 }
