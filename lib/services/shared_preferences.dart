@@ -1,3 +1,4 @@
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 
@@ -7,12 +8,17 @@ class UserData {
   static late User user;
   static late bool isLogIn;
   static late String isLog;
+  static late String path;
 
   //!methods
   static Future<void> init() async {
     print('Shared preferences initialized');
     _userData = await SharedPreferences.getInstance();
     user = await getUser();
+
+    await getApplicationDocumentsDirectory().then((value) {
+      path = value.path;
+    });
   }
 
   static Future<void> toggleOfflineMode(bool value) async {

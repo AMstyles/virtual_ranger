@@ -8,6 +8,7 @@ import '../models/constants.dart';
 import '../models/news.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 
 class NewsWidg extends StatefulWidget {
   NewsWidg({Key? key, required this.story}) : super(key: key);
@@ -24,10 +25,6 @@ class _NewsWidgState extends State<NewsWidg> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getApplicationDocumentsDirectory().then((Directory directory) {
-      final dir = directory;
-      imageFile = File("${dir.path}/images/${widget.story.news_image}");
-    });
   }
 
   @override
@@ -56,7 +53,9 @@ class _NewsWidgState extends State<NewsWidg> {
                           fit: BoxFit.cover,
                           image: Provider.of<UserProvider>(context).isOffLine ??
                                   false
-                              ? Image.file(imageFile!) as ImageProvider
+                              ? FileImage(File(
+                                      '${UserData.path}/images/${widget.story.news_image}'))
+                                  as ImageProvider
                               : CachedNetworkImageProvider(
                                   NEWS_IMAGE_URL + widget.story.news_image,
                                 ),

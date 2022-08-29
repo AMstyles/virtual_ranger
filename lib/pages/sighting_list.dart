@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,7 +12,18 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
+  void askLocationPermission() async {
+    await Permission.location.request();
+  }
+
   late GoogleMapController _googleMapController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    askLocationPermission();
+  }
 
   @override
   void dispose() {

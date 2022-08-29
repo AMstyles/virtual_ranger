@@ -10,6 +10,7 @@ import 'package:virtual_ranger/pages/Profile/textFieds.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 import 'package:virtual_ranger/apis/In.dart';
 
@@ -124,13 +125,25 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 18.0),
-                  child: Provider.of<UserProvider>(context).user!.isImageNull()
-                      ? const CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          radius: 80,
-                          backgroundImage: AssetImage('lib/assets/noPro'),
-                        )
-                      : Image.file(imageFile),
+                  child:
+                      (Provider.of<UserProvider>(context).user!.isImageNull())
+                          ? const CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              radius: 80,
+                              backgroundImage: AssetImage('lib/assets/noPro'),
+                            )
+                          : Provider.of<UserProvider>(context).user!.image == ''
+                              ? const CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 80,
+                                  backgroundImage:
+                                      AssetImage('lib/assets/noPro.jpg'),
+                                )
+                              : const CircleAvatar(
+                                  radius: 80,
+                                  backgroundImage:
+                                      AssetImage('lib/assets/noPro.jpg'),
+                                ),
                 ),
                 GestureDetector(
                   onTap: () {

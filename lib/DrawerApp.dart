@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
@@ -15,10 +16,16 @@ class DrawerApp extends StatefulWidget {
 }
 
 class _DrawerAppState extends State<DrawerApp> {
+  void askPermission() async {
+    await Permission.storage.request();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    askPermission();
 
     UserData.getOfflineMode().then((value) => setState(() {
           Provider.of<UserProvider>(context, listen: false).setOffline(value);

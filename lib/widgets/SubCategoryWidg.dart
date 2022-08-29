@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/subCategory.dart';
-
 import '../models/constants.dart';
 import '../pages/SpeciesPage.dart';
 import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 
 class SubCategoryWidg extends StatefulWidget {
   SubCategoryWidg({Key? key, required this.subCategory}) : super(key: key);
@@ -20,18 +20,10 @@ class SubCategoryWidg extends StatefulWidget {
 }
 
 class _SubCategoryWidgState extends State<SubCategoryWidg> {
-  late File file;
-  late Directory dir;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getApplicationDocumentsDirectory().then(
-      (directory) {
-        dir = directory;
-        file = File('${dir.path}/images/${widget.subCategory.BackgroundImage}');
-      },
-    );
   }
 
   @override
@@ -51,9 +43,11 @@ class _SubCategoryWidgState extends State<SubCategoryWidg> {
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
                 image: Provider.of<UserProvider>(context).isOffLine ?? false
-                    ? CachedNetworkImageProvider(SUBCATEGORY_IMAGE_URL +
-                        widget.subCategory.BackgroundImage)
-                    : FileImage(file) as ImageProvider,
+                    ? FileImage(File(
+                            '${UserData.path}/images/${widget.subCategory.BackgroundImage}'))
+                        as ImageProvider
+                    : CachedNetworkImageProvider(SUBCATEGORY_IMAGE_URL +
+                        widget.subCategory.BackgroundImage),
                 fit: BoxFit.cover),
           ),
           child: Center(

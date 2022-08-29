@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
@@ -13,6 +14,7 @@ import 'package:virtual_ranger/models/user.dart';
 import 'package:virtual_ranger/pages/sign_up_page.dart';
 import 'dart:io' show Platform;
 
+import '../services/LoginProviders.dart';
 import '../services/page_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -182,59 +184,102 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildFacebookSignInButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5),
-      alignment: Alignment.center,
-      height: 45,
-      width: 140,
-      decoration: const BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          Icon(
-            size: 40,
-            Icons.facebook,
-            color: Colors.white,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "Sign in with Facebook",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => FacebookLoginProvider.signInWithFacebook(),
+      child: Container(
+        padding: const EdgeInsets.only(left: 5),
+        alignment: Alignment.center,
+        height: 45,
+        width: 140,
+        decoration: const BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Icon(
+              size: 40,
+              Icons.facebook,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              "Sign in with Facebook",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildGoogleSignInButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5),
-      alignment: Alignment.center,
-      height: 45,
-      width: 140,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            child: Image.asset(
-              'lib/assets/googleIcon.png',
-              width: 40,
-              height: 40,
+    return GestureDetector(
+      onTap: () async {
+        await Provider.of<GoogleSignInProvider>(context, listen: false)
+            .googleLogin();
+        if (auth.FirebaseAuth.instance.currentUser != null) {
+          final nice = auth.FirebaseAuth.instance.currentUser;
+
+          final vedict = await signUpAPI.signInWithGoogle(nice!.email ?? '');
+          final finalVedict = jsonDecode(vedict);
+
+          if (finalVedict['success'] == true) {
+            final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          } else {
+            final things = await signUpAPI.signUp(
+                nice.displayName ?? "",
+                nice.email ?? '',
+                nice.phoneNumber ?? '  ',
+                'none',
+                'none',
+                '000000',
+                '000000');
+
+            await auth.FirebaseAuth.instance.signOut();
+
+            print(things);
+            final perfectThings = jsonDecode(things);
+
+            final userToBe = User.fromjson(perfectThings['data']);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          }
+        } else {}
+        auth.FirebaseAuth.instance.signOut();
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 5),
+        alignment: Alignment.center,
+        height: 45,
+        width: 140,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade400,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              child: Image.asset(
+                'lib/assets/googleIcon.png',
+                width: 40,
+                height: 40,
+              ),
             ),
-          ),
-          const SizedBox(width: 20),
-          const Text(
-            "Sign in with Google",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
+            const SizedBox(width: 20),
+            const Text(
+              "Sign in with Google",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

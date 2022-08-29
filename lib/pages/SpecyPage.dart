@@ -55,7 +55,6 @@ class _SpecyPageState extends State<SpecyPage> {
                   if (snapshot.data!.length == 1) {
                     return Pages(
                       specyImage: snapshot.data![0],
-                      isOffline: isOffline,
                     );
                   } else {
                     return Stack(
@@ -68,7 +67,6 @@ class _SpecyPageState extends State<SpecyPage> {
                           itemBuilder: (context, index) {
                             return Pages(
                               specyImage: snapshot.data![index],
-                              isOffline: isOffline,
                             );
                           },
                         ),
@@ -222,42 +220,12 @@ class _SpecyPageState extends State<SpecyPage> {
   }
 
   //!Widgets
-  Widget _buildImagePageView(List<String> images) {
-    return PageView.builder(
-      itemCount: images.length,
-      itemBuilder: (context, index) {
-        return !isOffline
-            ? Image.network(
-                images[index],
-                fit: BoxFit.cover,
-              )
-            : Image.file(
-                makefile(images[index])!,
-                fit: BoxFit.cover,
-              );
-      },
-    );
-  }
 
-  File? makefile(String image) {
-    late File file;
-    getApplicationDocumentsDirectory().then((value) {
-      final path = value.path;
-      file = File('$path/images/$image');
-      if (!file.existsSync()) {
-        file.createSync();
-      }
-      return file;
-    });
-    return file;
-  }
 }
 
 class Pages extends StatefulWidget {
-  Pages({Key? key, required this.specyImage, required this.isOffline})
-      : super(key: key);
+  Pages({Key? key, required this.specyImage}) : super(key: key);
   SpecyImage specyImage;
-  bool isOffline;
 
   @override
   State<Pages> createState() => _PagesState();
@@ -265,28 +233,24 @@ class Pages extends StatefulWidget {
 
 class _PagesState extends State<Pages> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("here we go booooy");
+    print(widget.specyImage.images);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      child: widget.isOffline
-          ? Image.file(makefile(widget.specyImage.images)!)
+      child: Provider.of<UserProvider>(context).isOffLine ?? false
+          ? Image.file(
+              File('${UserData.path}/images/${widget.specyImage.images}'),
+            )
           : CachedNetworkImage(
               imageUrl: BASE_IMAGE_URL + widget.specyImage.images,
               fit: BoxFit.cover,
             ),
     );
-  }
-
-  File? makefile(String image) {
-    late File file;
-    getApplicationDocumentsDirectory().then((value) {
-      final path = value.path;
-      print("path :" + path);
-      file = File('$path/images/$image');
-      if (!file.existsSync()) {
-        file.createSync();
-      }
-      return file;
-    });
-    return file;
   }
 }
