@@ -4,6 +4,7 @@ import 'package:virtual_ranger/widgets/FAQwidg.dart';
 
 import '../models/faq.dart';
 import '../services/faqapi.dart';
+import '../services/page_service.dart';
 import 'Custom/AnimeVals.dart';
 
 class FAQPage extends StatefulWidget {
@@ -25,7 +26,9 @@ class _FAQPageState extends State<FAQPage> {
         title: const Text("FAQ"),
       ),
       body: FutureBuilder<List<FAQ>>(
-        future: FAQapi.getFAQ(),
+        future: Provider.of<UserProvider>(context).isOffLine ?? false
+            ? FAQapi.getFAQFromLocal()
+            : FAQapi.getFAQ(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

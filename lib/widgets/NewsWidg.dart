@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Home/stroy_page.dart';
 import '../models/constants.dart';
 import '../models/news.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../services/page_service.dart';
 
 class NewsWidg extends StatefulWidget {
   NewsWidg({Key? key, required this.story}) : super(key: key);
@@ -14,6 +19,17 @@ class NewsWidg extends StatefulWidget {
 }
 
 class _NewsWidgState extends State<NewsWidg> {
+  File? imageFile;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getApplicationDocumentsDirectory().then((Directory directory) {
+      final dir = directory;
+      imageFile = File("${dir.path}/images/${widget.story.news_image}");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,9 +54,12 @@ class _NewsWidgState extends State<NewsWidg> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: CachedNetworkImageProvider(
-                            NEWS_IMAGE_URL + widget.story.news_image,
-                          ),
+                          image: Provider.of<UserProvider>(context).isOffLine ??
+                                  false
+                              ? Image.file(imageFile!) as ImageProvider
+                              : CachedNetworkImageProvider(
+                                  NEWS_IMAGE_URL + widget.story.news_image,
+                                ),
                         ),
                         color: Colors.black.withOpacity(0.4),
                       ),

@@ -1,15 +1,18 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 import '../models/constants.dart';
 import 'businesslistingsapi.dart';
 import 'eventapi.dart';
 
 class DownLoad {
-  static void downloadAllJson() {
+  static void downloadAllJson() async {
     DownloadNews();
     print("success 1");
     DownloadEvents();
@@ -24,6 +27,7 @@ class DownLoad {
     print("success 6");
     DownloadSubCategories();
     print("success last");
+    DownloadImages();
   }
 
   static void DownloadNews() async {
@@ -41,11 +45,11 @@ class DownLoad {
     });
   }
 
-  static void DownloadEvents() async {
+  static Future<void> DownloadEvents() async {
     final response = await http.get(Uri.parse(EVENT_URL));
     final data = response.body;
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/events.json');
+    final file = await File('${dir.path}/events.json');
     await file.writeAsString(data);
   }
 
@@ -53,7 +57,7 @@ class DownLoad {
     final response = await http.get(Uri.parse(SPECIES_URL));
     final data = response.body;
     var dir = await getApplicationDocumentsDirectory();
-    File file = File('${dir.path}/species.json');
+    File file = await File('${dir.path}/species.json');
     await file.writeAsString(data);
   }
 
@@ -61,7 +65,7 @@ class DownLoad {
     final response = await http.get(Uri.parse(CATEGORY_URL));
     final data = response.body;
     var dir = await getApplicationDocumentsDirectory();
-    File file = File('${dir.path}/categories.json');
+    File file = await File('${dir.path}/categories.json');
     file.writeAsString(data);
   }
 
@@ -69,7 +73,7 @@ class DownLoad {
     final response = await http.get(Uri.parse(SUBCATEGORY_URL));
     final data = response.body;
     var dir = await getApplicationDocumentsDirectory();
-    File file = File('${dir.path}/subcategories.json');
+    File file = await File('${dir.path}/sub_categories.json');
     await file.writeAsString(data);
   }
 
@@ -77,7 +81,7 @@ class DownLoad {
     final response = await http.get(Uri.parse(BUSINESS_LISTINGS_URL));
     final data = response.body;
     var dir = await getApplicationDocumentsDirectory();
-    File file = File('${dir.path}/businesslistings.json');
+    File file = await File('${dir.path}/business_listings.json');
     await file.writeAsString(data);
   }
 
@@ -85,7 +89,7 @@ class DownLoad {
     final response = await http.get(Uri.parse(FAQ_URL));
     final data = response.body;
     var dir = await getApplicationDocumentsDirectory();
-    File file = File('${dir.path}/faq.json');
+    File file = await File('${dir.path}/faq.json');
     await file.writeAsString(data);
   }
 
@@ -93,52 +97,115 @@ class DownLoad {
 
   void DownloadRules() async {}
 
+  static void DownloadImages() async {
+    final response = await http.get(Uri.parse(SPECIES_IMAGE_URL));
+    final data = response.body;
+    var dir = await getApplicationDocumentsDirectory();
+    File file = await File('${dir.path}/images.json');
+    await file.writeAsString(data);
+  }
+
   static downloadImage(String url, String name) async {
     Dio dio = Dio();
     var dir = await getApplicationDocumentsDirectory();
-    var imageFile = File("${dir.path}/images/$name");
-    await dio.download(url, imageFile.path);
+    var imageFile = await File("${dir.path}/images/$name");
+    try {
+      await dio.download(url, imageFile.path);
+    } catch (e) {
+      print(e);
+    }
   }
 
-  static downloadNewsImages() {
-    Newsapi.getNewsFromLocal().then((News) {
+  static void downloadAllImages(BuildContext context) async {
+    await downloadNewsImages(context);
+    await downloadEventsImages(context);
+    await downloadCategoryImage(context);
+    await downloadSubCategoryImage(context);
+    await downloadSpeciesImage(context);
+    await downloadBusinessListingsImages(context);
+  }
+
+  static downloadNewsImages(BuildContext context) {
+    Newsapi.getNewsFromLocal().then((News) async {
+      Provider.of<DownloadProvider>(context, listen: false)
+          .setImagesToDownload(News.length);
       for (var i = 0; i < News.length; i++) {
-        downloadImage(NEWS_IMAGE_URL + News[i].news_image, News[i].news_image);
+        await downloadImage(
+            NEWS_IMAGE_URL + News[i].news_image, News[i].news_image);
+        print(News[i].news_image);
+        Provider.of<DownloadProvider>(context, listen: false)
+            .incrementImagesDownloaded();
       }
     });
   }
 
-  static downloadEventsImages() {
-    Eventapi.getEventsFromLocal().then((Event) {
+  static downloadEventsImages(BuildContext context) {
+    Eventapi.getEventsFromLocal().then((Event) async {
+      Provider.of<DownloadProvider>(context, listen: false)
+          .setImagesToDownload(Event.length);
       for (var i = 0; i < Event.length; i++) {
-        downloadImage(
+        await downloadImage(
             NEWS_IMAGE_URL + Event[i].event_image, Event[i].event_image);
+        print(Event[i].event_image);
+        Provider.of<DownloadProvider>(context, listen: false)
+            .incrementImagesDownloaded();
       }
     });
   }
 
-  static downloadBusinessListingsImages() {
-    BusinessListingsapi.getBusinessListingsFromLocal().then((BL) {
+  static downloadBusinessListingsImages(context) {
+    BusinessListingsapi.getBusinessListingsFromLocal().then((BL) async {
+      Provider.of<DownloadProvider>(context, listen: false)
+          .setImagesToDownload(BL.length);
       for (var i = 0; i < BL.length; i++) {
-        downloadImage(BUSINESS_LISTINGS_IMAGE_URL + BL[i].logo, BL[i].logo);
+        await downloadImage(
+            BUSINESS_LISTINGS_IMAGE_URL + BL[i].logo, BL[i].logo);
+        print(BL[i].logo);
+        Provider.of<DownloadProvider>(context, listen: false)
+            .incrementImagesDownloaded();
       }
     });
   }
 
-  static downloadCategoryImage() {
-    Categoryapi.getCategoriesFromLocal().then((Category) {
+  static downloadCategoryImage(context) {
+    Categoryapi.getCategoriesFromLocal().then((Category) async {
+      Provider.of<DownloadProvider>(context, listen: false)
+          .setImagesToDownload(Category.length);
       for (var i = 0; i < Category.length; i++) {
-        downloadImage(CATEGORY_IMAGE_URL + Category[i].backgroundImage,
+        await downloadImage(CATEGORY_IMAGE_URL + Category[i].backgroundImage,
             Category[i].backgroundImage);
+        print(Category[i].backgroundImage);
+        Provider.of<DownloadProvider>(context, listen: false)
+            .incrementImagesDownloaded();
       }
     });
   }
 
-  static downloadSubCategoryImage() {
-    SubCategoryapi.getSubCategoriesFromLocal().then((SubCategory) {
+  static downloadSubCategoryImage(context) {
+    SubCategoryapi.getSubCategoriesFromLocal().then((SubCategory) async {
+      Provider.of<DownloadProvider>(context, listen: false)
+          .setImagesToDownload(SubCategory.length);
       for (var i = 0; i < SubCategory.length; i++) {
-        downloadImage(SUBCATEGORY_IMAGE_URL + SubCategory[i].BackgroundImage,
+        await downloadImage(
+            SUBCATEGORY_IMAGE_URL + SubCategory[i].BackgroundImage,
             SubCategory[i].BackgroundImage);
+        print(SubCategory[i].BackgroundImage);
+        Provider.of<DownloadProvider>(context, listen: false)
+            .incrementImagesDownloaded();
+      }
+    });
+  }
+
+  static downloadSpeciesImage(context) {
+    Imageapi.getImagesForDownload().then((Species) async {
+      Provider.of<DownloadProvider>(context, listen: false)
+          .setImagesToDownload(Species.length);
+      for (var i = 0; i < Species.length; i++) {
+        await downloadImage(
+            SPECIES_IMAGE_URL + Species[i].images, Species[i].images);
+        print(Species[i].images);
+        Provider.of<DownloadProvider>(context, listen: false)
+            .incrementImagesDownloaded();
       }
     });
   }

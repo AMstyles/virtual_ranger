@@ -51,31 +51,42 @@ class UserProvider extends ChangeNotifier {
     user = x;
     notifyListeners();
   }
+
+  void setOffline(bool x) {
+    isOffLine = x;
+    notifyListeners();
+  }
 }
 
 class DownloadProvider extends ChangeNotifier {
-  int _imagesToDownload = 0;
-  int _imagesDownloaded = 0;
+  int imagesToDownload = 0;
+  int imagesDownloaded = 0;
   double percentage = 0.0;
   bool _downloading = false;
   bool isOffline = false;
 
-  void incrementImagesToDownload() {
-    _imagesDownloaded++;
+  void getPercentage() {
+    if (imagesDownloaded / imagesToDownload < 1) {
+      percentage = imagesDownloaded / imagesToDownload;
+    } else {
+      percentage = 1;
+    }
+    notifyListeners();
+  }
+
+  void incrementImagesDownloaded() {
+    imagesDownloaded++;
+    getPercentage();
     notifyListeners();
   }
 
   void setImagesToDownload(int x) {
-    _imagesToDownload = x;
+    imagesToDownload += x;
+    getPercentage();
     notifyListeners();
   }
 
   DownloadProvider() {
-    notifyListeners();
-  }
-
-  void setImagesDownloaded(int x) {
-    _imagesDownloaded = x;
     notifyListeners();
   }
 

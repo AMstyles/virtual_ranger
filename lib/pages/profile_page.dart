@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Profile/textFieds.dart';
 import '../models/constants.dart';
@@ -25,6 +27,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   late User user;
   late String data;
+  late File imageFile;
+  late String dir;
 
   String makeGender() {
     if (isMale) {
@@ -52,6 +56,11 @@ class _ProfilePageState extends State<ProfilePage> {
     // TODO: implement initState
     super.initState();
     initControllers();
+    print("hello world");
+    getApplicationDocumentsDirectory().then((directory) {
+      final dir = directory;
+      imageFile = File('${dir.path}/ProfilePhoto.jpg');
+    });
 
     switch (Provider.of<UserProvider>(context, listen: false).user!.gender) {
       case 'male':
@@ -117,13 +126,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: const EdgeInsets.symmetric(vertical: 18.0),
                   child: Provider.of<UserProvider>(context).user!.isImageNull()
                       ? const CircleAvatar(
-                          backgroundColor: Colors.grey, radius: 80)
-                      : CircleAvatar(
                           backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(
-                            Provider.of<UserProvider>(context).user!.image!,
-                          ),
-                          radius: 80),
+                          radius: 80,
+                          backgroundImage: AssetImage('lib/assets/noPro'),
+                        )
+                      : Image.file(imageFile),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -454,8 +461,16 @@ class _ProfilePageState extends State<ProfilePage> {
               CupertinoActionSheetAction(
                   onPressed: () async {
                     final ImagePicker _picker = ImagePicker();
-                    final XFile? photo =
-                        await _picker.pickImage(source: ImageSource.camera);
+                    final File? photo = await _picker
+                        .pickImage(source: ImageSource.camera)
+                        .then((image) {
+                      getApplicationDocumentsDirectory().then((directory) {
+                        final String path = directory.path;
+                        final String filePath = '$path/profilePhoto.jpg';
+                        File file = File(filePath);
+                        file = image as File;
+                      });
+                    });
                   },
                   child: const Text('Camera')),
               CupertinoActionSheetAction(

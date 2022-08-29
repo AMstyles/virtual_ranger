@@ -1,11 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:virtual_ranger/models/user.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
-
 import '../apis/Download.dart';
+import '../services/page_service.dart';
 
 class DownloadPage extends StatefulWidget {
   DownloadPage({Key? key}) : super(key: key);
@@ -14,7 +13,8 @@ class DownloadPage extends StatefulWidget {
   State<DownloadPage> createState() => _DownloadPageState();
 }
 
-class _DownloadPageState extends State<DownloadPage> {
+class _DownloadPageState extends State<DownloadPage>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     // TODO: implement initState
@@ -35,10 +35,9 @@ class _DownloadPageState extends State<DownloadPage> {
     super.initState();
   }
 
-  int _imagesToDownload = 0;
-  int _imagesDownloaded = 0;
   late bool isOffline;
   late bool canBeOffline;
+  bool _downloading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +48,16 @@ class _DownloadPageState extends State<DownloadPage> {
       body: Center(
         child: Column(
           children: [
+            _downloading
+                ? Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Container(
+                        height: 100,
+                        width: 100,
+                        child: Center(
+                            child: CircularProgressIndicator.adaptive())),
+                  )
+                : SizedBox(),
             ListTile(
               title: const Text(
                 'Offline Mode',
@@ -78,8 +87,37 @@ class _DownloadPageState extends State<DownloadPage> {
                   }),
             ),
             const Divider(),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: LinearPercentIndicator(
+                linearGradient: LinearGradient(
+                  colors: [
+                    Colors.red,
+                    Colors.amber,
+                    Colors.yellow,
+                    Colors.greenAccent,
+                    Colors.green,
+                  ],
+                ),
+                animation: true,
+                width: MediaQuery.of(context).size.width - 20,
+                lineHeight: 20.0,
+                percent: Provider.of<DownloadProvider>(context).percentage,
+                backgroundColor: Colors.grey.shade200,
+                //progressColor: Colors.blue,
+                center: Text(
+                  '${Provider.of<DownloadProvider>(context).imagesDownloaded}/${Provider.of<DownloadProvider>(context).imagesToDownload}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ),
             Text(
-              '$_imagesDownloaded/$_imagesToDownload' + ' images downloaded',
+              '${Provider.of<DownloadProvider>(context).imagesDownloaded}/${Provider.of<DownloadProvider>(context).imagesToDownload}' +
+                  ' images downloaded',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -87,9 +125,12 @@ class _DownloadPageState extends State<DownloadPage> {
               ),
             ),
             ElevatedButton(
-              child: const Text('Download'),
+              child: const Text('Downnload to device'),
               onPressed: () {
-                getMetaData();
+                setState(() {
+                  _downloading = true;
+                  getMetaData();
+                });
               },
             ),
           ],
@@ -117,13 +158,18 @@ class _DownloadPageState extends State<DownloadPage> {
     setState(() {
       DownLoad.downloadAllJson();
     });
-    //getApplicationDocumentsDirectory().then((directory) {
-    //Directory dir = directory;
-    //File file = File('${dir.path}/news.json');
-    //final contents = file.readAsStringSync();
-    //print(contents);
-    // });
+
     Navigator.pop(context);
+
+    setState(() {
+      _downloading = true;
+
+      DownLoad.downloadAllImages(context);
+
+      _downloading = false;
+      canBeOffline = true;
+      UserData.canGoOffline(true);
+    });
   }
 
   Future<void> off() async {

@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/models/Specy.dart';
 import 'package:virtual_ranger/models/animal_image.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/constants.dart';
+import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 
 class SpecyPage extends StatefulWidget {
   SpecyPage({Key? key, required this.specy}) : super(key: key);
@@ -15,6 +21,17 @@ class SpecyPage extends StatefulWidget {
 }
 
 class _SpecyPageState extends State<SpecyPage> {
+  late bool isOffline;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UserData.getOfflineMode().then((value) => setState(() {
+          isOffline = value;
+          print(value);
+        }));
+  }
+
   final PageController _controller = PageController(initialPage: 0);
 
   @override
@@ -30,11 +47,16 @@ class _SpecyPageState extends State<SpecyPage> {
           SizedBox(
             height: 350,
             child: FutureBuilder<List<SpecyImage>>(
-              future: Imageapi.getImages(widget.specy),
+              future: Provider.of<UserProvider>(context).isOffLine ?? false
+                  ? Imageapi.getImagesFromLocal(widget.specy)
+                  : Imageapi.getImages(widget.specy),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.length == 1) {
-                    return Pages(specyImage: snapshot.data![0]);
+                    return Pages(
+                      specyImage: snapshot.data![0],
+                      isOffline: isOffline,
+                    );
                   } else {
                     return Stack(
                       alignment: const Alignment(0, .9),
@@ -44,7 +66,10 @@ class _SpecyPageState extends State<SpecyPage> {
                           scrollDirection: Axis.horizontal,
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            return Pages(specyImage: snapshot.data![index]);
+                            return Pages(
+                              specyImage: snapshot.data![index],
+                              isOffline: isOffline,
+                            );
                           },
                         ),
                         SmoothPageIndicator(
@@ -201,25 +226,67 @@ class _SpecyPageState extends State<SpecyPage> {
     return PageView.builder(
       itemCount: images.length,
       itemBuilder: (context, index) {
-        return Image.network(
-          images[index],
-          fit: BoxFit.cover,
-        );
+        return !isOffline
+            ? Image.network(
+                images[index],
+                fit: BoxFit.cover,
+              )
+            : Image.file(
+                makefile(images[index])!,
+                fit: BoxFit.cover,
+              );
       },
     );
   }
+
+  File? makefile(String image) {
+    late File file;
+    getApplicationDocumentsDirectory().then((value) {
+      final path = value.path;
+      file = File('$path/images/$image');
+      if (!file.existsSync()) {
+        file.createSync();
+      }
+      return file;
+    });
+    return file;
+  }
 }
 
-class Pages extends StatelessWidget {
-  Pages({Key? key, required this.specyImage}) : super(key: key);
+class Pages extends StatefulWidget {
+  Pages({Key? key, required this.specyImage, required this.isOffline})
+      : super(key: key);
   SpecyImage specyImage;
+  bool isOffline;
+
+  @override
+  State<Pages> createState() => _PagesState();
+}
+
+class _PagesState extends State<Pages> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: CachedNetworkImage(
-        imageUrl: BASE_IMAGE_URL + specyImage.images,
-        fit: BoxFit.cover,
-      ),
+      child: widget.isOffline
+          ? Image.file(makefile(widget.specyImage.images)!)
+          : CachedNetworkImage(
+              imageUrl: BASE_IMAGE_URL + widget.specyImage.images,
+              fit: BoxFit.cover,
+            ),
     );
+  }
+
+  File? makefile(String image) {
+    late File file;
+    getApplicationDocumentsDirectory().then((value) {
+      final path = value.path;
+      print("path :" + path);
+      file = File('$path/images/$image');
+      if (!file.existsSync()) {
+        file.createSync();
+      }
+      return file;
+    });
+    return file;
   }
 }

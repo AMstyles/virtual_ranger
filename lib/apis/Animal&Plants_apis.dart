@@ -105,7 +105,7 @@ class Imageapi {
     return species;
   }
 
-  static Future<List<SpecyImage>> getImagesFromLocal() async {
+  static Future<List<SpecyImage>> getImagesForDownload() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/images.json');
     final data = jsonDecode(await file.readAsString());
@@ -114,6 +114,21 @@ class Imageapi {
     List<SpecyImage> species = [];
     for (var i = 0; i < finalData.length; i++) {
       species.add(SpecyImage.fromJson(finalData[i]));
+    }
+    return species;
+  }
+
+  static Future<List<SpecyImage>> getImagesFromLocal(Specy specy) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/images.json');
+    final data = jsonDecode(await file.readAsString());
+    final data2 = data['data'];
+    final List<dynamic> finalData = data2;
+    List<SpecyImage> species = [];
+    for (var i = 0; i < finalData.length; i++) {
+      if (SpecyImage.fromJson(finalData[i]).animal_id == specy.id) {
+        species.add(SpecyImage.fromJson(finalData[i]));
+      }
     }
     return species;
   }
