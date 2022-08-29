@@ -8,6 +8,7 @@ import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import '../models/constants.dart';
+import '../services/shared_preferences.dart';
 import 'businesslistingsapi.dart';
 import 'eventapi.dart';
 
@@ -31,66 +32,81 @@ class DownLoad {
   }
 
   static void DownloadNews() async {
-    getApplicationDocumentsDirectory().then((directory) async {
-      final response = await http.get(Uri.parse(NEWS_URL));
-      final data = response.body;
-      final dir = directory;
-      final file = File('${dir.path}/news.json');
+    final response = await http.get(Uri.parse(NEWS_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/news.json');
 
-      if (!file.existsSync()) {
-        file.createSync();
-      } else {
-        await file.writeAsString(data);
-      }
-    });
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   static Future<void> DownloadEvents() async {
     final response = await http.get(Uri.parse(EVENT_URL));
     final data = response.body;
-    final dir = await getApplicationDocumentsDirectory();
-    final file = await File('${dir.path}/events.json');
-    await file.writeAsString(data);
+    final file = await File('${UserData.path}/events.json');
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   static void DownloadSpecies() async {
     final response = await http.get(Uri.parse(SPECIES_URL));
     final data = response.body;
-    var dir = await getApplicationDocumentsDirectory();
-    File file = await File('${dir.path}/species.json');
-    await file.writeAsString(data);
+    File file = await File('${UserData.path}/species.json');
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   static void DownloadCategories() async {
     final response = await http.get(Uri.parse(CATEGORY_URL));
     final data = response.body;
-    var dir = await getApplicationDocumentsDirectory();
-    File file = await File('${dir.path}/categories.json');
-    file.writeAsString(data);
+    File file = await File('${UserData.path}/categories.json');
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   static void DownloadSubCategories() async {
     final response = await http.get(Uri.parse(SUBCATEGORY_URL));
     final data = response.body;
-    var dir = await getApplicationDocumentsDirectory();
-    File file = await File('${dir.path}/sub_categories.json');
-    await file.writeAsString(data);
+    File file = await File('${UserData.path}/sub_categories.json');
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   static void DownloadBusinessListings() async {
     final response = await http.get(Uri.parse(BUSINESS_LISTINGS_URL));
     final data = response.body;
-    var dir = await getApplicationDocumentsDirectory();
-    File file = await File('${dir.path}/business_listings.json');
-    await file.writeAsString(data);
+    File file = await File('${UserData.path}/business_listings.json');
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   static void DownloadFAQ() async {
     final response = await http.get(Uri.parse(FAQ_URL));
     final data = response.body;
-    var dir = await getApplicationDocumentsDirectory();
-    File file = await File('${dir.path}/faq.json');
-    await file.writeAsString(data);
+    File file = await File('${UserData.path}/faq.json');
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   void DownloadSightings() async {}
@@ -100,19 +116,25 @@ class DownLoad {
   static void DownloadImages() async {
     final response = await http.get(Uri.parse(SPECIES_IMAGE_URL));
     final data = response.body;
-    var dir = await getApplicationDocumentsDirectory();
-    File file = await File('${dir.path}/images.json');
-    await file.writeAsString(data);
+    File file = await File('${UserData.path}/images.json');
+    print("Download image data success");
+    if (!file.existsSync()) {
+      file.createSync();
+    } else {
+      file.writeAsStringSync(data);
+    }
   }
 
   static downloadImage(String url, String name) async {
     Dio dio = Dio();
-    var dir = await getApplicationDocumentsDirectory();
-    var imageFile = await File("${dir.path}/images/$name");
+    File imageFile = await File("${UserData.path}/images/$name");
     try {
       await dio.download(url, imageFile.path);
     } catch (e) {
       print(e);
+    }
+    if (!imageFile.existsSync()) {
+      imageFile.createSync();
     }
   }
 
@@ -201,6 +223,7 @@ class DownLoad {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(Species.length);
       for (var i = 0; i < Species.length; i++) {
+        print("Now Downloading }");
         await downloadImage(
             SPECIES_IMAGE_URL + Species[i].images, Species[i].images);
         print(Species[i].images);
@@ -208,5 +231,13 @@ class DownLoad {
             .incrementImagesDownloaded();
       }
     });
+  }
+
+  void getIm() async {
+    Dio dio = Dio();
+    String url =
+        'https://dinokengapp.co.za/admin/animal_image/101_286%20African%20Snipe%202515_2705%20Mankwe%20Dam%20001%20Of%2010Oct15.JPG';
+    String filePath = UserData.path + url.split('/').last;
+    await dio.download(url, filePath);
   }
 }
