@@ -65,7 +65,6 @@ class signUpAPI {
     return data;
   }
 
-/*
   static Future<String> updateProfile(
     String id,
     String name,
@@ -76,37 +75,23 @@ class signUpAPI {
     String country,
     String city,
     String secretKey,
-    String file,
-    //String thing,
   ) async {
-   
-    // final response = await http
-    //     .post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
-    //   'id': id,
-    //   'name': name,
-    //   'email': email,
-    //   'mobile': phone,
-    //   'country': country,
-    //   'age_range': age_range,
-    //   'secret_key': secretKey,
-    //   'user_role': 'Attendee',
-    //   'city': city,
-    // });
-    final response = await http.post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
+    final response = await http
+        .post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
       'id': id,
       'name': name,
       'email': email,
       'mobile': phone,
-      'country': country,
+      //'country': country,
       'age_range': age_range,
       'secret_key': secretKey,
       'user_role': 'Attendee',
       'city': city,
-      'file': file,
     });
-    // final data = response.body;
-    // print(data);
 
-    //return null;
-  }*/
+    final data = response.body;
+    print(data);
+
+    return data;
+  }
 }

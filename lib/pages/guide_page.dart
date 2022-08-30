@@ -6,6 +6,7 @@ import 'package:virtual_ranger/services/animal_search.dart';
 import 'package:virtual_ranger/widgets/CategoryWidg.dart';
 
 import '../apis/Animal&Plants_apis.dart';
+import '../services/page_service.dart';
 import 'Custom/AnimeVals.dart';
 
 class GuidePage extends StatefulWidget {
@@ -40,8 +41,9 @@ class _GuidePageState extends State<GuidePage> {
         ],
       ),
       body: FutureBuilder<List<Category_>>(
-        future:
-            Categoryapi.getCategoriesFromLocal(), //Categoryapi.getCategories(),
+        future: Provider.of<UserProvider>(context).isOffLine ?? false
+            ? Categoryapi.getCategoriesFromLocal()
+            : Categoryapi.getCategories(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

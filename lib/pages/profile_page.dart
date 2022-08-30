@@ -330,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const Center(child: CircularProgressIndicator.adaptive()),
     );
 
-    /*signUpAPI.updateProfile(
+    data = await signUpAPI.updateProfile(
       userProvider.user!.id,
       _nameController.text,
       _emailController.text,
@@ -340,13 +340,14 @@ class _ProfilePageState extends State<ProfilePage> {
       _countryController.text,
       _cityController.text,
       userProvider.user!.secret_key!,
-    );*/
+    );
     Navigator.pop(context);
     final finalData = jsonDecode(data)!;
 
     if (finalData['success'] == true) {
       Provider.of<UserProvider>(context, listen: false)
           .setUser(User.fromjson(finalData['data']));
+      UserData.setUser(User.fromjson(finalData['data']));
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
