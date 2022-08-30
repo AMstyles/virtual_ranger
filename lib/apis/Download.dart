@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
@@ -13,7 +12,7 @@ import 'businesslistingsapi.dart';
 import 'eventapi.dart';
 
 class DownLoad {
-  static void downloadAllJson() async {
+  static void downloadAllJson() {
     DownloadNews();
     print("success 1");
     DownloadEvents();
@@ -111,8 +110,6 @@ class DownLoad {
 
   void DownloadSightings() async {}
 
-  void DownloadRules() async {}
-
   static void DownloadImages() async {
     final response = await http.get(Uri.parse(SPECIES_IMAGE_URL));
     final data = response.body;
@@ -180,9 +177,15 @@ class DownLoad {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(BL.length);
       for (var i = 0; i < BL.length; i++) {
-        await downloadImage(
-            BUSINESS_LISTINGS_IMAGE_URL + BL[i].logo, BL[i].logo);
-        print(BL[i].logo);
+        try {
+          await downloadImage(
+              BUSINESS_LISTINGS_IMAGE_URL + BL[i].logo, BL[i].logo);
+        } catch (e) {
+          print(e);
+          await downloadImage(
+              BUSINESS_LISTINGS_IMAGE_URL + BL[i].logo, BL[i].logo);
+        }
+
         Provider.of<DownloadProvider>(context, listen: false)
             .incrementImagesDownloaded();
       }
@@ -218,26 +221,26 @@ class DownLoad {
     });
   }
 
-  static downloadSpeciesImage(context) {
-    Imageapi.getImagesForDownload().then((Species) async {
+  static downloadSpeciesImage(context) async {
+    await Imageapi.getImagesForDownload().then((Species) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(Species.length);
       for (var i = 0; i < Species.length; i++) {
-        print("Now Downloading }");
-        await downloadImage(
-            SPECIES_IMAGE_URL + Species[i].images, Species[i].images);
-        print(Species[i].images);
+        await getIm(BASE_IMAGE_URL + Species[i].images);
         Provider.of<DownloadProvider>(context, listen: false)
             .incrementImagesDownloaded();
       }
     });
   }
 
-  void getIm() async {
-    Dio dio = Dio();
-    String url =
-        'https://dinokengapp.co.za/admin/animal_image/101_286%20African%20Snipe%202515_2705%20Mankwe%20Dam%20001%20Of%2010Oct15.JPG';
-    String filePath = UserData.path + url.split('/').last;
-    await dio.download(url, filePath);
+  static Future<void> getIm(String url) async {
+    Dio dio = await Dio();
+    String filePath = UserData.path + "/" + url.split('/').last;
+    print(filePath);
+    try {
+      await dio.download(url, filePath);
+    } catch (e) {
+      print(e);
+    }
   }
 }

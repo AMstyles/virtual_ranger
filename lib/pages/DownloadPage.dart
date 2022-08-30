@@ -139,7 +139,7 @@ class _DownloadPageState extends State<DownloadPage>
     );
   }
 
-  void getMetaData() async {
+  void getMetaData() {
     showDialog(
         context: context,
         builder: ((context) {
@@ -163,9 +163,7 @@ class _DownloadPageState extends State<DownloadPage>
 
     setState(() {
       _downloading = true;
-
       DownLoad.downloadAllImages(context);
-
       _downloading = false;
       canBeOffline = true;
       UserData.canGoOffline(true);

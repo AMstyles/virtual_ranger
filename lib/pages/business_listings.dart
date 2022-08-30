@@ -29,7 +29,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
         children: [
           _buildHeader(context, 'Emergency Contact Numbers'),
           FutureBuilder<List<BusinessListing>>(
-            future: Provider.of<UserProvider>(context).isOffLine ?? true
+            future: Provider.of<UserProvider>(context).isOffLine ?? false
                 ? BusinessListingsapi.getBusinessListingsFromLocal()
                 : BusinessListingsapi.getBusinessListings(),
             builder: (context, snapshot) {

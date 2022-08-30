@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/BL.dart';
 import '../models/constants.dart';
+import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 
 class BusinessListingWidg extends StatelessWidget {
   BusinessListingWidg({Key? key, required this.businessListing})
@@ -136,12 +141,19 @@ class BusinessListingWidg extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         child: Row(
           children: [
-            Image.network(
-              BUSINESS_LISTINGS_IMAGE_URL + businessListing.logo,
-              fit: BoxFit.contain,
-              height: 60,
-              width: 60,
-            ),
+            Provider.of<UserProvider>(context).isOffLine ?? false
+                ? Image.file(
+                    File('${UserData.path}/images/${businessListing.logo}'),
+                    fit: BoxFit.contain,
+                    height: 60,
+                    width: 60,
+                  )
+                : Image.network(
+                    BUSINESS_LISTINGS_IMAGE_URL + businessListing.logo,
+                    fit: BoxFit.contain,
+                    height: 60,
+                    width: 60,
+                  ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
