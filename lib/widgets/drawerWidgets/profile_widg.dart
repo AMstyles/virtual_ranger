@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/services/page_service.dart';
@@ -29,7 +30,7 @@ class DrawerProfile extends StatelessWidget {
                                   .image! ==
                               "")
                           ? AssetImage('lib/assets/noPro.jpg') as ImageProvider
-                          : NetworkImage(
+                          : CachedNetworkImageProvider(
                               Provider.of<UserProvider>(context).user!.image!),
                       radius: 50,
                     ),

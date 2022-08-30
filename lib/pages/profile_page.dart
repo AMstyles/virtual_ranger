@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image/image.dart' as ImageConvert;
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -134,15 +136,18 @@ class _ProfilePageState extends State<ProfilePage> {
                             )
                           : Provider.of<UserProvider>(context).user!.image == ''
                               ? const CircleAvatar(
-                                  backgroundColor: Colors.grey,
                                   radius: 80,
                                   backgroundImage:
                                       AssetImage('lib/assets/noPro.jpg'),
                                 )
-                              : const CircleAvatar(
+                              : CircleAvatar(
                                   radius: 80,
-                                  backgroundImage:
-                                      AssetImage('lib/assets/noPro.jpg'),
+                                  backgroundColor: Colors.green,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      Provider.of<UserProvider>(context)
+                                              .user!
+                                              .image ??
+                                          'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'),
                                 ),
                 ),
                 GestureDetector(
@@ -325,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const Center(child: CircularProgressIndicator.adaptive()),
     );
 
-    data = await signUpAPI.updateProfile(
+    /*signUpAPI.updateProfile(
       userProvider.user!.id,
       _nameController.text,
       _emailController.text,
@@ -335,7 +340,7 @@ class _ProfilePageState extends State<ProfilePage> {
       _countryController.text,
       _cityController.text,
       userProvider.user!.secret_key!,
-    );
+    );*/
     Navigator.pop(context);
     final finalData = jsonDecode(data)!;
 
@@ -473,24 +478,101 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: [
               CupertinoActionSheetAction(
                   onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Center(
+                              child: CircularProgressIndicator.adaptive());
+                        });
+
                     final ImagePicker _picker = ImagePicker();
                     final File? photo = await _picker
                         .pickImage(source: ImageSource.camera)
-                        .then((image) {
-                      getApplicationDocumentsDirectory().then((directory) {
-                        final String path = directory.path;
-                        final String filePath = '$path/profilePhoto.jpg';
-                        File file = File(filePath);
-                        file = image as File;
-                      });
+                        .then((image) async {
+                      if (image != null) {
+                        Dio dio = Dio();
+                        FormData formData = FormData.fromMap({});
+
+                        final response = dio.post(
+                          "http://dinokengapp.co.za/edit_profile",
+                          data: FormData.fromMap({
+                            "profile_image":
+                                await MultipartFile.fromFile(image.path),
+                            "id": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .id,
+                            "email": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .email,
+                            "user_role": "Attendee",
+                            "secret_key": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .secret_key ??
+                                ' ',
+                          }),
+                        );
+                        response.then((value) {
+                          final data = value.data;
+                          print(data);
+                          User UserToBe = User.fromjson(data['data']);
+                          UserData.setUser(UserToBe);
+                          Provider.of<UserProvider>(context, listen: false)
+                              .setUser(UserToBe);
+                        });
+
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+                      Navigator.pop(context);
+                      return;
                     });
                   },
                   child: const Text('Camera')),
               CupertinoActionSheetAction(
                   onPressed: () async {
                     final ImagePicker _picker = ImagePicker();
-                    final XFile? photo =
-                        await _picker.pickImage(source: ImageSource.gallery);
+                    final XFile? photo = await _picker
+                        .pickImage(source: ImageSource.gallery)
+                        .then((Image) async {
+                      if (Image != null) {
+                        Dio dio = Dio();
+                        FormData formData = FormData.fromMap({});
+                        final response = dio.post(
+                          "http://dinokengapp.co.za/edit_profile",
+                          data: FormData.fromMap({
+                            "profile_image":
+                                await MultipartFile.fromFile(Image.path),
+                            "id": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .id,
+                            "email": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .email,
+                            "user_role": "Attendee",
+                            "secret_key": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .secret_key ??
+                                ' ',
+                          }),
+                        );
+                        response.then((value) {
+                          final data = value.data;
+                          print(data);
+                          User UserToBe = User.fromjson(data['data']);
+                          //set user to shared prefs
+                          UserData.setUser(UserToBe);
+                          print(UserToBe.name);
+                          Provider.of<UserProvider>(context, listen: false)
+                              .setUser(UserToBe);
+                        });
+                      }
+                    });
                   },
                   child: const Text('Gallery')),
             ],
