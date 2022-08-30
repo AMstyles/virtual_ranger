@@ -25,6 +25,8 @@ class _DownloadPageState extends State<DownloadPage>
           print(value);
         }));
 
+    start();
+
     print("success 1");
 
     UserData.getCanGoOffline().then((value) => setState(() {
@@ -131,6 +133,9 @@ class _DownloadPageState extends State<DownloadPage>
                   _downloading = true;
                   getMetaData();
                 });
+                setState(() {
+                  getMetaData();
+                });
               },
             ),
           ],
@@ -158,7 +163,6 @@ class _DownloadPageState extends State<DownloadPage>
     setState(() {
       DownLoad.downloadAllJson();
       DownLoad.downloadAllJson();
-      DownLoad.downloadAllJson();
     });
 
     Navigator.pop(context);
@@ -175,6 +179,11 @@ class _DownloadPageState extends State<DownloadPage>
   Future<void> off() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isOffline = prefs.getBool('offline') ?? false;
+  }
+
+  Future<void> start() async {
+    DownLoad.downloadAllJson();
+    print("success");
   }
 
   Future<void> canOffline() async {
