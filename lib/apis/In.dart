@@ -76,7 +76,6 @@ class signUpAPI {
     String city,
     String secretKey,
     String file,
-
     //String thing,
   ) async {
     var postUri = Uri.parse("<APIUrl>");
@@ -87,11 +86,11 @@ class signUpAPI {
     request.fields['mobile'] = phone;
     request.fields['country'] = country;
     request.fields['age_range'] = age_range;
-    request.fields['secret_key'] =  secretKey;
+    request.fields['secret_key'] = secretKey;
     request.fields['user_role'] = 'Attendee';
     request.fields['city'] = city;
-    request.files.add(new http.MultipartFile.fromBytes('file', file))
-  final response  = await  request.send();
+    // request.files.add(new http.MultipartFile.fromBytes('file', file))
+    final response = await request.send();
     // final response = await http
     //     .post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
     //   'id': id,
@@ -105,11 +104,9 @@ class signUpAPI {
     //   'city': city,
     // });
 
-      request.send().then((response) {
+    request.send().then((response) {
       if (response.statusCode == 200) ;
-
-      
-     });
+    });
     // final data = response.body;
     // print(data);
 
