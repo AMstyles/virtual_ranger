@@ -40,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            title: const Text('Show notificatoions'),
+            title: const Text('Show notifications'),
             onTap: () {
               setState(() {
                 showNotifications = !showNotifications;
