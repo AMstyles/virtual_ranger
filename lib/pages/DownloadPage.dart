@@ -157,6 +157,8 @@ class _DownloadPageState extends State<DownloadPage>
 
     setState(() {
       DownLoad.downloadAllJson();
+      DownLoad.downloadAllJson();
+      DownLoad.downloadAllJson();
     });
 
     Navigator.pop(context);
