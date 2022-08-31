@@ -27,6 +27,13 @@ class _DrawerMenuState extends State<DrawerMenu> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    myTimer.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {

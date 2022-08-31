@@ -57,6 +57,7 @@ dependencies:
   dio: ^4.0.6
   percent_indicator: ^4.2.2
   permission_handler: ^10.0.0
+  qr_code_scanner: ^1.0.1
   #font_awesome_flutter:
 
 dev_dependencies:

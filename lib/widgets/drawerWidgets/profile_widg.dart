@@ -22,6 +22,7 @@ class DrawerProfile extends StatelessWidget {
             children: [
               Provider.of<UserProvider>(context).user!.isImageNull()
                   ? const CircleAvatar(
+                      radius: 50,
                       backgroundImage: AssetImage('lib/assets/noPro.jpg'),
                     )
                   : CircleAvatar(

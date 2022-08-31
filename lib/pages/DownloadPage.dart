@@ -19,13 +19,13 @@ class _DownloadPageState extends State<DownloadPage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    //getMetaData();
-    UserData.getOfflineMode().then((value) => setState(() {
-          isOffline = value;
-          print(value);
-        }));
 
-    start();
+    UserData.getOfflineMode().then((value) {
+      setState(() {
+        isOffline = value;
+        print(value);
+      });
+    });
 
     print("success 1");
 
@@ -144,8 +144,8 @@ class _DownloadPageState extends State<DownloadPage>
     );
   }
 
-  void getMetaData() {
-    showDialog(
+  Future<void> getMetaData() async {
+    /*showDialog(
         context: context,
         builder: ((context) {
           return AlertDialog(
@@ -158,22 +158,20 @@ class _DownloadPageState extends State<DownloadPage>
               ],
             ),
           );
-        }));
+        }));*/
 
     setState(() {
-      DownLoad.downloadAllJson();
-      DownLoad.downloadAllJson();
+      //DownLoad.downloadAllJson();
+      //DownLoad.downloadAllJson();
     });
 
-    Navigator.pop(context);
+    _downloading = true;
+    await DownLoad.downloadAllImages(context);
+    _downloading = false;
+    canBeOffline = true;
+    UserData.canGoOffline(true);
 
-    setState(() {
-      _downloading = true;
-      DownLoad.downloadAllImages(context);
-      _downloading = false;
-      canBeOffline = true;
-      UserData.canGoOffline(true);
-    });
+    // Navigator.pop(context);
   }
 
   Future<void> off() async {
