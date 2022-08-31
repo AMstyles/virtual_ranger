@@ -88,7 +88,7 @@ class _NewsWidgState extends State<NewsWidg> {
                                 //overflow: TextOverflow.ellipsis,
                                 widget.story.title,
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.white),
+                                    fontSize: 19, color: Colors.white),
                               ),
                               const SizedBox(
                                 height: 5,
@@ -96,7 +96,7 @@ class _NewsWidgState extends State<NewsWidg> {
                               Text(
                                 widget.story.news_post_date,
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: Colors.white,
                                   //fontWeight: FontWeight.bold
                                 ),

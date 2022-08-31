@@ -4,7 +4,7 @@ import 'DrawerItem.dart';
 
 class DrawerItems {
   static final profile =
-      DrawerItem(title: 'Profile', icon: Icons.person, num: 0);
+      DrawerItem(title:  'Profile', icon: Icons.person, num: 0);
   static final dealsAndNews =
       DrawerItem(title: 'Deals & News', icon: Icons.newspaper_rounded, num: 1);
 
