@@ -1,5 +1,5 @@
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../models/user.dart';
 
 class UserData {
@@ -8,16 +8,33 @@ class UserData {
   static late User user;
   static late bool isLogIn;
   static late String isLog;
+  static late String path;
 
   //!methods
   static Future<void> init() async {
     print('Shared preferences initialized');
-
     _userData = await SharedPreferences.getInstance();
     user = await getUser();
-    //print(user.name);
-    //print(await isLoggedIn());
-    //print(isLog);
+
+    await getApplicationDocumentsDirectory().then((value) {
+      path = value.path;
+    });
+  }
+
+  static Future<void> toggleOfflineMode(bool value) async {
+    await _userData.setBool('offlineMode', value);
+  }
+
+  static Future<bool> getOfflineMode() async {
+    return await _userData.getBool('offlineMode') ?? false;
+  }
+
+  static canGoOffline(bool value) async {
+    await _userData.setBool('canGoOfflineMode', value);
+  }
+
+  static Future<bool> getCanGoOffline() async {
+    return await _userData.getBool('canGoOfflineMode') ?? false;
   }
 
   static Future<void> logOut() async {
@@ -36,7 +53,6 @@ class UserData {
 
   static Future setUser(User user) async {
     //save to shared prefs from user class
-
     //bool to check if user is logged in
     await _userData.setBool('isLoggedIn', true);
     await _userData.setString('isLog', '1');

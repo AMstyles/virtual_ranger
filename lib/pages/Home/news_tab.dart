@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/news.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/widgets/NewsWidg.dart';
 
 import '../../apis/newsapi.dart';
@@ -22,7 +24,9 @@ class _NewsTabState extends State<NewsTab>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<News>>(
-      future: Newsapi.getNews(),
+      future: Provider.of<UserProvider>(context).isOffLine ?? false
+          ? Newsapi.getNewsFromLocal()
+          : Newsapi.getNews(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(

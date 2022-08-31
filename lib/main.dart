@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/apis/Download.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/pages/splash_screen.dart';
 import 'package:virtual_ranger/services/LoginProviders.dart';
@@ -11,6 +12,11 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserData.init();
   await Firebase.initializeApp();
+  try {
+    await DownLoad.downloadAllJson();
+  } catch (e) {
+    print(e);
+  }
   runApp(MyApp());
 }
 
@@ -38,6 +44,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => DownloadProvider(),
+        ),
       ],
       child: MaterialApp(
         themeMode: ThemeMode.light,
@@ -54,7 +63,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen() /*const SplashScreen()*/,
+        home: SplashScreen(),
       ),
     );
   }

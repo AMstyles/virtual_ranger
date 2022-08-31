@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/models/news.dart';
+import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/services/shared_preferences.dart';
 
 import '../../models/preset_styles.dart';
 
@@ -21,10 +26,13 @@ class NewsPage extends StatelessWidget {
         children: [
           Hero(
             tag: story.title,
-            child: CachedNetworkImage(
-              imageUrl: NEWS_IMAGE_URL + story.news_image,
-              fit: BoxFit.cover,
-            ),
+            child: Provider.of<UserProvider>(context).isOffLine ?? false
+                ? Image.file(
+                    File('${UserData.path}/images/${story.news_image}'))
+                : CachedNetworkImage(
+                    imageUrl: NEWS_IMAGE_URL + story.news_image,
+                    fit: BoxFit.cover,
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 
 import '../apis/Animal&Plants_apis.dart';
 import '../models/Specy.dart';
@@ -49,7 +51,9 @@ class CustomSearchDelegate extends SearchDelegate {
       }
     }
     return FutureBuilder<List<Specy>>(
-      future: Specyapi.getSpecies(),
+      future: Provider.of<UserProvider>(context).isOffLine ?? false
+          ? Specyapi.getSpeciesFromLocal()
+          : Specyapi.getSpecies(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (query.isEmpty) {
@@ -89,7 +93,9 @@ class CustomSearchDelegate extends SearchDelegate {
     // TODO: implement buildSuggestions
 
     return FutureBuilder<List<Specy>>(
-      future: Specyapi.getSpecies(),
+      future: Provider.of<UserProvider>(context).isOffLine ?? false
+          ? Specyapi.getSpeciesFromLocal()
+          : Specyapi.getSpecies(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (query.isEmpty) {

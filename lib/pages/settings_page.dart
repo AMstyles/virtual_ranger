@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/pages/DownloadPage.dart';
 
 import 'Custom/AnimeVals.dart';
 
@@ -39,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            title: const Text('Show notificatoions'),
+            title: const Text('Show notifications'),
             onTap: () {
               setState(() {
                 showNotifications = !showNotifications;
@@ -99,11 +100,13 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             textColor: Colors.red,
             title: const Text(
-              'Redownload app contents',
+              'Download For Offline',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             onTap: () {
-              setState(() {});
+              Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+                return DownloadPage();
+              })));
             },
             trailing: const Icon(
               Icons.download,

@@ -5,6 +5,7 @@ import 'package:virtual_ranger/widgets/BLWidg.dart';
 
 import '../apis/businesslistingsapi.dart';
 import '../models/BL.dart';
+import '../services/page_service.dart';
 
 class BusinessListingsPage extends StatefulWidget {
   BusinessListingsPage({Key? key}) : super(key: key);
@@ -28,7 +29,9 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
         children: [
           _buildHeader(context, 'Emergency Contact Numbers'),
           FutureBuilder<List<BusinessListing>>(
-            future: BusinessListingsapi.getBusinessListings(),
+            future: Provider.of<UserProvider>(context).isOffLine ?? false
+                ? BusinessListingsapi.getBusinessListingsFromLocal()
+                : BusinessListingsapi.getBusinessListings(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(

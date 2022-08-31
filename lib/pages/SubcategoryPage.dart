@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/category.dart';
 import 'package:virtual_ranger/services/animal_search.dart';
 import '../models/subCategory.dart';
+import '../services/page_service.dart';
 import '../widgets/SubCategoryWidg.dart';
 import '../apis/Animal&Plants_apis.dart';
 
@@ -36,7 +38,9 @@ class _SubcategoryPageState extends State<SubcategoryPage> {
         ],
       ),
       body: FutureBuilder<List<SubCategory>>(
-        future: SubCategoryapi.getSubCategories(),
+        future: Provider.of<UserProvider>(context).isOffLine ?? true
+            ? SubCategoryapi.getSubCategoriesFromLocal()
+            : SubCategoryapi.getSubCategories(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

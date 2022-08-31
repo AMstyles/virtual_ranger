@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/event.dart';
 
 import '../../apis/eventapi.dart';
+import '../../services/page_service.dart';
 import '../../widgets/eventWidg.dart';
 
 class DealsTab extends StatefulWidget {
@@ -16,7 +18,9 @@ class _DealsTabState extends State<DealsTab>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Event>>(
-      future: Eventapi.getEvents(),
+      future: Provider.of<UserProvider>(context).isOffLine ?? false
+          ? Eventapi.getEventsFromLocal()
+          : Eventapi.getEvents(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(

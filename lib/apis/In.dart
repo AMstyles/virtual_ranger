@@ -23,7 +23,6 @@ class signUpAPI {
       'gender': gender,
     });
     final data = response.body;
-
     return data;
   }
 
@@ -62,7 +61,6 @@ class signUpAPI {
     });
     final data = response.body;
     print(data);
-
     return data;
   }
 
@@ -76,8 +74,6 @@ class signUpAPI {
     String country,
     String city,
     String secretKey,
-
-    //String thing,
   ) async {
     final response = await http
         .post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
@@ -85,14 +81,13 @@ class signUpAPI {
       'name': name,
       'email': email,
       'mobile': phone,
-      'country': country,
+      //'country': country,
       'age_range': age_range,
       'secret_key': secretKey,
       'user_role': 'Attendee',
       'city': city,
-      //'country': country,
-      //'age_range':age_range,
     });
+
     final data = response.body;
     print(data);
 

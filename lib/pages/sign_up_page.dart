@@ -207,6 +207,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
           if (finalVedict['success'] == true) {
             final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
@@ -296,29 +297,32 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildFacebookSignInButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5),
-      alignment: Alignment.center,
-      height: 45,
-      width: 140,
-      decoration: const BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          Icon(
-            size: 40,
-            Icons.facebook,
-            color: Colors.white,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "Sign in with Facebook",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => FacebookLoginProvider.signInWithFacebook(),
+      child: Container(
+        padding: const EdgeInsets.only(left: 5),
+        alignment: Alignment.center,
+        height: 45,
+        width: 140,
+        decoration: const BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Icon(
+              size: 40,
+              Icons.facebook,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              "Sign in with Facebook",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

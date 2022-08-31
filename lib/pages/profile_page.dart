@@ -1,13 +1,17 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Profile/textFieds.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 import 'package:virtual_ranger/apis/In.dart';
 
@@ -25,6 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   late User user;
   late String data;
+  late File imageFile;
+  late String dir;
 
   String makeGender() {
     if (isMale) {
@@ -52,6 +58,11 @@ class _ProfilePageState extends State<ProfilePage> {
     // TODO: implement initState
     super.initState();
     initControllers();
+    print("hello world");
+    getApplicationDocumentsDirectory().then((directory) {
+      final dir = directory;
+      imageFile = File('${dir.path}/ProfilePhoto.jpg');
+    });
 
     switch (Provider.of<UserProvider>(context, listen: false).user!.gender) {
       case 'male':
@@ -77,16 +88,16 @@ class _ProfilePageState extends State<ProfilePage> {
     _emailController.text =
         Provider.of<UserProvider>(context, listen: false).user!.email;
     _countryController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.country!;
+        Provider.of<UserProvider>(context, listen: false).user!.country ?? "";
 
     _cityController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.city!;
+        Provider.of<UserProvider>(context, listen: false).user!.city ?? "";
 
     _phoneController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.mobile!;
+        Provider.of<UserProvider>(context, listen: false).user!.mobile ?? "";
 
     _ageController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.age_range!;
+        Provider.of<UserProvider>(context, listen: false).user!.age_range ?? "";
   }
 
   @override
@@ -115,15 +126,28 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 18.0),
-                  child: Provider.of<UserProvider>(context).user!.isImageNull()
-                      ? const CircleAvatar(
-                          backgroundColor: Colors.grey, radius: 80)
-                      : CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(
-                            Provider.of<UserProvider>(context).user!.image!,
-                          ),
-                          radius: 80),
+                  child:
+                      (Provider.of<UserProvider>(context).user!.isImageNull())
+                          ? const CircleAvatar(
+                              radius: 80,
+                              backgroundImage:
+                                  AssetImage('lib/assets/noPro.jpg'),
+                            )
+                          : Provider.of<UserProvider>(context).user!.image == ''
+                              ? const CircleAvatar(
+                                  radius: 80,
+                                  backgroundImage:
+                                      AssetImage('lib/assets/noPro.jpg'),
+                                )
+                              : CircleAvatar(
+                                  radius: 80,
+                                  backgroundColor: Colors.green,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      Provider.of<UserProvider>(context)
+                                              .user!
+                                              .image ??
+                                          'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'),
+                                ),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -322,6 +346,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (finalData['success'] == true) {
       Provider.of<UserProvider>(context, listen: false)
           .setUser(User.fromjson(finalData['data']));
+      UserData.setUser(User.fromjson(finalData['data']));
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -453,16 +478,113 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: [
               CupertinoActionSheetAction(
                   onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Center(
+                              child: CircularProgressIndicator.adaptive());
+                        });
+
                     final ImagePicker _picker = ImagePicker();
-                    final XFile? photo =
-                        await _picker.pickImage(source: ImageSource.camera);
+                    final File? photo = await _picker
+                        .pickImage(source: ImageSource.camera)
+                        .then((image) async {
+                      if (image != null) {
+                        Dio dio = Dio();
+                        FormData formData = FormData.fromMap({});
+
+                        final response = dio.post(
+                          "http://dinokengapp.co.za/edit_profile",
+                          data: FormData.fromMap({
+                            "profile_image":
+                                await MultipartFile.fromFile(image.path),
+                            "id": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .id,
+                            "email": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .email,
+                            "user_role": "Attendee",
+                            "secret_key": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .secret_key ??
+                                ' ',
+                          }),
+                        );
+                        await response.then((value) {
+                          final data = value.data;
+                          print(data);
+                          User UserToBe = User.fromjson(data['data']);
+                          UserData.setUser(UserToBe);
+                          Provider.of<UserProvider>(context, listen: false)
+                              .setUser(UserToBe);
+                        });
+
+                        Navigator.pop(context);
+                      }
+                      Navigator.pop(context);
+                      return;
+                    });
                   },
                   child: const Text('Camera')),
               CupertinoActionSheetAction(
                   onPressed: () async {
                     final ImagePicker _picker = ImagePicker();
-                    final XFile? photo =
-                        await _picker.pickImage(source: ImageSource.gallery);
+                    final XFile? photo = await _picker
+                        .pickImage(source: ImageSource.gallery)
+                        .then((Image) async {
+                      if (Image != null) {
+                        Dio dio = Dio();
+                        FormData formData = FormData.fromMap({});
+                        final response = dio.post(
+                          "http://dinokengapp.co.za/edit_profile",
+                          data: FormData.fromMap({
+                            "profile_image":
+                                await MultipartFile.fromFile(Image.path),
+                            "id": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .id,
+                            "email": Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .user!
+                                .email,
+                            "user_role": "Attendee",
+                            "secret_key": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .secret_key ??
+                                ' ',
+                          }),
+                        );
+
+                        //showDialog
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const Center(
+                                  child: CircularProgressIndicator.adaptive());
+                            });
+
+                        await response.then((value) {
+                          final data = value.data;
+                          print(data);
+                          User UserToBe = User.fromjson(data['data']);
+                          //set user to shared prefs
+                          UserData.setUser(UserToBe);
+                          print(UserToBe.name);
+                          Provider.of<UserProvider>(context, listen: false)
+                              .setUser(UserToBe);
+                        });
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+
+                      return;
+                    });
                   },
                   child: const Text('Gallery')),
             ],

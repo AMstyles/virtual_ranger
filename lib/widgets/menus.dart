@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Custom/DrawerItem.dart';
-
 import '../pages/Custom/AnimeVals.dart';
 import '../services/page_service.dart';
 
@@ -29,6 +27,13 @@ class _DrawerMenuState extends State<DrawerMenu> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    myTimer.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -38,7 +43,8 @@ class _DrawerMenuState extends State<DrawerMenu> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(
-            vertical: MediaQuery.of(context).size.height * .01, horizontal: 10),
+            vertical: MediaQuery.of(context).size.height * .018,
+            horizontal: 10),
         color:
             (Provider.of<PageProvider>(context, listen: false).currentPageNum !=
                     widget.item.num)
@@ -48,9 +54,11 @@ class _DrawerMenuState extends State<DrawerMenu> {
           children: [
             Row(
               children: <Widget>[
-                Icon(
-                  widget.item.icon,
+                Image.asset(
+                  widget.item.image,
+                  height: 26,
                   color: Colors.white,
+                  fit: BoxFit.cover,
                 ),
                 const SizedBox(
                   width: 10,

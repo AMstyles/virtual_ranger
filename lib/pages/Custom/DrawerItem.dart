@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-
 class DrawerItem {
   final String title;
-  final IconData icon;
+  final String image;
   int num;
 
-  DrawerItem({required this.title, required this.icon, required this.num});
+  DrawerItem({required this.title, required this.image, required this.num});
 }

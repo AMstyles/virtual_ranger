@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/models/Specy.dart';
 import 'package:virtual_ranger/models/subCategory.dart';
 import 'package:virtual_ranger/services/animal_search.dart';
 import 'package:virtual_ranger/widgets/SpecyWidget.dart';
+
+import '../services/page_service.dart';
 
 class SpeciesPage extends StatefulWidget {
   SpeciesPage({Key? key, required this.subCategory}) : super(key: key);
@@ -35,7 +38,9 @@ class _SpeciesPageState extends State<SpeciesPage> {
         ],
       ),
       body: FutureBuilder<List<Specy>>(
-        future: Specyapi.getSpecies(),
+        future: Provider.of<UserProvider>(context).isOffLine ?? false
+            ? Specyapi.getSpeciesFromLocal()
+            : Specyapi.getSpecies(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
