@@ -27,6 +27,13 @@ class _DrawerMenuState extends State<DrawerMenu> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    myTimer.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -47,9 +54,11 @@ class _DrawerMenuState extends State<DrawerMenu> {
           children: [
             Row(
               children: <Widget>[
-                Icon(
-                  widget.item.icon,
+                Image.asset(
+                  widget.item.image,
+                  height: 26,
                   color: Colors.white,
+                  fit: BoxFit.cover,
                 ),
                 const SizedBox(
                   width: 10,

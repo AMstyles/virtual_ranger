@@ -52,7 +52,8 @@ class SubCategoryapi {
   static Future<List<SubCategory>> getSubCategoriesFromLocal() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/sub_categories.json');
-    final data = jsonDecode(await file.readAsString());
+    final something = await file.readAsString();
+    final data = jsonDecode(something);
     final data2 = data['data'];
     final List<dynamic> finalData = data2;
     List<SubCategory> subCategories = [];
@@ -108,7 +109,8 @@ class Imageapi {
   static Future<List<SpecyImage>> getImagesForDownload() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/images.json');
-    final data = jsonDecode(await file.readAsString());
+    final something = await file.readAsString();
+    final data = jsonDecode(something);
     final data2 = data['data'];
     final List<dynamic> finalData = data2;
     List<SpecyImage> species = [];
@@ -121,7 +123,8 @@ class Imageapi {
   static Future<List<SpecyImage>> getImagesFromLocal(Specy specy) async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/images.json');
-    final data = jsonDecode(await file.readAsString());
+    final something = await file.readAsString();
+    final data = jsonDecode(something);
     final data2 = data['data'];
     final List<dynamic> finalData = data2;
     List<SpecyImage> species = [];

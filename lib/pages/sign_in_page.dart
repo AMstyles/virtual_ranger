@@ -13,7 +13,6 @@ import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/models/user.dart';
 import 'package:virtual_ranger/pages/sign_up_page.dart';
 import 'dart:io' show Platform;
-
 import '../services/LoginProviders.dart';
 import '../services/page_service.dart';
 
@@ -27,7 +26,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late User user;
   late String data;
-
   late String email;
   late String password;
   late TextEditingController _emailController;

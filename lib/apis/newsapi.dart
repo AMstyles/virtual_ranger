@@ -21,7 +21,7 @@ class Newsapi {
   static Future<List<News>> getNewsFromLocal() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/news.json');
-    final data = file.readAsStringSync();
+    String data = file.readAsStringSync();
     final pre_data = jsonDecode(data);
     final List<dynamic> finalData = pre_data['data'];
     List<News> news = [];

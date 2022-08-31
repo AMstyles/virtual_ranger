@@ -41,7 +41,14 @@ class _Kestrel_club_pageState extends State<Kestrel_club_page> {
 
   Widget _buildSignUpButton(BuildContext context, String text) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QRScannerPage(),
+          ),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 8.0,

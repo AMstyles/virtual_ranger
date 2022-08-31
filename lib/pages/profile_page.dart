@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:image/image.dart' as ImageConvert;
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,16 +88,16 @@ class _ProfilePageState extends State<ProfilePage> {
     _emailController.text =
         Provider.of<UserProvider>(context, listen: false).user!.email;
     _countryController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.country!;
+        Provider.of<UserProvider>(context, listen: false).user!.country ?? "";
 
     _cityController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.city!;
+        Provider.of<UserProvider>(context, listen: false).user!.city ?? "";
 
     _phoneController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.mobile!;
+        Provider.of<UserProvider>(context, listen: false).user!.mobile ?? "";
 
     _ageController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.age_range!;
+        Provider.of<UserProvider>(context, listen: false).user!.age_range ?? "";
   }
 
   @override
@@ -130,9 +129,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child:
                       (Provider.of<UserProvider>(context).user!.isImageNull())
                           ? const CircleAvatar(
-                              backgroundColor: Colors.grey,
                               radius: 80,
-                              backgroundImage: AssetImage('lib/assets/noPro'),
+                              backgroundImage:
+                                  AssetImage('lib/assets/noPro.jpg'),
                             )
                           : Provider.of<UserProvider>(context).user!.image == ''
                               ? const CircleAvatar(
@@ -515,7 +514,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ' ',
                           }),
                         );
-                        response.then((value) {
+                        await response.then((value) {
                           final data = value.data;
                           print(data);
                           User UserToBe = User.fromjson(data['data']);
@@ -524,7 +523,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               .setUser(UserToBe);
                         });
 
-                        Navigator.pop(context);
                         Navigator.pop(context);
                       }
                       Navigator.pop(context);
@@ -562,7 +560,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ' ',
                           }),
                         );
-                        response.then((value) {
+
+                        //showDialog
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const Center(
+                                  child: CircularProgressIndicator.adaptive());
+                            });
+
+                        await response.then((value) {
                           final data = value.data;
                           print(data);
                           User UserToBe = User.fromjson(data['data']);
@@ -572,7 +579,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           Provider.of<UserProvider>(context, listen: false)
                               .setUser(UserToBe);
                         });
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                       }
+
+                      return;
                     });
                   },
                   child: const Text('Gallery')),

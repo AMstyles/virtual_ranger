@@ -12,7 +12,7 @@ import 'businesslistingsapi.dart';
 import 'eventapi.dart';
 
 class DownLoad {
-  static void downloadAllJson() {
+  static Future<void> downloadAllJson() async {
     DownloadNews();
     print("success 1");
     DownloadEvents();
@@ -36,7 +36,8 @@ class DownLoad {
     final file = File('${UserData.path}/news.json');
 
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true); // create file if not exists
+
     } else {
       file.writeAsStringSync(data);
     }
@@ -47,7 +48,7 @@ class DownLoad {
     final data = response.body;
     final file = await File('${UserData.path}/events.json');
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     } else {
       file.writeAsStringSync(data);
     }
@@ -58,7 +59,7 @@ class DownLoad {
     final data = response.body;
     File file = await File('${UserData.path}/species.json');
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     } else {
       file.writeAsStringSync(data);
     }
@@ -69,7 +70,7 @@ class DownLoad {
     final data = response.body;
     File file = await File('${UserData.path}/categories.json');
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     } else {
       file.writeAsStringSync(data);
     }
@@ -80,7 +81,7 @@ class DownLoad {
     final data = response.body;
     File file = await File('${UserData.path}/sub_categories.json');
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     } else {
       file.writeAsStringSync(data);
     }
@@ -91,7 +92,7 @@ class DownLoad {
     final data = response.body;
     File file = await File('${UserData.path}/business_listings.json');
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     } else {
       file.writeAsStringSync(data);
     }
@@ -102,7 +103,7 @@ class DownLoad {
     final data = response.body;
     File file = await File('${UserData.path}/faq.json');
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     } else {
       file.writeAsStringSync(data);
     }
@@ -116,7 +117,7 @@ class DownLoad {
     File file = await File('${UserData.path}/images.json');
     print("Download image data success");
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     } else {
       file.writeAsStringSync(data);
     }
@@ -131,11 +132,11 @@ class DownLoad {
       print(e);
     }
     if (!imageFile.existsSync()) {
-      imageFile.createSync();
+      imageFile.createSync(recursive: true);
     }
   }
 
-  static void downloadAllImages(BuildContext context) async {
+  static Future<void> downloadAllImages(BuildContext context) async {
     await downloadNewsImages(context);
     await downloadEventsImages(context);
     await downloadCategoryImage(context);
@@ -146,6 +147,7 @@ class DownLoad {
 
   static downloadNewsImages(BuildContext context) {
     Newsapi.getNewsFromLocal().then((News) async {
+      print(News);
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(News.length);
       for (var i = 0; i < News.length; i++) {

@@ -23,7 +23,6 @@ class signUpAPI {
       'gender': gender,
     });
     final data = response.body;
-
     return data;
   }
 
