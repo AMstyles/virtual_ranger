@@ -192,45 +192,49 @@ class _SightingslistPageState extends State<SightingslistPage> {
               'Choose Map Type',
               style: TextStyle(color: Colors.blue),
             ),
-            content: ListView(shrinkWrap: true, children: [
-              //listview to choose map type
-              ListTile(
-                title: const Text('Normal'),
-                onTap: () {
-                  setState(() {
-                    mapType = MapType.normal;
-                  });
-                  Navigator.of(context).pop();
-                },
+            content: Center(
+              child: Container(
+                child: Column(children: [
+                  //listview to choose map type
+                  ListTile(
+                    title: const Text('Normal'),
+                    onTap: () {
+                      setState(() {
+                        mapType = MapType.normal;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Satellite'),
+                    onTap: () {
+                      setState(() {
+                        mapType = MapType.satellite;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Hybrid'),
+                    onTap: () {
+                      setState(() {
+                        mapType = MapType.hybrid;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Terrain'),
+                    onTap: () {
+                      setState(() {
+                        mapType = MapType.terrain;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ]),
               ),
-              ListTile(
-                title: const Text('Satellite'),
-                onTap: () {
-                  setState(() {
-                    mapType = MapType.satellite;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('Hybrid'),
-                onTap: () {
-                  setState(() {
-                    mapType = MapType.hybrid;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: const Text('Terrain'),
-                onTap: () {
-                  setState(() {
-                    mapType = MapType.terrain;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]),
+            ),
             actions: <Widget>[
               FlatButton(
                 child: const Text('Close', style: TextStyle(color: Colors.red)),
