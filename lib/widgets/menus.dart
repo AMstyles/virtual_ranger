@@ -54,9 +54,11 @@ class _DrawerMenuState extends State<DrawerMenu> {
           children: [
             Row(
               children: <Widget>[
-                Icon(
-                  widget.item.icon,
+                Image.asset(
+                  widget.item.image,
+                  height: 26,
                   color: Colors.white,
+                  fit: BoxFit.cover,
                 ),
                 const SizedBox(
                   width: 10,

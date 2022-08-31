@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,7 @@ import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../apis/Sightingsapi.dart';
+import '../widgets/MapLegend_widg.dart';
 
 class SightingslistPage extends StatefulWidget {
   SightingslistPage({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
+  var mapType = MapType.normal;
   var markers = Set<Marker>();
   void askLocationPermission() async {
     await Permission.location.request();
@@ -45,6 +48,9 @@ class _SightingslistPageState extends State<SightingslistPage> {
             icon: const Icon(Icons.menu),
             onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
           ),
+          actions: [
+            IconButton(onPressed: chooseMapType, icon: Icon(Icons.settings))
+          ],
           title: const Text('Sightings List')),
       floatingActionButton:
           Column(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -85,6 +91,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
       ]),
       body: Center(
         child: GoogleMap(
+          mapType: mapType,
+          compassEnabled: true,
           onTap: addMaker_,
           markers: markers,
           onLongPress: addMaker_,
@@ -122,19 +130,35 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   void showLegend() {
     showModalBottomSheet(
+        anchorPoint: const Offset(0, 1),
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        enableDrag: true,
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Legend'),
-            content: const Text('Red: Sighting'),
-            actions: <Widget>[
-              FlatButton(
-                child: const Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+          return SafeArea(
+            bottom: false,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Legend',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 20,
+                    itemBuilder: (context, index) {
+                      return LegendWidget();
+                    }),
+              ],
+            ),
           );
         });
   }
@@ -149,6 +173,67 @@ class _SightingslistPageState extends State<SightingslistPage> {
             actions: <Widget>[
               FlatButton(
                 child: const Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void chooseMapType() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          //alert dialog to choose map type
+          return AlertDialog(
+            title: const Text(
+              'Choose Map Type',
+              style: TextStyle(color: Colors.blue),
+            ),
+            content: ListView(shrinkWrap: true, children: [
+              //listview to choose map type
+              ListTile(
+                title: const Text('Normal'),
+                onTap: () {
+                  setState(() {
+                    mapType = MapType.normal;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: const Text('Satellite'),
+                onTap: () {
+                  setState(() {
+                    mapType = MapType.satellite;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: const Text('Hybrid'),
+                onTap: () {
+                  setState(() {
+                    mapType = MapType.hybrid;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: const Text('Terrain'),
+                onTap: () {
+                  setState(() {
+                    mapType = MapType.terrain;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]),
+            actions: <Widget>[
+              FlatButton(
+                child: const Text('Close', style: TextStyle(color: Colors.red)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
