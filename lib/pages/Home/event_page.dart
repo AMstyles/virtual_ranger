@@ -28,7 +28,8 @@ class EventPage extends StatelessWidget {
           Hero(
               tag: event.title,
               child: Provider.of<UserProvider>(context).isOffLine ?? false
-                  ? Image.file(File('${UserData.path}/${event.event_image}'))
+                  ? Image.file(
+                      File('${UserData.path}/images/${event.event_image}'))
                   : CachedNetworkImage(
                       imageUrl: NEWS_IMAGE_URL + event.event_image,
                     )),

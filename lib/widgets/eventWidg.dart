@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/event.dart';
 import '../models/constants.dart';
 import '../pages/Home/event_page.dart';
+import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 
 class EventWidg extends StatelessWidget {
   EventWidg({Key? key, required this.event}) : super(key: key);
@@ -24,11 +29,16 @@ class EventWidg extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: Stack(
               children: [
-                CachedNetworkImage(
-                  fadeInDuration: const Duration(milliseconds: 0),
-                  fit: BoxFit.cover,
-                  imageUrl: NEWS_IMAGE_URL + event.event_image,
-                ),
+                Provider.of<UserProvider>(context).isOffLine ?? false
+                    ? Image.file(
+                        File('${UserData.path}/images/${event.event_image}'),
+                        fit: BoxFit.cover,
+                      )
+                    : CachedNetworkImage(
+                        fadeInDuration: const Duration(milliseconds: 0),
+                        fit: BoxFit.cover,
+                        imageUrl: NEWS_IMAGE_URL + event.event_image,
+                      ),
                 Positioned(
                   bottom: 0,
                   child: AnimatedContainer(

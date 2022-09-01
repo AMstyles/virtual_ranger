@@ -16,7 +16,7 @@ class SightingslistPage extends StatefulWidget {
 
 class _SightingslistPageState extends State<SightingslistPage> {
   late final legendItems;
-  var currentAnimal = null;
+  AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
   var markers = Set<Marker>();
   void askLocationPermission() async {
@@ -158,7 +158,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
     return Colors.black;
   }
 
-  void addMaker_(LatLng latLng, Sighting sighting) async {
+  void addMaker_(LatLng latLng, AnimalSight sighting) async {
     bool isTrue = false;
 
     Marker marker = Marker(
@@ -166,19 +166,22 @@ class _SightingslistPageState extends State<SightingslistPage> {
         markerId: MarkerId(latLng.toString()),
         position: latLng,
         infoWindow: InfoWindow(
-          title: getName(sighting.animal_id),
-          snippet: sighting.sighting_time.toString(),
+          title: getName(sighting.name),
+          snippet: TimeOfDay.now().toString(),
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
 
     setState(() {
       markers.add(marker);
+    });
+    await Sightings.uploadMarker(latLng, context, currentAnimal!);
+    setState(() {
       currentAnimal = null;
     });
-    Sightings.uploadMarker(latLng, context, currentAnimal);
   }
 
   void addMakerLoc_(LatLng latLng, AnimalSight sighting) async {
+    print(latLng.toString());
     Marker marker = Marker(
         flat: true,
         markerId: MarkerId(latLng.toString()),
@@ -193,7 +196,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
       markers.add(marker);
       currentAnimal = null;
     });
-    Sightings.uploadMarker(latLng, context, currentAnimal);
+    Sightings.uploadMarker(latLng, context, currentAnimal!);
   }
 
   void showLegend() {
@@ -259,6 +262,10 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }
 
   void showConfirmDialog(LatLng latLng) {
+    LatLng currPos = latLng;
+
+    print(latLng.latitude.toString() + 'latlng');
+    print(latLng.longitude.toString() + 'latlng');
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -280,7 +287,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    addMakerLoc_(latLng, currentAnimal);
+                    addMaker_(currPos, currentAnimal!);
                   },
                   child: Text('Confirm')),
             ],
@@ -420,7 +427,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
   void setCurrentAnimal(index) {
     setState(() {
       currentAnimal = legendItems[index];
-      print(currentAnimal.name);
+      //print(currentAnimal.name);
     });
 
     Navigator.pop(context);
@@ -430,7 +437,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
         builder: (context) => AlertDialog(
               title: Text('Add Sighting'),
               content: Text(
-                  'Simply tap on the map where you spotted the ${currentAnimal.name}'),
+                  'Simply tap on the map where you spotted the ${currentAnimal!.name}'),
               actions: [
                 TextButton(
                     onPressed: () {

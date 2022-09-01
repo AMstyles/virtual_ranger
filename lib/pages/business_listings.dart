@@ -56,7 +56,9 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
           const SizedBox(height: 10),
           _buildHeader(context, 'Accomodation'),
           FutureBuilder<List<BusinessListing>>(
-            future: BusinessListingsapi.getBusinessListings(),
+            future: Provider.of<UserProvider>(context).isOffLine ?? false
+                ? BusinessListingsapi.getBusinessListingsFromLocal()
+                : BusinessListingsapi.getBusinessListings(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -80,7 +82,9 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
           const SizedBox(height: 10),
           _buildHeader(context, 'Restaurants'),
           FutureBuilder<List<BusinessListing>>(
-            future: BusinessListingsapi.getBusinessListings(),
+            future: Provider.of<UserProvider>(context).isOffLine ?? false
+                ? BusinessListingsapi.getBusinessListingsFromLocal()
+                : BusinessListingsapi.getBusinessListings(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -104,7 +108,9 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
           const SizedBox(height: 10),
           _buildHeader(context, 'Activities'),
           FutureBuilder<List<BusinessListing>>(
-            future: BusinessListingsapi.getBusinessListings(),
+            future: Provider.of<UserProvider>(context).isOffLine ?? false
+                ? BusinessListingsapi.getBusinessListingsFromLocal()
+                : BusinessListingsapi.getBusinessListings(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -128,7 +134,9 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
           const SizedBox(height: 10),
           _buildHeader(context, 'Services'),
           FutureBuilder<List<BusinessListing>>(
-            future: BusinessListingsapi.getBusinessListings(),
+            future: Provider.of<UserProvider>(context).isOffLine ?? false
+                ? BusinessListingsapi.getBusinessListingsFromLocal()
+                : BusinessListingsapi.getBusinessListings(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(

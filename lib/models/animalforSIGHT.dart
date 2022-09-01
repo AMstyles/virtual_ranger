@@ -26,7 +26,7 @@ class Sighting {
   double latitude;
   double longitude;
   String animal_id;
-  TimeOfDay sighting_time;
+  String sighting_time;
 
   Sighting({
     required this.latitude,
@@ -37,8 +37,8 @@ class Sighting {
 
   static Sighting fromJson(Map<String, dynamic> json) {
     return Sighting(
-      latitude: json['latitude'],
-      longitude: json['longitude'],
+      latitude: double.parse(json['latitude']),
+      longitude: double.parse(json['longitude']),
       animal_id: json['animal_id'],
       sighting_time: json['sighting_time'],
     );

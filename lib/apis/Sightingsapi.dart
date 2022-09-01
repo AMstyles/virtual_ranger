@@ -11,14 +11,15 @@ import '../models/constants.dart';
 import '../services/page_service.dart';
 
 class Sightings {
-  static void uploadMarker(
-      LatLng position, BuildContext context, Sighting currentAnimal) async {
+  static Future<void> uploadMarker(
+      LatLng position, BuildContext context, AnimalSight currentAnimal) async {
+    print("uploading marker" + position.toString());
     final response = await http
         .post(Uri.parse('http://dinokengapp.co.za/add_animal_sighting'), body: {
       'user_id': UserData.user.id,
-      'animal_id': currentAnimal.animal_id,
-      'plartform': 'mobile',
-      'DeviceID': ' ',
+      'animal_id': currentAnimal.id,
+      'plartform': Platform.isAndroid ? 'android' : 'ios',
+      'DeviceID': Platform.version,
       'latitude': position.latitude.toString(),
       'longitude': position.longitude.toString(),
       'secret_key':
@@ -57,7 +58,11 @@ class Sightings {
   }
 
   static Future<List<Sighting>> getSightings() async {
-    final response = await http.get(Uri.parse(GET_SIGHTINGS_URL));
+    final response = await http.post(Uri.parse(GET_SIGHTINGS_URL), body: {
+      'user_id': UserData.user.id,
+      'secret_key': UserData.user.secret_key,
+      'user_role': 'Attendee'
+    });
     print(response.body);
     final pre_data = jsonDecode(response.body);
     final data = pre_data['data'];
