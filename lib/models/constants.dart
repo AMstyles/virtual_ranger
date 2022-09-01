@@ -23,6 +23,10 @@ String BASE_IMAGE_URL = 'http://dinokengapp.co.za/admin/animal_image/';
 String GET_USER_URL = 'https://dinokengapp.co.za/get_user';
 String GET_GOOGLE_USER_URL = 'http://dinokengapp.co.za/google_login';
 
+String GET_COLOURED_ANIMALS_URL =
+    'https://dinokengapp.co.za/get_animals_colored';
+String GET_SIGHTINGS_URL = 'https://dinokengapp.co.za/hour_sightings';
+
 class MyColors {
   static Color primaryColor = const Color(0xff364d19);
   static Color secondaryColor = const Color(0xff6a3a16);

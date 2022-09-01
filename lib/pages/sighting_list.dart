@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/models/animalforSIGHT.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../apis/Sightingsapi.dart';
 import '../widgets/MapLegend_widg.dart';
 
@@ -16,6 +15,8 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
+  late final legendItems;
+  var currentAnimal = null;
   var mapType = MapType.normal;
   var markers = Set<Marker>();
   void askLocationPermission() async {
@@ -24,13 +25,14 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   late GoogleMapController _googleMapController;
 
-  late final currentLocation;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     askLocationPermission();
+    Sightings.getSightings();
+    putLegend();
+    //putMarkers();
   }
 
   @override
@@ -74,28 +76,26 @@ class _SightingslistPageState extends State<SightingslistPage> {
             child: const Icon(Icons.map),
           ),
         ),
-        Padding(
+        /*Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton(
             backgroundColor: Colors.white,
             onPressed: () {
-              _googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                      target: LatLng(
-                          currentLocation.latitude, currentLocation.longitude),
-                      zoom: 10)));
+              _googleMapController.animateCamera(CameraUpdate.newLatLngZoom(
+                  LatLng(currentLocation.latitude, currentLocation.longitude),
+                  14));
             },
             child: const Icon(Icons.my_location, color: Colors.black),
           ),
-        ),
+        ),*/
       ]),
       body: Center(
         child: GoogleMap(
           mapType: mapType,
           compassEnabled: true,
-          onTap: addMaker_,
+          onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
           markers: markers,
-          onLongPress: addMaker_,
+          //onLongPress: addMaker_,
           mapToolbarEnabled: true,
           zoomControlsEnabled: false,
           onMapCreated: (controller) => _googleMapController = controller,
@@ -110,73 +110,245 @@ class _SightingslistPageState extends State<SightingslistPage> {
     );
   }
 
-  void addMaker_(LatLng latLng) {
-    print(latLng);
+  void putLegend() async {
+    legendItems = await Sightings.getColouredAnimal(context);
+  }
+
+  void putMarkers() async {
+    final data = await Sightings.getSightings();
+    var markers_ = Set<Marker>();
+
+    for (var item in data) {
+      markers_.add(putMarkerNow(item));
+      print(item.sighting_time);
+    }
+
+    setState(() {
+      markers = markers_;
+    });
+  }
+
+  Marker putMarkerNow(Sighting sighting) {
+    return Marker(
+      markerId: MarkerId(sighting.animal_id),
+      position: LatLng(sighting.latitude, sighting.longitude),
+      icon: BitmapDescriptor.defaultMarkerWithHue(0),
+      infoWindow: InfoWindow(
+        title: sighting.animal_id,
+        snippet: sighting.sighting_time.toString(),
+      ),
+    );
+  }
+
+  String getName(String id) {
+    for (var item in legendItems) {
+      if (item.id == id) {
+        return item.name;
+      }
+    }
+    return '';
+  }
+
+  Color getColor(String id) {
+    for (var item in legendItems) {
+      if (item.id == id) {
+        return item.color;
+      }
+    }
+    return Colors.black;
+  }
+
+  void addMaker_(LatLng latLng, Sighting sighting) async {
+    bool isTrue = false;
+
     Marker marker = Marker(
         flat: true,
         markerId: MarkerId(latLng.toString()),
         position: latLng,
         infoWindow: InfoWindow(
-          title: 'Sighting',
-          snippet: 'Sighting',
+          title: getName(sighting.animal_id),
+          snippet: sighting.sighting_time.toString(),
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
 
     setState(() {
       markers.add(marker);
+      currentAnimal = null;
     });
-    Sightings.uploadMarker(latLng, context);
+    Sightings.uploadMarker(latLng, context, currentAnimal);
+  }
+
+  void addMakerLoc_(LatLng latLng, AnimalSight sighting) async {
+    Marker marker = Marker(
+        flat: true,
+        markerId: MarkerId(latLng.toString()),
+        position: latLng,
+        infoWindow: InfoWindow(
+          title: sighting.name,
+          snippet: TimeOfDay.now().toString(),
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+
+    setState(() {
+      markers.add(marker);
+      currentAnimal = null;
+    });
+    Sightings.uploadMarker(latLng, context, currentAnimal);
   }
 
   void showLegend() {
     showModalBottomSheet(
+        clipBehavior: Clip.hardEdge,
         anchorPoint: const Offset(0, 1),
-        isScrollControlled: true,
+        //isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         enableDrag: true,
         context: context,
         builder: (BuildContext context) {
-          return SafeArea(
-            bottom: false,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Legend',
-                    style: TextStyle(fontSize: 20),
+          return ListView(
+            padding: const EdgeInsets.all(8),
+            shrinkWrap: true,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Legend',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
-                ),
-                ListView.builder(
-                    physics: ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 20,
-                    itemBuilder: (context, index) {
-                      return LegendWidget();
-                    }),
-              ],
-            ),
+                  //close button
+                  Container(
+                    alignment: Alignment.center,
+                    //padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                      ),
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              ListView.builder(
+                  physics: ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: legendItems.length,
+                  itemBuilder: (context, index) {
+                    return LegendWidget(
+                      animalSight: legendItems[index],
+                      callback: () {
+                        setCurrentAnimal(index);
+                      },
+                    );
+                  }),
+            ],
           );
         });
   }
 
-  void chooseAnimal() {
+  void showConfirmDialog(LatLng latLng) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Choose Animal'),
-            content: const Text('Select an animal to add a sighting'),
-            actions: <Widget>[
-              FlatButton(
-                child: const Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+            title: Text('Confirm'),
+            content: Text('Are you sure you want to add this sighting?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      currentAnimal = null;
+                    });
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.red),
+                  )),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    addMakerLoc_(latLng, currentAnimal);
+                  },
+                  child: Text('Confirm')),
+            ],
+          );
+        });
+    //alert dialog
+  }
+
+  void chooseAnimal() {
+    showModalBottomSheet(
+        clipBehavior: Clip.hardEdge,
+        anchorPoint: const Offset(0, 1),
+        //isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        enableDrag: true,
+        context: context,
+        builder: (BuildContext context) {
+          return ListView(
+            padding: const EdgeInsets.all(8),
+            shrinkWrap: true,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Choose The Animal You spotted',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  //close button
+                  Container(
+                    alignment: Alignment.center,
+                    //padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                      ),
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
               ),
+              ListView.builder(
+                  physics: ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: legendItems.length,
+                  itemBuilder: (context, index) {
+                    return ChooseWidget(
+                      animalSight: legendItems[index],
+                      callback: () {
+                        setCurrentAnimal(index);
+                      },
+                    );
+                  }),
             ],
           );
         });
@@ -193,47 +365,45 @@ class _SightingslistPageState extends State<SightingslistPage> {
               style: TextStyle(color: Colors.blue),
             ),
             content: Center(
-              child: Container(
-                child: Column(children: [
-                  //listview to choose map type
-                  ListTile(
-                    title: const Text('Normal'),
-                    onTap: () {
-                      setState(() {
-                        mapType = MapType.normal;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Satellite'),
-                    onTap: () {
-                      setState(() {
-                        mapType = MapType.satellite;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Hybrid'),
-                    onTap: () {
-                      setState(() {
-                        mapType = MapType.hybrid;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Terrain'),
-                    onTap: () {
-                      setState(() {
-                        mapType = MapType.terrain;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ]),
-              ),
+              child: Column(children: [
+                //listview to choose map type
+                ListTile(
+                  title: const Text('Normal'),
+                  onTap: () {
+                    setState(() {
+                      mapType = MapType.normal;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  title: const Text('Satellite'),
+                  onTap: () {
+                    setState(() {
+                      mapType = MapType.satellite;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  title: const Text('Hybrid'),
+                  onTap: () {
+                    setState(() {
+                      mapType = MapType.hybrid;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  title: const Text('Terrain'),
+                  onTap: () {
+                    setState(() {
+                      mapType = MapType.terrain;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ]),
             ),
             actions: <Widget>[
               FlatButton(
@@ -245,5 +415,29 @@ class _SightingslistPageState extends State<SightingslistPage> {
             ],
           );
         });
+  }
+
+  void setCurrentAnimal(index) {
+    setState(() {
+      currentAnimal = legendItems[index];
+      print(currentAnimal.name);
+    });
+
+    Navigator.pop(context);
+
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Add Sighting'),
+              content: Text(
+                  'Simply tap on the map where you spotted the ${currentAnimal.name}'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Ok'))
+              ],
+            ));
   }
 }

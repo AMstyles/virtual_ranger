@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         themeMode: ThemeMode.light,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.white,
             foregroundColor: Colors.black,
             elevation: 0,
             scrolledUnderElevation: 1,

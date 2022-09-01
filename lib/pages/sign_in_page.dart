@@ -306,8 +306,14 @@ class _LoginPageState extends State<LoginPage> {
 
     if (finalData['success'] == true) {
       user = User.fromjson(finalData['data']);
-      UserData.setUser(user);
+      await UserData.setUser(user);
       Provider.of<UserProvider>(context, listen: false).setUser(user);
+      print(
+          Provider.of<UserProvider>(context, listen: false).user!.secret_key ??
+              "" + "success?");
+
+      //print("the logged in key: " + user.secret_key.toString());
+
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const DrawerApp()));
     } else {
