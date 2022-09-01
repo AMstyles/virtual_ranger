@@ -17,7 +17,7 @@ class DrawerItems {
   static final faq =
       DrawerItem(title: 'FAQ', image: 'lib/icons/iconElephant.png', num: 5);
   static final rules =
-      DrawerItem(title: 'rules', image: 'lib/icons/iconElephant.png', num: 6);
+      DrawerItem(title: 'Rules', image: 'lib/icons/iconElephant.png', num: 6);
   static final businessListings = DrawerItem(
       title: 'Business Listings', image: 'lib/icons/iconElephant.png', num: 7);
   static final settings = DrawerItem(

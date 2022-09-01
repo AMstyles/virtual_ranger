@@ -34,10 +34,17 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
               labelColor: Colors.blue,
               tabs: [
                 Tab(
-                  text: 'News',
+                  child:Text(
+                    'News',
+                    style:TextStyle(fontSize:17,color: Colors.lightBlue)
+                  )
+
                 ),
                 Tab(
-                  text: 'Deals',
+                    child:Text(
+                        'Deals',
+                        style:TextStyle(fontSize:17,color: Colors.lightBlue)
+                    )
                 )
               ]),
           backgroundColor: Colors.white,
