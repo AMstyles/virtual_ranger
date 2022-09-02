@@ -264,8 +264,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
   void showConfirmDialog(LatLng latLng) {
     LatLng currPos = latLng;
 
-    print(latLng.latitude.toString() + 'latlng');
-    print(latLng.longitude.toString() + 'latlng');
     showDialog(
         context: context,
         builder: (BuildContext context) {
