@@ -19,9 +19,9 @@ class Sightings {
       'user_id': UserData.user.id,
       'animal_id': currentAnimal.id,
       'plartform': Platform.isAndroid ? 'android' : 'ios',
-      'DeviceID': Platform.version,
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString(),
+      'device_id': Platform.version,
+      'lat_seq': position.latitude.toString(),
+      'lng_seq': position.longitude.toString(),
       'secret_key':
           Provider.of<UserProvider>(context, listen: false).user!.secret_key ??
               " ",
@@ -46,7 +46,7 @@ class Sightings {
                   ),
             content: Text(data['data'].toString()),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('Close'),
                 onPressed: () {
                   Navigator.of(context).pop();

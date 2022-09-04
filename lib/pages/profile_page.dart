@@ -356,7 +356,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 content: const Text("profile updated"),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.pop(context);
@@ -374,7 +374,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 content: Text(finalData['data']),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.pop(context);
@@ -416,7 +416,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 content: const Text("Profile updated"),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.pop(context);
@@ -434,7 +434,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 content: Text(finalData['data']),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.pop(context);

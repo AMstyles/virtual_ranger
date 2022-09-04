@@ -445,7 +445,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 title: const Text('Error'),
                 content: Text(finalData['data']),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.pop(context);

@@ -10,8 +10,9 @@ import 'package:virtual_ranger/services/shared_preferences.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await UserData.init();
   await Firebase.initializeApp();
+  await UserData.init();
+
   try {
     await DownLoad.downloadAllJson();
   } catch (e) {

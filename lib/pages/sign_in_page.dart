@@ -326,7 +326,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 content: Text(finalData['data']),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.pop(context);

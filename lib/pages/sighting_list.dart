@@ -411,7 +411,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ]),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: const Text('Close', style: TextStyle(color: Colors.red)),
                 onPressed: () {
                   Navigator.of(context).pop();
