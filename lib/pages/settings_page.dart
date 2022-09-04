@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/pages/BridgePage.dart';
 import 'package:virtual_ranger/pages/DownloadPage.dart';
 
 import 'Custom/AnimeVals.dart';
@@ -105,7 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                return DownloadPage();
+                return BridgePage();
               })));
             },
             trailing: const Icon(

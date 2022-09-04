@@ -18,6 +18,7 @@ class _DownloadPageState extends State<DownloadPage>
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
 
     UserData.getOfflineMode().then((value) {
@@ -145,33 +146,35 @@ class _DownloadPageState extends State<DownloadPage>
   }
 
   Future<void> getMetaData() async {
-    /*showDialog(
-        context: context,
-        builder: ((context) {
-          return AlertDialog(
-            title: const Text('Getting metadata'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                Text('please wait...'),
-              ],
-            ),
-          );
-        }));*/
-
-    setState(() {
-      //DownLoad.downloadAllJson();
-      //DownLoad.downloadAllJson();
-    });
-
     _downloading = true;
-    await DownLoad.downloadAllImages(context);
+    await DownLoad.downloadAllImages(
+        context); /*.then((value) {
+      showDialog(
+          context: context,
+          builder: ((context) {
+            showDialog(
+                context: context,
+                builder: ((context) {
+                  return AlertDialog(
+                    //text widget notifing user that download is complete
+                    title: const Text('Download Complete'),
+                    content: Text(
+                        "You can now toggle the offline mode and use most of the app's features offline"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Done'))
+                    ],
+                  );
+                }));
+            return SizedBox();
+          }));
+    });*/
     _downloading = false;
     canBeOffline = true;
     UserData.canGoOffline(true);
-
-    // Navigator.pop(context);
   }
 
   Future<void> off() async {
@@ -180,7 +183,9 @@ class _DownloadPageState extends State<DownloadPage>
   }
 
   Future<void> start() async {
-    DownLoad.downloadAllJson();
+    setState(() {
+      DownLoad.downloadAllJson();
+    });
     print("success");
   }
 
