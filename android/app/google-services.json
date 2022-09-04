@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "734421281531-ovp2vjqa82npkjemmbnq3v4q3ukdka90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.virtual_ranger",
+            "certificate_hash": "413460e22a72e029bbeba4a1b3bf4d21ebaaf593"
+          }
+        },
+        {
           "client_id": "734421281531-ddg5g74ejabn1flgo4qi6aj1h9lgs6bq.apps.googleusercontent.com",
           "client_type": 3
         }

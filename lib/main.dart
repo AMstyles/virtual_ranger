@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,10 +9,17 @@ import 'package:virtual_ranger/pages/splash_screen.dart';
 import 'package:virtual_ranger/services/LoginProviders.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
+import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   await UserData.init();
 
   try {
