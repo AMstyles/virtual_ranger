@@ -18,6 +18,8 @@ class DrawerApp extends StatefulWidget {
 class _DrawerAppState extends State<DrawerApp> {
   void askPermission() async {
     await Permission.storage.request();
+    await Permission.location.request();
+    await Permission.camera.request();
   }
 
   @override
