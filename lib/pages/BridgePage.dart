@@ -17,7 +17,7 @@ class _BridgePageState extends State<BridgePage> {
     // TODO: implement initState
     super.initState();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         await DownLoad.downloadAllJson();
       } catch (e) {

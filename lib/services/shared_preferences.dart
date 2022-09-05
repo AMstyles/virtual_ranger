@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
@@ -83,5 +85,14 @@ class UserData {
       image: await _userData.getString('user_image'),
       secret_key: await _userData.getString('user_secret_key'),
     );
+  }
+
+//!settings
+  static Future<void> setSettings(String key, bool value) async {
+    await _userData.setBool(key, value);
+  }
+
+  static Future<bool> getSettings(String key) async {
+    return await _userData.getBool(key) ?? false;
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
 import 'package:virtual_ranger/pages/DownloadPage.dart';
 
+import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -16,6 +17,27 @@ class _SettingsPageState extends State<SettingsPage> {
   bool showNotifications = false;
   bool beacons = false;
   bool checkContent = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UserData.getSettings('showNotification').then((value) {
+      setState(() {
+        showNotifications = value;
+      });
+    });
+    UserData.getSettings('beacons').then((value) {
+      setState(() {
+        beacons = value;
+      });
+    });
+    UserData.getSettings('checkContent').then((value) {
+      setState(() {
+        checkContent = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +67,8 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () {
               setState(() {
                 showNotifications = !showNotifications;
+                //set the value in the shared preferences
+                UserData.setSettings('showNotification', showNotifications);
               });
             },
             trailing: Switch.adaptive(
@@ -52,6 +76,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (newbBol) {
                   setState(() {
                     showNotifications = newbBol;
+                    //set the value in the shared preferences
+                    UserData.setSettings('showNotification', showNotifications);
                   });
                 }),
           ),
@@ -61,6 +87,8 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () {
               setState(() {
                 beacons = !beacons;
+                //set the value in the shared preferences
+                UserData.setSettings('beacons', beacons);
               });
             },
             trailing: Switch.adaptive(
@@ -68,6 +96,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (newbBol) {
                   setState(() {
                     beacons = newbBol;
+                    //set the value in the shared preferences
+                    UserData.setSettings('beacons', beacons);
                   });
                 }),
           ),
@@ -77,6 +107,8 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () {
               setState(() {
                 checkContent = !checkContent;
+                //set the value in the shared preferences
+                UserData.setSettings('checkContent', checkContent);
               });
             },
             trailing: Switch.adaptive(
@@ -84,6 +116,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (newbBol) {
                   setState(() {
                     checkContent = newbBol;
+                    //set the value in the shared preferences
+                    UserData.setSettings('checkContent', checkContent);
                   });
                 }),
             //trailing: Switch.adaptive(value: value, onChanged: onChanged),

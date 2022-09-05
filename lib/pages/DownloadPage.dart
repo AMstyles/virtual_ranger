@@ -52,13 +52,21 @@ class _DownloadPageState extends State<DownloadPage>
         child: Column(
           children: [
             _downloading
-                ? Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Container(
-                        height: 100,
-                        width: 100,
-                        child: Center(
-                            child: CircularProgressIndicator.adaptive())),
+                ? Column(
+                    children: [
+                      Text(
+                        'Please do not exit this page until the download finishes',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Container(
+                            height: 100,
+                            width: 100,
+                            child: Center(
+                                child: CircularProgressIndicator.adaptive())),
+                      ),
+                    ],
                   )
                 : SizedBox(),
             ListTile(
@@ -79,13 +87,38 @@ class _DownloadPageState extends State<DownloadPage>
                   value: isOffline,
                   onChanged: (newbBol) {
                     setState(() {
-                      isOffline = newbBol;
-                      //write to shared preferences
-                      SharedPreferences.getInstance().then((prefs) {
+                      //if the get settings is false in shared preferences, disable the switch
+                      UserData.getSettings('canBeOffline').then((value) {
                         setState(() {
-                          UserData.toggleOfflineMode(newbBol);
+                          if (value == null || value == false) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('You cannot go offline'),
+                                    content: Text(
+                                        'You need to download content to go offline'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Ok'))
+                                    ],
+                                  );
+                                });
+                          } else {
+                            isOffline = newbBol;
+                            SharedPreferences.getInstance().then((prefs) {
+                              setState(() {
+                                UserData.toggleOfflineMode(newbBol);
+                              });
+                            });
+                          }
                         });
                       });
+
+                      //write to shared preferences
                     });
                   }),
             ),
@@ -127,8 +160,8 @@ class _DownloadPageState extends State<DownloadPage>
                 color: Colors.blueGrey,
               ),
             ),
-            ElevatedButton(
-              child: const Text('Downnload to device'),
+            TextButton(
+              child: const Text('Downnload / Update content'),
               onPressed: () {
                 setState(() {
                   _downloading = true;
@@ -147,33 +180,14 @@ class _DownloadPageState extends State<DownloadPage>
 
   Future<void> getMetaData() async {
     _downloading = true;
-    await DownLoad.downloadAllImages(
-        context); /*.then((value) {
-      showDialog(
-          context: context,
-          builder: ((context) {
-            showDialog(
-                context: context,
-                builder: ((context) {
-                  return AlertDialog(
-                    //text widget notifing user that download is complete
-                    title: const Text('Download Complete'),
-                    content: Text(
-                        "You can now toggle the offline mode and use most of the app's features offline"),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Done'))
-                    ],
-                  );
-                }));
-            return SizedBox();
-          }));
-    });*/
+    await DownLoad.downloadAllImages(context);
+
     _downloading = false;
     canBeOffline = true;
+    setState(() {
+      UserData.setSettings('canBeOffline', true);
+    });
+
     UserData.canGoOffline(true);
   }
 
