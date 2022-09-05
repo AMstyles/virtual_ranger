@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -12,21 +11,21 @@ class QRScannerPage extends StatefulWidget {
 }
 
 class _QRScannerPageState extends State<QRScannerPage> {
-  MobileScannerController cameraController = MobileScannerController();
-
-  final qrKey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  late Barcode result;
+  QRViewController? controller;
+  bool isFlashOn = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    askPermission();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    ;
+
     super.dispose();
   }
 
@@ -49,7 +48,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
         key: qrKey,
       )),
       bottomNavigationBar: Container(
-        color: Colors.black.withOpacity(.3),
+        color: Colors.black,
         height: 60,
         child: GestureDetector(
           onTap: (() {
@@ -70,9 +69,14 @@ class _QRScannerPageState extends State<QRScannerPage> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+    setState(() {
+      this.controller = controller;
+      controller.resumeCamera();
+    });
+
     controller.scannedDataStream.listen((scanData) {
       debugPrint(scanData.code);
-      controller.pauseCamera();
+      controller.stopCamera();
       Navigator.of(context).pop(scanData.code);
     });
   }
@@ -85,14 +89,9 @@ class _QRScannerPageState extends State<QRScannerPage> {
     }
   }
 
-  void askPermission() async {
-    final status = await Permission.camera.status;
-    if (status.isGranted) {
-      return;
-    } else if (status.isDenied) {
-      await Permission.camera.request();
-    } else if (status.isPermanentlyDenied) {
-      await openAppSettings();
+  void _onPermissionSet(PermissionStatus status) {
+    if (status == PermissionStatus.granted) {
+      controller!.resumeCamera();
     }
   }
 }
