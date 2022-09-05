@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
+import 'package:virtual_ranger/pages/forgot.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
@@ -94,11 +95,17 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           const SizedBox(height: 20),
-          Text(
-            textAlign: TextAlign.center,
-            'Forgot Password?',
-            style: TextStyle(
-              fontSize: 15,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ForgortPage()));
+            },
+            child: Text(
+              textAlign: TextAlign.center,
+              'Forgot Password?',
+              style: TextStyle(
+                fontSize: 15,
+              ),
             ),
           ),
           const SizedBox(height: 20),

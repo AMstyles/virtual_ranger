@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
             backgroundColor: Colors.black12,
             foregroundColor: Colors.black,
             elevation: 0,
-            scrolledUnderElevation: 1,
+            //scrolledUnderElevation: 1,
             centerTitle: true,
             titleTextStyle: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w400, fontSize: 24),

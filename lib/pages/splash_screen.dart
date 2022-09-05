@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
-import 'package:virtual_ranger/pages/settings_page.dart';
 import 'package:virtual_ranger/pages/sign_in_page.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/user.dart';
 import 'sign_up_page.dart';
+import 'package:show_up_animation/show_up_animation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -15,12 +15,17 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  var _alignment = Alignment.bottomCenter;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     startUser();
+    setState(() {
+      _alignment = Alignment.topCenter;
+    });
   }
 
   Future<void> startUser() async {
@@ -37,24 +42,51 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        foregroundDecoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.center,
-            colors: [
-              Colors.black.withOpacity(0),
-              Colors.black.withOpacity(0),
-            ],
+      body: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Container(
+            foregroundDecoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.center,
+                colors: [
+                  Colors.black.withOpacity(0),
+                  Colors.black.withOpacity(0),
+                ],
+              ),
+            ),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: Image.asset('lib/assets/splashscreenbg.png').image,
+                  fit: BoxFit.cover),
+            ),
+            child: makeContent(context),
           ),
-        ),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: Image.asset('lib/assets/splashscreenbg.png').image,
-              fit: BoxFit.cover),
-        ),
-        child: makeContent(context),
+          ShowUpAnimation(
+            key: UniqueKey(),
+            delayStart: Duration(milliseconds: 100),
+            animationDuration: Duration(seconds: 2),
+            curve: Curves.linear,
+            direction: Direction.vertical,
+            offset: 0.9,
+            child: Positioned(
+                child: Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                ),
+                Image.asset(
+                  height: 150,
+                  'lib/assets/dinokeng_logo.png',
+                  color: Colors.white,
+                ),
+              ],
+              
+            )),
+          ),
+        ],
       ),
     );
   }

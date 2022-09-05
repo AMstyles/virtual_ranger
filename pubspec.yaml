@@ -58,7 +58,7 @@ dependencies:
   percent_indicator: ^4.2.2
   permission_handler: ^10.0.0
   qr_code_scanner: ^1.0.1
-  sliding_sheet: ^0.5.2
+  show_up_animation: ^1.0.2
   #font_awesome_flutter:
 
 dev_dependencies:
