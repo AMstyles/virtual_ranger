@@ -76,8 +76,22 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
     controller.scannedDataStream.listen((scanData) {
       debugPrint(scanData.code);
-      controller.stopCamera();
-      Navigator.of(context).pop(scanData.code);
+
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('QR Code'),
+                content: Text(scanData.code ?? ' null'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'))
+                ],
+              ));
+
+      //Navigator.of(context).pop(scanData.code);
     });
   }
 
