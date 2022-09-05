@@ -342,12 +342,12 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Text('none'),
           ),
           DropdownMenuItem<String>(
-            value: 'male',
-            child: Text('male'),
+            value: 'Male',
+            child: Text('Male'),
           ),
           DropdownMenuItem<String>(
-            value: 'female',
-            child: Text('female'),
+            value: 'Female',
+            child: Text('Female'),
           ),
         ],
         onChanged: ((value) {
@@ -368,8 +368,8 @@ class _SignUpPageState extends State<SignUpPage> {
         isExpanded: false,
         items: const [
           DropdownMenuItem<String>(
-            value: 'under 12',
-            child: Text('under 12'),
+            value: 'Under 12',
+            child: Text('Under 12'),
           ),
           DropdownMenuItem<String>(
             value: '12 to 17',
@@ -400,8 +400,8 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Text('65 - 74'),
           ),
           DropdownMenuItem<String>(
-            value: 'over 75',
-            child: Text('over 75'),
+            value: 'Over 75',
+            child: Text('Over 75'),
           ),
         ],
         onChanged: ((value) {

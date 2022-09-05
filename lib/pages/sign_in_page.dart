@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
           TextField(
             controller: _emailController,
             decoration: const InputDecoration(
-              hintText: 'email',
+              hintText: 'Email',
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
             ),
@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
             controller: _passwordController,
             obscureText: true,
             decoration: const InputDecoration(
-              hintText: 'password',
+              hintText: 'Password',
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
             ),

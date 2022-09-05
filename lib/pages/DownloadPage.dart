@@ -46,7 +46,11 @@ class _DownloadPageState extends State<DownloadPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Download content'),
+        title: Text('Download content',style: TextStyle(
+          fontSize: 20,
+          color: Colors.black,
+        )),
+
       ),
       body: Center(
         child: Column(
