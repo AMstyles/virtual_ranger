@@ -194,7 +194,8 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Gender:'),
+              const Text('Gender:',
+                  style: TextStyle(fontSize: 18)),
               ChoiceChip(
                 backgroundColor: Colors.blueAccent.shade100,
                 selectedColor: Color.fromARGB(255, 0, 0, 197),
@@ -203,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                 ),
                 label: const Text(
-                  'male',
+                  'Male',
                   style: TextStyle(color: Colors.white),
                 ),
                 selected: isMale,
@@ -225,7 +226,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                 ),
                 label:
-                    const Text('female', style: TextStyle(color: Colors.white)),
+                    const Text('Female', style: TextStyle(color: Colors.white)),
                 selected: isFemale,
                 onSelected: (value) {
                   setState(() {
@@ -240,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ChoiceChip(
                 backgroundColor: Colors.greenAccent.shade100,
                 selectedColor: Colors.green,
-                label: const Text('none'),
+                label: const Text('None'),
                 selected: isOther,
                 onSelected: (value) {
                   setState(() {

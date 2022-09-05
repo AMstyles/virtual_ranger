@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: Image.asset('lib/assets/splash.jpg').image,
+              image: Image.asset('lib/assets/splashscreenbg.png').image,
               fit: BoxFit.cover),
         ),
         child: makeContent(context),
