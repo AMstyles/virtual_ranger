@@ -6,7 +6,6 @@ import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/user.dart';
 import 'sign_up_page.dart';
-import 'package:show_up_animation/show_up_animation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -64,28 +63,19 @@ class _SplashScreenState extends State<SplashScreen>
             ),
             child: makeContent(context),
           ),
-          ShowUpAnimation(
-            key: UniqueKey(),
-            delayStart: Duration(milliseconds: 100),
-            animationDuration: Duration(seconds: 2),
-            curve: Curves.linear,
-            direction: Direction.vertical,
-            offset: 0.9,
-            child: Positioned(
-                child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                Image.asset(
-                  height: 150,
-                  'lib/assets/dinokeng_logo.png',
-                  color: Colors.white,
-                ),
-              ],
-              
-            )),
-          ),
+          Positioned(
+              child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+              ),
+              Image.asset(
+                height: 150,
+                'lib/assets/dinokeng_logo.png',
+                color: Colors.white,
+              ),
+            ],
+          )),
         ],
       ),
     );

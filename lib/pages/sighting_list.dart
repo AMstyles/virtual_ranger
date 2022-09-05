@@ -15,6 +15,35 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
+  void onMapcreated(GoogleMapController controller) {
+    setState(() {
+      markers.add(const Marker(
+        markerId: MarkerId('1'),
+        position: LatLng(13.007488, 77.598656),
+        infoWindow: InfoWindow(
+          title: 'Marker Title Second ',
+          snippet: 'My Custom Subtitle',
+        ),
+      ));
+      markers.add(const Marker(
+        markerId: MarkerId('2'),
+        position: LatLng(12.999595, 77.585856),
+        infoWindow: InfoWindow(
+          title: 'Marker Title Third ',
+          snippet: 'My Custom Subtitle',
+        ),
+      ));
+      markers.add(const Marker(
+        markerId: MarkerId('3'),
+        position: LatLng(13.001916, 77.588849),
+        infoWindow: InfoWindow(
+          title: 'Marker Title Fourth ',
+          snippet: 'My Custom Subtitle',
+        ),
+      ));
+    });
+  }
+
   late final legendItems;
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
@@ -32,7 +61,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
     askLocationPermission();
     Sightings.getSightings();
     putLegend();
-    //putMarkers();
   }
 
   @override
@@ -45,20 +73,40 @@ class _SightingslistPageState extends State<SightingslistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
+          backgroundColor: Colors.transparent,
+          leading: Container(
+            margin: const EdgeInsets.only(left: 5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withOpacity(0.4),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed:
+                  Provider.of<Anime>(context, listen: false).handleDrawer,
+            ),
           ),
           actions: [
-            IconButton(onPressed: chooseMapType, icon: Icon(Icons.settings))
+            Container(
+                margin: EdgeInsets.only(right: 5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.4),
+                ),
+                child: IconButton(
+                    onPressed: chooseMapType, icon: Icon(Icons.settings)))
           ],
           title: const Text('Sightings List')),
       floatingActionButton:
-          Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton(
+            elevation: 0,
             backgroundColor: Colors.black.withOpacity(.4),
             onPressed: () {
               chooseAnimal();
@@ -69,6 +117,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton(
+            elevation: 0,
             backgroundColor: Colors.black.withOpacity(.4),
             onPressed: () {
               showLegend();
@@ -76,31 +125,31 @@ class _SightingslistPageState extends State<SightingslistPage> {
             child: const Icon(Icons.map),
           ),
         ),
-        /*Padding(
+        //Location Button
+        Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton(
-            backgroundColor: Colors.white,
+            elevation: 0,
+            backgroundColor: Colors.black.withOpacity(.4),
             onPressed: () {
-              _googleMapController.animateCamera(CameraUpdate.newLatLngZoom(
-                  LatLng(currentLocation.latitude, currentLocation.longitude),
-                  14));
+              _googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                      target: LatLng(13.007488, 77.598656), zoom: 15)));
             },
-            child: const Icon(Icons.my_location, color: Colors.black),
+            child: const Icon(Icons.my_location),
           ),
-        ),*/
+        ),
       ]),
-      body: Center(
+      body: Container(
         child: GoogleMap(
+          zoomGesturesEnabled: true,
+          zoomControlsEnabled: false,
           mapType: mapType,
-          compassEnabled: true,
           onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
           markers: markers,
-          //onLongPress: addMaker_,
-          mapToolbarEnabled: true,
-          zoomControlsEnabled: false,
-          onMapCreated: (controller) => _googleMapController = controller,
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
+          onMapCreated: (controller) {
+            _googleMapController = controller;
+          },
           initialCameraPosition: const CameraPosition(
             target: LatLng(-25.452076, 28.483199),
             zoom: 13,
@@ -112,20 +161,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   void putLegend() async {
     legendItems = await Sightings.getColouredAnimal(context);
-  }
-
-  void putMarkers() async {
-    final data = await Sightings.getSightings();
-    var markers_ = Set<Marker>();
-
-    for (var item in data) {
-      markers_.add(putMarkerNow(item));
-      print(item.sighting_time);
-    }
-
-    setState(() {
-      markers = markers_;
-    });
   }
 
   Marker putMarkerNow(Sighting sighting) {
@@ -159,14 +194,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }
 
   void addMaker_(LatLng latLng, AnimalSight sighting) async {
-    bool isTrue = false;
-
     Marker marker = Marker(
         flat: true,
         markerId: MarkerId(latLng.toString()),
         position: latLng,
         infoWindow: InfoWindow(
-          title: getName(sighting.name),
+          title: getName(sighting.id),
           snippet: TimeOfDay.now().toString(),
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
@@ -180,30 +213,10 @@ class _SightingslistPageState extends State<SightingslistPage> {
     });
   }
 
-  void addMakerLoc_(LatLng latLng, AnimalSight sighting) async {
-    print(latLng.toString());
-    Marker marker = Marker(
-        flat: true,
-        markerId: MarkerId(latLng.toString()),
-        position: latLng,
-        infoWindow: InfoWindow(
-          title: sighting.name,
-          snippet: TimeOfDay.now().toString(),
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
-
-    setState(() {
-      markers.add(marker);
-      currentAnimal = null;
-    });
-    Sightings.uploadMarker(latLng, context, currentAnimal!);
-  }
-
   void showLegend() {
     showModalBottomSheet(
         clipBehavior: Clip.hardEdge,
         anchorPoint: const Offset(0, 1),
-        //isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -364,60 +377,61 @@ class _SightingslistPageState extends State<SightingslistPage> {
         context: context,
         builder: (BuildContext context) {
           //alert dialog to choose map type
-          return AlertDialog(
-            title: const Text(
-              'Choose Map Type',
-              style: TextStyle(color: Colors.blue),
-            ),
-            content: Center(
-              child: Column(children: [
-                //listview to choose map type
-                ListTile(
-                  title: const Text('Normal'),
-                  onTap: () {
-                    setState(() {
-                      mapType = MapType.normal;
-                    });
-                    Navigator.of(context).pop();
-                  },
+          return Material(
+            color: Colors.transparent,
+            type: MaterialType.transparency,
+            child: Center(
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          "Select Map Type",
+                          style:
+                              TextStyle(color: Colors.blueAccent, fontSize: 25),
+                        )),
+                    ListTile(
+                      title: Text('Normal'),
+                      onTap: () {
+                        setState(() {
+                          mapType = MapType.normal;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Satellite'),
+                      onTap: () {
+                        setState(() {
+                          mapType = MapType.satellite;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Terrain'),
+                      onTap: () {
+                        setState(() {
+                          mapType = MapType.terrain;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Hybrid'),
+                      onTap: () {
+                        setState(() {
+                          mapType = MapType.hybrid;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
-                ListTile(
-                  title: const Text('Satellite'),
-                  onTap: () {
-                    setState(() {
-                      mapType = MapType.satellite;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: const Text('Hybrid'),
-                  onTap: () {
-                    setState(() {
-                      mapType = MapType.hybrid;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: const Text('Terrain'),
-                  onTap: () {
-                    setState(() {
-                      mapType = MapType.terrain;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ]),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Close', style: TextStyle(color: Colors.red)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
               ),
-            ],
+            ),
           );
         });
   }
