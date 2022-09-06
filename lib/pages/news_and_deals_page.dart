@@ -34,6 +34,7 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
               labelColor: Colors.blue,
               tabs: [
                 Tab(
+
                   child:Text(
                     'News',
                     style:TextStyle(fontSize:17,color: Colors.lightBlue)
@@ -44,6 +45,7 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
                     child:Text(
                         'Deals',
                         style:TextStyle(fontSize:17,color: Colors.lightBlue)
+
                     )
                 )
               ]),
