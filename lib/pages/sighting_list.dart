@@ -162,6 +162,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
       ]),
       body: Container(
         child: GoogleMap(
+          myLocationButtonEnabled: false,
+          myLocationEnabled: true,
           zoomGesturesEnabled: true,
           zoomControlsEnabled: false,
           mapType: mapType,
