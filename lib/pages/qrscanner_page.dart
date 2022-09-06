@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:virtual_ranger/apis/qrapis.dart';
 
 class QRScannerPage extends StatefulWidget {
   QRScannerPage({Key? key}) : super(key: key);
@@ -76,20 +77,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
     controller.scannedDataStream.listen((scanData) {
       controller.pauseCamera();
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text('QR Code'),
-                content: Text(scanData.code ?? ' null'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        controller.resumeCamera();
-                      },
-                      child: Text('OK'))
-                ],
-              ));
+      QRapi.getQR(context, scanData.code ?? '', controller);
     });
   }
 

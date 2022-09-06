@@ -48,6 +48,26 @@ class _SightingslistPageState extends State<SightingslistPage> {
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
   var markers = Set<Marker>();
+  late List<Sighting> fetchedSites;
+
+  void putSightings() async {
+    fetchedSites = await Sightings.getSightings();
+    setState(() {
+      fetchedSites.forEach((element) {
+        print(element.animal_id);
+        markers.add(Marker(
+          markerId: MarkerId(element.animal_id.toString()),
+          position: LatLng(element.latitude, element.longitude),
+          infoWindow: InfoWindow(
+            title: getName(element.animal_id),
+            snippet:
+                readTimeStamp(element.sighting_time), //element.sighting_time,
+          ),
+        ));
+      });
+    });
+  }
+
   void askLocationPermission() async {
     await Permission.location.request();
   }
@@ -149,6 +169,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
           markers: markers,
           onMapCreated: (controller) {
             _googleMapController = controller;
+            putSightings();
           },
           initialCameraPosition: const CameraPosition(
             target: LatLng(-25.452076, 28.483199),
@@ -165,11 +186,13 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   Marker putMarkerNow(Sighting sighting) {
     return Marker(
-      markerId: MarkerId(sighting.animal_id),
+      markerId: MarkerId(sighting.animal_id.toString() +
+          sighting.latitude.toString() +
+          sighting.longitude.toString()),
       position: LatLng(sighting.latitude, sighting.longitude),
       icon: BitmapDescriptor.defaultMarkerWithHue(0),
       infoWindow: InfoWindow(
-        title: sighting.animal_id,
+        title: getName(sighting.animal_id),
         snippet: sighting.sighting_time.toString(),
       ),
     );
@@ -458,5 +481,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     child: Text('Ok'))
               ],
             ));
+  }
+
+  String readTimeStamp(String timeStamp) {
+    final DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp) * 1000);
+    String time = '${dateTime.hour}:${dateTime.minute}';
+    return time;
   }
 }
