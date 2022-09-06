@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class signUpAPI {
@@ -92,5 +95,46 @@ class signUpAPI {
     print(data);
 
     return data;
+  }
+
+  static Future<void> forgotPassword(String email, BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            title: Text('Please wait...'),
+            content: Container(
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          );
+        }));
+    final response = await http
+        .post(Uri.parse('https://dinokengapp.co.za/forgot_password'), body: {
+      'email': email,
+    });
+    Navigator.pop(context);
+
+    final data = response.body;
+    final finalData = jsonDecode(data);
+
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            title: Text(finalData['success'] ? 'Success' : 'Error'),
+            content: Text(finalData['data']),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Ok'))
+            ],
+          );
+        }));
+    print(response.body);
   }
 }

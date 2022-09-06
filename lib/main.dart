@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,11 +8,19 @@ import 'package:virtual_ranger/pages/splash_screen.dart';
 import 'package:virtual_ranger/services/LoginProviders.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
+import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   await UserData.init();
-  await Firebase.initializeApp();
+
   try {
     await DownLoad.downloadAllJson();
   } catch (e) {
@@ -52,10 +61,10 @@ class _MyAppState extends State<MyApp> {
         themeMode: ThemeMode.light,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.black12,
             foregroundColor: Colors.black,
             elevation: 0,
-            scrolledUnderElevation: 1,
+            //scrolledUnderElevation: 1,
             centerTitle: true,
             titleTextStyle: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w400, fontSize: 24),

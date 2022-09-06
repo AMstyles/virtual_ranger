@@ -25,6 +25,7 @@ class _DrawerContainerState extends State<DrawerContainer> {
             blurRadius: 12,
           )
         ]),
+
         transform: Matrix4.translationValues(
             Provider.of<Anime>(context).xOffset,
             Provider.of<Anime>(context).yOffset,

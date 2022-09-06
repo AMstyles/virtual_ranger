@@ -18,6 +18,7 @@ class _DownloadPageState extends State<DownloadPage>
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
 
     UserData.getOfflineMode().then((value) {
@@ -45,19 +46,31 @@ class _DownloadPageState extends State<DownloadPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Download content'),
+        title: Text('Download content',style: TextStyle(
+          fontSize: 20,
+          color: Colors.black,
+        )),
+
       ),
       body: Center(
         child: Column(
           children: [
             _downloading
-                ? Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Container(
-                        height: 100,
-                        width: 100,
-                        child: Center(
-                            child: CircularProgressIndicator.adaptive())),
+                ? Column(
+                    children: [
+                      Text(
+                        'Please do not exit this page until the download finishes',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Container(
+                            height: 100,
+                            width: 100,
+                            child: Center(
+                                child: CircularProgressIndicator.adaptive())),
+                      ),
+                    ],
                   )
                 : SizedBox(),
             ListTile(
@@ -78,13 +91,38 @@ class _DownloadPageState extends State<DownloadPage>
                   value: isOffline,
                   onChanged: (newbBol) {
                     setState(() {
-                      isOffline = newbBol;
-                      //write to shared preferences
-                      SharedPreferences.getInstance().then((prefs) {
+                      //if the get settings is false in shared preferences, disable the switch
+                      UserData.getSettings('canBeOffline').then((value) {
                         setState(() {
-                          UserData.toggleOfflineMode(newbBol);
+                          if (value == null || value == false) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('You cannot go offline'),
+                                    content: Text(
+                                        'You need to download content to go offline'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Ok'))
+                                    ],
+                                  );
+                                });
+                          } else {
+                            isOffline = newbBol;
+                            SharedPreferences.getInstance().then((prefs) {
+                              setState(() {
+                                UserData.toggleOfflineMode(newbBol);
+                              });
+                            });
+                          }
                         });
                       });
+
+                      //write to shared preferences
                     });
                   }),
             ),
@@ -126,8 +164,8 @@ class _DownloadPageState extends State<DownloadPage>
                 color: Colors.blueGrey,
               ),
             ),
-            ElevatedButton(
-              child: const Text('Downnload to device'),
+            TextButton(
+              child: const Text('Downnload / Update content'),
               onPressed: () {
                 setState(() {
                   _downloading = true;
@@ -145,33 +183,16 @@ class _DownloadPageState extends State<DownloadPage>
   }
 
   Future<void> getMetaData() async {
-    /*showDialog(
-        context: context,
-        builder: ((context) {
-          return AlertDialog(
-            title: const Text('Getting metadata'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                Text('please wait...'),
-              ],
-            ),
-          );
-        }));*/
-
-    setState(() {
-      //DownLoad.downloadAllJson();
-      //DownLoad.downloadAllJson();
-    });
-
     _downloading = true;
     await DownLoad.downloadAllImages(context);
+
     _downloading = false;
     canBeOffline = true;
-    UserData.canGoOffline(true);
+    setState(() {
+      UserData.setSettings('canBeOffline', true);
+    });
 
-    // Navigator.pop(context);
+    UserData.canGoOffline(true);
   }
 
   Future<void> off() async {
@@ -180,7 +201,9 @@ class _DownloadPageState extends State<DownloadPage>
   }
 
   Future<void> start() async {
-    DownLoad.downloadAllJson();
+    setState(() {
+      DownLoad.downloadAllJson();
+    });
     print("success");
   }
 

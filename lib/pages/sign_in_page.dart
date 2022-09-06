@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
+import 'package:virtual_ranger/pages/forgot.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
@@ -77,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
           TextField(
             controller: _emailController,
             decoration: const InputDecoration(
-              hintText: 'email',
+              hintText: 'Email',
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
             ),
@@ -88,17 +89,23 @@ class _LoginPageState extends State<LoginPage> {
             controller: _passwordController,
             obscureText: true,
             decoration: const InputDecoration(
-              hintText: 'password',
+              hintText: 'Password',
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
             ),
           ),
           const SizedBox(height: 20),
-          Text(
-            textAlign: TextAlign.center,
-            'Forgot Password?',
-            style: TextStyle(
-              fontSize: 15,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ForgortPage()));
+            },
+            child: Text(
+              textAlign: TextAlign.center,
+              'Forgot Password?',
+              style: TextStyle(
+                fontSize: 15,
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -306,8 +313,14 @@ class _LoginPageState extends State<LoginPage> {
 
     if (finalData['success'] == true) {
       user = User.fromjson(finalData['data']);
-      UserData.setUser(user);
+      await UserData.setUser(user);
       Provider.of<UserProvider>(context, listen: false).setUser(user);
+      print(
+          Provider.of<UserProvider>(context, listen: false).user!.secret_key ??
+              "" + "success?");
+
+      //print("the logged in key: " + user.secret_key.toString());
+
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const DrawerApp()));
     } else {
@@ -320,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 content: Text(finalData['data']),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('Ok'),
                     onPressed: () {
                       Navigator.pop(context);

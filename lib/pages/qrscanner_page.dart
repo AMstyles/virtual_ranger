@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:virtual_ranger/apis/qrapis.dart';
 
 class QRScannerPage extends StatefulWidget {
   QRScannerPage({Key? key}) : super(key: key);
@@ -10,30 +12,44 @@ class QRScannerPage extends StatefulWidget {
 }
 
 class _QRScannerPageState extends State<QRScannerPage> {
-  QRViewController? _controller;
-  final qrKey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  late Barcode result;
+  QRViewController? controller;
+  bool isFlashOn = false;
+
   @override
-  void dispose() {
-    // TODO: implement dispose
-    _controller!.dispose();
-    super.dispose();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
-  void reassemble() async {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      await _controller!.pauseCamera();
-    }
-    _controller!.resumeCamera();
+  void dispose() {
+    // TODO: implement dispose
+    controller?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: buildQrView(context)),
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      body: SafeArea(
+          child: QRView(
+        overlay: QrScannerOverlayShape(
+          borderColor: Colors.white,
+          borderRadius: 10,
+          borderLength: 30,
+          borderWidth: 8,
+          cutOutHeight: MediaQuery.of(context).size.width * 0.85,
+          cutOutWidth: MediaQuery.of(context).size.width * .85,
+        ),
+        onQRViewCreated: _onQRViewCreated,
+        key: qrKey,
+      )),
       bottomNavigationBar: Container(
-        color: Colors.black.withOpacity(1),
+        color: Colors.black,
         height: 60,
         child: GestureDetector(
           onTap: (() {
@@ -53,24 +69,29 @@ class _QRScannerPageState extends State<QRScannerPage> {
     );
   }
 
-  Widget buildQrView(BuildContext context) {
-    return QRView(
-      overlay: QrScannerOverlayShape(
-        borderColor: Colors.white,
-        borderRadius: 10,
-        borderLength: 30,
-        borderWidth: 8,
-        cutOutHeight: MediaQuery.of(context).size.height * 0.6,
-        cutOutWidth: MediaQuery.of(context).size.width * .6,
-      ),
-      onQRViewCreated: (QRViewController) {},
-      key: qrKey,
-    );
+  void _onQRViewCreated(QRViewController controller) {
+    setState(() {
+      this.controller = controller;
+      controller.resumeCamera();
+    });
+
+    controller.scannedDataStream.listen((scanData) {
+      controller.pauseCamera();
+      QRapi.getQR(context, scanData.code ?? '', controller);
+    });
   }
 
-  void onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this._controller = controller;
-    });
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      qrKey.currentState?.reassemble();
+    }
+  }
+
+  void _onPermissionSet(PermissionStatus status) {
+    if (status == PermissionStatus.granted) {
+      controller!.resumeCamera();
+    }
   }
 }

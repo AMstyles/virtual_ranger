@@ -29,7 +29,9 @@ class _RulesPageState extends State<RulesPage> {
             icon: const Icon(Icons.menu),
             onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
           ),
-          title: const Text('Rules And Regulations')),
+
+          title: const Text('Rules and Regulations')),
+
       body: ListView(
         children: [
           Container(
@@ -42,7 +44,7 @@ class _RulesPageState extends State<RulesPage> {
             child: const Center(
               child: Text(
                 textAlign: TextAlign.center,
-                'We would like tofocus on driving advice where the safe driving is in the hands of the visitor. We would like to provide the following recommendations',
+                'We would like to focus on driving advice where the safe driving is in the hands of the visitor. We would like to provide the following recommendations',
                 style: TextStyle(
                   fontWeight: FontWeight.w300,
                   fontSize: 18,
@@ -54,13 +56,15 @@ class _RulesPageState extends State<RulesPage> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: 8,
+              vertical: 20,
               horizontal: 14,
             ),
             child: Text(
               constRulesAndRegulations,
               textAlign: TextAlign.left,
-              style: TextStyle(color: MyColors.secondaryColor, fontSize: 14),
+
+              style: TextStyle(color: MyColors.secondaryColor, fontSize: 15),
+
             ),
           ),
         ],
