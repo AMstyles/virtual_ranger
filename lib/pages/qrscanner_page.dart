@@ -25,7 +25,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-
+    controller?.dispose();
     super.dispose();
   }
 
@@ -75,8 +75,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
     });
 
     controller.scannedDataStream.listen((scanData) {
-      debugPrint(scanData.code);
-
+      controller.pauseCamera();
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -86,12 +85,11 @@ class _QRScannerPageState extends State<QRScannerPage> {
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
+                        controller.resumeCamera();
                       },
                       child: Text('OK'))
                 ],
               ));
-
-      //Navigator.of(context).pop(scanData.code);
     });
   }
 
