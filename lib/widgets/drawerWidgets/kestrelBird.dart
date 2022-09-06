@@ -20,7 +20,10 @@ class _KestrelBirdsState extends State<KestrelBirds> {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3),
             itemBuilder: ((context, index) {
-              return Bird(index: index);
+              return Bird(
+                index: index,
+                count: 1,
+              );
             })),
       ),
     );
@@ -28,8 +31,10 @@ class _KestrelBirdsState extends State<KestrelBirds> {
 }
 
 class Bird extends StatelessWidget {
-  const Bird({Key? key, required this.index}) : super(key: key);
+  const Bird({Key? key, required this.index, required this.count})
+      : super(key: key);
   final int index;
+  final int count;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,10 +46,12 @@ class Bird extends StatelessWidget {
                 ? 'lib/assets/kestrel_empty.png'
                 : 'lib/assets/kestrel_free.png',
           ),
-          Image.asset(
-            'lib/assets/kestrel_check.png',
-            width: 25,
-          ),
+          (index <= (count - 1))
+              ? Image.asset(
+                  'lib/assets/kestrel_check.png',
+                  width: 25,
+                )
+              : SizedBox(),
         ],
       ),
     );
