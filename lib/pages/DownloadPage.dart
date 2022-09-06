@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../apis/Download.dart';
 import '../services/page_service.dart';
@@ -46,11 +48,11 @@ class _DownloadPageState extends State<DownloadPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Download content',style: TextStyle(
-          fontSize: 20,
-          color: Colors.black,
-        )),
-
+        title: Text('Download content',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.black,
+            )),
       ),
       body: Center(
         child: Column(
@@ -164,7 +166,13 @@ class _DownloadPageState extends State<DownloadPage>
                 color: Colors.blueGrey,
               ),
             ),
-            TextButton(
+
+            //put some space between the two buttons
+            SizedBox(
+              height: 20,
+            ),
+            CupertinoButton(
+              color: MyColors.primaryColor,
               child: const Text('Downnload / Update content'),
               onPressed: () {
                 setState(() {

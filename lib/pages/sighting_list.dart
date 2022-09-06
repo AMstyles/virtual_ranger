@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/apis/locationapi.dart';
 import 'package:virtual_ranger/models/animalforSIGHT.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,35 +16,6 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
-  void onMapcreated(GoogleMapController controller) {
-    setState(() {
-      markers.add(const Marker(
-        markerId: MarkerId('1'),
-        position: LatLng(13.007488, 77.598656),
-        infoWindow: InfoWindow(
-          title: 'Marker Title Second ',
-          snippet: 'My Custom Subtitle',
-        ),
-      ));
-      markers.add(const Marker(
-        markerId: MarkerId('2'),
-        position: LatLng(12.999595, 77.585856),
-        infoWindow: InfoWindow(
-          title: 'Marker Title Third ',
-          snippet: 'My Custom Subtitle',
-        ),
-      ));
-      markers.add(const Marker(
-        markerId: MarkerId('3'),
-        position: LatLng(13.001916, 77.588849),
-        infoWindow: InfoWindow(
-          title: 'Marker Title Fourth ',
-          snippet: 'My Custom Subtitle',
-        ),
-      ));
-    });
-  }
-
   late final legendItems;
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
@@ -95,14 +67,13 @@ class _SightingslistPageState extends State<SightingslistPage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
-      extendBodyBehindAppBar: true,
+      // extendBodyBehindAppBar: true,
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
           leading: Container(
             margin: const EdgeInsets.only(left: 5),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.4),
+              color: Colors.white.withOpacity(0),
             ),
             child: IconButton(
               icon: const Icon(Icons.menu),
@@ -115,7 +86,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                 margin: EdgeInsets.only(right: 5),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.4),
+                  color: Colors.white.withOpacity(0),
                 ),
                 child: IconButton(
                     onPressed: chooseMapType, icon: Icon(Icons.settings)))
@@ -146,23 +117,20 @@ class _SightingslistPageState extends State<SightingslistPage> {
           ),
         ),
         //Location Button
-        Padding(
+        /*Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton(
             elevation: 0,
             backgroundColor: Colors.black.withOpacity(.4),
-            onPressed: () {
-              _googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                      target: LatLng(13.007488, 77.598656), zoom: 15)));
-            },
+            onPressed: () {},
             child: const Icon(Icons.my_location),
           ),
-        ),
+        ),*/
       ]),
       body: Container(
         child: GoogleMap(
-          myLocationButtonEnabled: false,
+          trafficEnabled: true,
+          myLocationButtonEnabled: true,
           myLocationEnabled: true,
           zoomGesturesEnabled: true,
           zoomControlsEnabled: false,
@@ -363,7 +331,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
                   //close button
                   Container(
                     alignment: Alignment.center,
-                    //padding: const EdgeInsets.all(1),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(.1),
                       shape: BoxShape.circle,
