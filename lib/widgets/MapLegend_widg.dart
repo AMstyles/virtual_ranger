@@ -36,7 +36,7 @@ class ChooseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      textColor: Colors.green,
+      textColor: Colors.black,
       onTap: () {
         callback();
       },

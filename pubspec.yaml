@@ -58,6 +58,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   mobile_scanner: ^2.0.0
   date_time_format: ^2.0.1
+  location: ^4.4.0
   #show_up_animation: ^1.0.2
 
 dev_dependencies:
