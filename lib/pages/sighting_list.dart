@@ -14,12 +14,13 @@ class SightingslistPage extends StatefulWidget {
   State<SightingslistPage> createState() => _SightingslistPageState();
 }
 
-class _SightingslistPageState extends State<SightingslistPage> {
+class _SightingslistPageState extends State<SightingslistPage>
+    with AutomaticKeepAliveClientMixin<SightingslistPage> {
   late final legendItems;
 
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
-  late BitmapDescriptor pinLocationIcon;
+
   var markers = Set<Marker>();
 
   late List<Sighting> fetchedSites;
@@ -27,10 +28,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
   void putSightings() async {
     fetchedSites = await Sightings.getSightings();
     setState(() {
-      fetchedSites.forEach((element) {
+      fetchedSites.forEach((element) async {
         print(element.animal_id);
+        //setCustomMapPin(element.animal_id.toString());
 
-        setCustomMapPin(element.animal_id.toString());
+        late BitmapDescriptor pinLocationIcon;
+        pinLocationIcon = await setCustomMapPin(element.animal_id.toString());
 
         markers.add(Marker(
           markerId: MarkerId(element.animal_id.toString()),
@@ -59,17 +62,14 @@ class _SightingslistPageState extends State<SightingslistPage> {
     askLocationPermission();
     Sightings.getSightings();
     putLegend();
-    //putSightings();
-    //setCustomMapPin("20");
-
-    // pinLocationIcon =
-    //     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
   }
 
-  void setCustomMapPin(id) async {
-    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'lib/icons/location' + id + '.png');
+  Future<BitmapDescriptor> setCustomMapPin(id) async {
+    return BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(30, 45), devicePixelRatio: 5),
+      'lib/icons/location' + id + '.png',
+    );
   }
 
   @override
@@ -211,7 +211,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
           title: getName(sighting.id),
           snippet: TimeOfDay.now().toString(),
         ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+        icon: await setCustomMapPin(sighting.id));
 
     setState(() {
       markers.add(marker);
@@ -337,7 +337,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Choose The Animal You spotted',
+                      'Choose The Animal',
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.blueGrey,
@@ -474,4 +474,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
     String time = '${dateTime.hour}:${dateTime.minute}';
     return time;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

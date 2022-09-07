@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/preset_styles.dart';
 import 'package:virtual_ranger/pages/Custom/drawerItems.dart';
 import 'package:virtual_ranger/pages/splash_screen.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/widgets/BLWidg.dart';
-
 import '../apis/businesslistingsapi.dart';
 import '../models/BL.dart';
 import '../services/page_service.dart';
@@ -14,7 +13,8 @@ class BusinessListingsPage extends StatefulWidget {
   State<BusinessListingsPage> createState() => _BusinessListingsPageState();
 }
 
-class _BusinessListingsPageState extends State<BusinessListingsPage> {
+class _BusinessListingsPageState extends State<BusinessListingsPage>
+    with AutomaticKeepAliveClientMixin<BusinessListingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,4 +177,8 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
