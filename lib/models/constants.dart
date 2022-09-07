@@ -26,7 +26,7 @@ String GET_GOOGLE_USER_URL = 'http://dinokengapp.co.za/google_login';
 String GET_COLOURED_ANIMALS_URL =
     'https://dinokengapp.co.za/get_animals_colored';
 //String GET_SIGHTINGS_URL = 'https://dinokengapp.co.za/hour_sightings';
-String GET_SIGHTINGS_URL = 'http://dinokengapp.co.za/get_user_sightings';
+String GET_SIGHTINGS_URL = 'http://dinokengapp.co.za/hour_sightings';
 String QRSubmit_URL = 'https://dinokengapp.co.za/verify_qr_code';
 
 class MyColors {
