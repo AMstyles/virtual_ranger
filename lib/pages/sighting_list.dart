@@ -30,6 +30,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
       fetchedSites.forEach((element) {
         print(element.animal_id);
         setCustomMapPin(element.animal_id.toString());
+
         markers.add(Marker(
           markerId: MarkerId(element.animal_id.toString()),
           position: LatLng(element.latitude, element.longitude),
@@ -58,13 +59,16 @@ class _SightingslistPageState extends State<SightingslistPage> {
     Sightings.getSightings();
     putLegend();
     //putSightings();
+    //setCustomMapPin("20");
+
+    // pinLocationIcon =
+    //     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
   }
 
-  void setCustomMapPin(animal_id) async {
+  void setCustomMapPin(id) async {
     pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(devicePixelRatio: 1.5),
-      'lib/icons/location' + animal_id + '.png',
-    );
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'lib/icons/location' + id + '.png');
   }
 
   @override
@@ -154,7 +158,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
           },
           initialCameraPosition: const CameraPosition(
             target: LatLng(-25.453076, 28.483199),
-            zoom: 14,
+            zoom: 13,
           ),
         ),
       ),
