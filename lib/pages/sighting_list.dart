@@ -158,8 +158,8 @@ class _SightingslistPageState extends State<SightingslistPage>
             putSightings();
           },
           initialCameraPosition: const CameraPosition(
-            target: LatLng(-25.453076, 28.483199),
-            zoom: 13,
+            target: LatLng(-25.377812607116923, 28.315522686420948),
+            zoom: 15,
           ),
         ),
       ),
