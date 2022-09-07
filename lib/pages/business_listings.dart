@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/widgets/BLWidg.dart';
-
 import '../apis/businesslistingsapi.dart';
 import '../models/BL.dart';
 import '../services/page_service.dart';

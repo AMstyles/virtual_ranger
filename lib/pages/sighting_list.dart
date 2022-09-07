@@ -14,7 +14,8 @@ class SightingslistPage extends StatefulWidget {
   State<SightingslistPage> createState() => _SightingslistPageState();
 }
 
-class _SightingslistPageState extends State<SightingslistPage> {
+class _SightingslistPageState extends State<SightingslistPage>
+    with AutomaticKeepAliveClientMixin {
   late final legendItems;
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
@@ -457,4 +458,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
     String time = '${dateTime.hour}:${dateTime.minute}';
     return time;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
