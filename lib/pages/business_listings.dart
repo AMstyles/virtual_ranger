@@ -23,7 +23,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
           icon: const Icon(Icons.menu),
           onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
         ),
-        title: const Text("BusinessListings"),
+        title: const Text("Business Listings"),
       ),
       body: ListView(
         children: [
