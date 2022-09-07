@@ -29,13 +29,18 @@ class _RulesPageState extends State<RulesPage> {
             icon: const Icon(Icons.menu),
             onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
           ),
+
           title: const Text('Rules and Regulations')),
+
       body: ListView(
         children: [
           Container(
             //alignment: Alignment.center,
+            margin: EdgeInsets.all(10.0),
+            decoration: BoxDecoration( borderRadius: BorderRadius.circular(8),
+                color: MyColors.secondaryColor ),
             padding: const EdgeInsets.symmetric(vertical: 8),
-            color: MyColors.secondaryColor,
+
             child: const Center(
               child: Text(
                 textAlign: TextAlign.center,
@@ -45,6 +50,7 @@ class _RulesPageState extends State<RulesPage> {
                   fontSize: 18,
                   color: Colors.white,
                 ),
+                //      margin: const EdgeInsects.only(left:20.0, right: 20.0),
               ),
             ),
           ),
@@ -56,7 +62,9 @@ class _RulesPageState extends State<RulesPage> {
             child: Text(
               constRulesAndRegulations,
               textAlign: TextAlign.left,
+
               style: TextStyle(color: MyColors.secondaryColor, fontSize: 15),
+
             ),
           ),
         ],
