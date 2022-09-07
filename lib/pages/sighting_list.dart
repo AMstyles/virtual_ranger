@@ -15,7 +15,7 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin<SightingslistPage> {
   late final legendItems;
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
