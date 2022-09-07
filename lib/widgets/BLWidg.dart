@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,6 @@ class BusinessListingWidg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //BusinessListing businessListing = ;
     return GestureDetector(
       onTap: () {
         print(businessListing.businesType);
@@ -148,8 +148,9 @@ class BusinessListingWidg extends StatelessWidget {
                     height: 60,
                     width: 60,
                   )
-                : Image.network(
-                    BUSINESS_LISTINGS_IMAGE_URL + businessListing.logo,
+                : CachedNetworkImage(
+                    imageUrl:
+                        BUSINESS_LISTINGS_IMAGE_URL + businessListing.logo,
                     fit: BoxFit.contain,
                     height: 60,
                     width: 60,

@@ -11,7 +11,7 @@ class DrawerContainer extends StatefulWidget {
 }
 
 class _DrawerContainerState extends State<DrawerContainer>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin<DrawerContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

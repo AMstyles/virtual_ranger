@@ -20,7 +20,7 @@ class _SightingslistPageState extends State<SightingslistPage>
 
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
-  late BitmapDescriptor pinLocationIcon;
+
   var markers = Set<Marker>();
 
   late List<Sighting> fetchedSites;
@@ -28,9 +28,12 @@ class _SightingslistPageState extends State<SightingslistPage>
   void putSightings() async {
     fetchedSites = await Sightings.getSightings();
     setState(() {
-      fetchedSites.forEach((element) {
+      fetchedSites.forEach((element) async {
         print(element.animal_id);
-        setCustomMapPin(element.animal_id.toString());
+        //setCustomMapPin(element.animal_id.toString());
+
+        late BitmapDescriptor pinLocationIcon;
+        pinLocationIcon = await setCustomMapPin(element.animal_id.toString());
 
         markers.add(Marker(
           markerId: MarkerId(element.animal_id.toString()),
@@ -59,17 +62,14 @@ class _SightingslistPageState extends State<SightingslistPage>
     askLocationPermission();
     Sightings.getSightings();
     putLegend();
-    //putSightings();
-    //setCustomMapPin("20");
-
-    // pinLocationIcon =
-    //     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
   }
 
-  void setCustomMapPin(id) async {
-    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'lib/icons/location' + id + '.png');
+  Future<BitmapDescriptor> setCustomMapPin(id) async {
+    return BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(30, 45), devicePixelRatio: 5),
+      'lib/icons/location' + id + '.png',
+    );
   }
 
   @override
@@ -211,7 +211,7 @@ class _SightingslistPageState extends State<SightingslistPage>
           title: getName(sighting.id),
           snippet: TimeOfDay.now().toString(),
         ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+        icon: await setCustomMapPin(sighting.id));
 
     setState(() {
       markers.add(marker);
