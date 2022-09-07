@@ -17,9 +17,12 @@ class SightingslistPage extends StatefulWidget {
 class _SightingslistPageState extends State<SightingslistPage>
     with AutomaticKeepAliveClientMixin<SightingslistPage> {
   late final legendItems;
+
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
+  late BitmapDescriptor pinLocationIcon;
   var markers = Set<Marker>();
+
   late List<Sighting> fetchedSites;
 
   void putSightings() async {
@@ -27,9 +30,12 @@ class _SightingslistPageState extends State<SightingslistPage>
     setState(() {
       fetchedSites.forEach((element) {
         print(element.animal_id);
+        setCustomMapPin(element.animal_id.toString());
+
         markers.add(Marker(
           markerId: MarkerId(element.animal_id.toString()),
           position: LatLng(element.latitude, element.longitude),
+          icon: pinLocationIcon,
           infoWindow: InfoWindow(
             title: getName(element.animal_id),
             snippet:
@@ -54,6 +60,16 @@ class _SightingslistPageState extends State<SightingslistPage>
     Sightings.getSightings();
     putLegend();
     //putSightings();
+    //setCustomMapPin("20");
+
+    // pinLocationIcon =
+    //     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+  }
+
+  void setCustomMapPin(id) async {
+    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'lib/icons/location' + id + '.png');
   }
 
   @override
@@ -142,7 +158,7 @@ class _SightingslistPageState extends State<SightingslistPage>
             putSightings();
           },
           initialCameraPosition: const CameraPosition(
-            target: LatLng(-25.452076, 28.483199),
+            target: LatLng(-25.453076, 28.483199),
             zoom: 13,
           ),
         ),
