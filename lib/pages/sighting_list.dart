@@ -29,6 +29,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
     setState(() {
       fetchedSites.forEach((element) {
         print(element.animal_id);
+
         setCustomMapPin(element.animal_id.toString());
 
         markers.add(Marker(
