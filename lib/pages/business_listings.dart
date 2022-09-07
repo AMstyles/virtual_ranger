@@ -14,7 +14,8 @@ class BusinessListingsPage extends StatefulWidget {
   State<BusinessListingsPage> createState() => _BusinessListingsPageState();
 }
 
-class _BusinessListingsPageState extends State<BusinessListingsPage> {
+class _BusinessListingsPageState extends State<BusinessListingsPage>
+    with AutomaticKeepAliveClientMixin<BusinessListingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,4 +178,8 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

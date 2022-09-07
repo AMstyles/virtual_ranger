@@ -320,7 +320,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Choose The Animal You spotted',
+                      'Choose The Animal',
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.blueGrey,
