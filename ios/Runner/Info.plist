@@ -30,6 +30,8 @@
 	<string></string>
 	<key>NSLocationDefaultAccuracyReduced</key>
 	<false/>
+	<key>NSLocationUsageDescription</key>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string></string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

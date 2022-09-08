@@ -7,6 +7,7 @@ import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/pages/splash_screen.dart';
 import 'package:virtual_ranger/services/LoginProviders.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/services/readyData.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import 'firebase_options.dart';
 
@@ -41,6 +42,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => MapsData(),
+        ),
         ChangeNotifierProvider(
           create: (context) => GoogleSignInProvider(),
         ),

@@ -8,7 +8,6 @@ import 'package:virtual_ranger/models/Specy.dart';
 import 'package:virtual_ranger/models/animal_image.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/constants.dart';
-import '../services/animal_search.dart';
 import '../services/page_service.dart';
 import '../services/shared_preferences.dart';
 

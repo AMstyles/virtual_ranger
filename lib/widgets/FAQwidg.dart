@@ -8,7 +8,26 @@ class FAQWidg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return
+        //expansion tile
+        ExpansionTile(
+      backgroundColor: Colors.white,
+      collapsedBackgroundColor: Colors.grey[200],
+      collapsedIconColor: Colors.green,
+      title: Text(faq.question,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Text(faq.answer,
+              style: const TextStyle(
+                fontSize: 16,
+              )),
+        ),
+      ],
+    );
+
+    ; /*Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,6 +45,6 @@ class FAQWidg extends StatelessWidget {
           const Divider()
         ],
       ),
-    );
+    );*/
   }
 }

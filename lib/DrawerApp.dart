@@ -6,6 +6,7 @@ import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/pages/Custom/DrawerContainer.dart';
 import 'package:virtual_ranger/pages/Custom/customDrawer.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/services/readyData.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 
 class DrawerApp extends StatefulWidget {
@@ -33,6 +34,8 @@ class _DrawerAppState extends State<DrawerApp> {
           Provider.of<UserProvider>(context, listen: false).setOffline(value);
           print(value);
         }));
+    Provider.of<MapsData>(context, listen: false).getEm();
+    Provider.of<MapsData>(context, listen: false).putLegend(context);
   }
 
   @override
