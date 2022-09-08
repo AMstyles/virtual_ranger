@@ -8,8 +8,8 @@ import 'package:virtual_ranger/pages/splash_screen.dart';
 import 'package:virtual_ranger/services/LoginProviders.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/readyData.dart';
-import 'package:virtual_ranger/services/shared_preferences.dart';
 import 'firebase_options.dart';
+import 'package:virtual_ranger/services/shared_preferences.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,14 +30,9 @@ Future main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -71,8 +66,13 @@ class _MyAppState extends State<MyApp> {
             //scrolledUnderElevation: 1,
             centerTitle: true,
             titleTextStyle: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.w400, fontSize: 24),
-            actionsIconTheme: IconThemeData(color: Colors.black),
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 24,
+            ),
+            actionsIconTheme: IconThemeData(
+              color: Colors.black,
+            ),
           ),
         ),
         debugShowCheckedModeBanner: false,
