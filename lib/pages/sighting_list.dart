@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -15,14 +17,18 @@ class SightingslistPage extends StatefulWidget {
   State<SightingslistPage> createState() => _SightingslistPageState();
 }
 
-class _SightingslistPageState extends State<SightingslistPage>
-    with AutomaticKeepAliveClientMixin<SightingslistPage> {
+class _SightingslistPageState extends State<SightingslistPage> {
   //late final legendItems;
 
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
 
   var markers = Set<Marker>();
+
+  void initMapMakers() async {
+    Provider.of<MapsData>(context, listen: false).getEm();
+    Provider.of<MapsData>(context, listen: false).putLegend(context);
+  }
 
   void putSightings() {
     var fetchedSites =
@@ -60,6 +66,7 @@ class _SightingslistPageState extends State<SightingslistPage>
     super.initState();
     askLocationPermission();
     Sightings.getSightings();
+    initMapMakers();
     //putLegend();
     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
   }
@@ -81,33 +88,62 @@ class _SightingslistPageState extends State<SightingslistPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: Platform.isIOS,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
       // extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          leading: Container(
-            margin: const EdgeInsets.only(left: 5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed:
-                  Provider.of<Anime>(context, listen: false).handleDrawer,
-            ),
-          ),
-          actions: [
-            Container(
-                margin: EdgeInsets.only(right: 5),
+      appBar: Platform.isAndroid
+          ? AppBar(
+              leading: Container(
+                margin: const EdgeInsets.only(left: 5),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white.withOpacity(0),
                 ),
                 child: IconButton(
-                    onPressed: chooseMapType, icon: Icon(Icons.settings)))
-          ],
-          title: const Text('Sightings List')),
+                  icon: const Icon(Icons.menu),
+                  onPressed:
+                      Provider.of<Anime>(context, listen: false).handleDrawer,
+                ),
+              ),
+              actions: [
+                Container(
+                    margin: EdgeInsets.only(right: 5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(0),
+                    ),
+                    child: IconButton(
+                        onPressed: chooseMapType, icon: Icon(Icons.settings)))
+              ],
+              title: const Text('Sightings List'),
+            )
+          : AppBar(
+              leading: Container(
+                margin: const EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(.3),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed:
+                      Provider.of<Anime>(context, listen: false).handleDrawer,
+                ),
+              ),
+              backgroundColor: Colors.transparent,
+              //title: const Text('Sightings List'),
+              actions: [
+                Container(
+                    margin: EdgeInsets.only(right: 5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(.3),
+                    ),
+                    child: IconButton(
+                        onPressed: chooseMapIOS, icon: Icon(Icons.settings)))
+              ],
+            ),
       floatingActionButton:
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Padding(
@@ -132,21 +168,11 @@ class _SightingslistPageState extends State<SightingslistPage>
             child: const Icon(Icons.map),
           ),
         ),
-        //Location Button
-        /*Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-            elevation: 0,
-            backgroundColor: Colors.black.withOpacity(.4),
-            onPressed: () {},
-            child: const Icon(Icons.my_location),
-          ),
-        ),*/
       ]),
       body: Container(
         child: GoogleMap(
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
+          //myLocationButtonEnabled: true,
+          //myLocationEnabled: true,
           zoomGesturesEnabled: true,
           zoomControlsEnabled: false,
           mapType: mapType,
@@ -164,10 +190,6 @@ class _SightingslistPageState extends State<SightingslistPage>
       ),
     );
   }
-
-  /*void putLegend() async {
-    legendItems = await Sightings.getColouredAnimal(context);
-  }*/
 
   String getName(String id) {
     for (var item
@@ -375,6 +397,43 @@ class _SightingslistPageState extends State<SightingslistPage>
         });
   }
 
+  void chooseMapIOS() {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return CupertinoActionSheet(
+            title: Text('Choose Map'),
+            actions: [
+              CupertinoActionSheetAction(
+                child: Text('Normal'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    mapType = MapType.normal;
+                  });
+                },
+              ),
+              CupertinoActionSheetAction(
+                child: Text('Satellite'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    mapType = MapType.hybrid;
+                  });
+                },
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              isDestructiveAction: true,
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          );
+        });
+  }
+
   void chooseMapType() {
     showDialog(
         context: context,
@@ -470,8 +529,4 @@ class _SightingslistPageState extends State<SightingslistPage>
     String time = '${dateTime.hour}:${dateTime.minute}';
     return time;
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
