@@ -94,4 +94,11 @@ class DownloadProvider extends ChangeNotifier {
     isOffline = x;
     notifyListeners();
   }
+
+  void reset() {
+    imagesToDownload = 0;
+    imagesDownloaded = 0;
+    percentage = 0.0;
+    notifyListeners();
+  }
 }

@@ -170,20 +170,6 @@ class _SightingslistPageState extends State<SightingslistPage>
     legendItems = await Sightings.getColouredAnimal(context);
   }
 
-  Marker putMarkerNow(Sighting sighting) {
-    return Marker(
-      markerId: MarkerId(sighting.animal_id.toString() +
-          sighting.latitude.toString() +
-          sighting.longitude.toString()),
-      position: LatLng(sighting.latitude, sighting.longitude),
-      icon: BitmapDescriptor.defaultMarkerWithHue(0),
-      infoWindow: InfoWindow(
-        title: getName(sighting.animal_id),
-        snippet: sighting.sighting_time.toString(),
-      ),
-    );
-  }
-
   String getName(String id) {
     for (var item in legendItems) {
       if (item.id == id) {
