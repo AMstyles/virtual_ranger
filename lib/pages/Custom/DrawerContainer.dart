@@ -49,7 +49,11 @@ class DrawerContainer extends StatelessWidget {
           ..scale(Provider.of<Anime>(context).scaleFactor),
         child: AbsorbPointer(
           absorbing: Provider.of<Anime>(context).isOpen ? true : false,
-          child: pages[Provider.of<PageProvider>(context).currentPageNum],
+          //child: pages[Provider.of<PageProvider>(context).currentPageNum],
+          child: IndexedStack(
+            index: Provider.of<PageProvider>(context).currentPageNum,
+            children: pages,
+          ),
         ),
       ),
     );
