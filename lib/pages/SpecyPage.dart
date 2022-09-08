@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
@@ -36,10 +36,32 @@ class _SpecyPageState extends State<SpecyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.black.withOpacity(.3),
+            ),
+            child: Center(
+              child: Icon(
+                Platform.isAndroid ? Icons.arrow_back : CupertinoIcons.back,
+                size: 25,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.transparent,
         title: Text(widget.specy.english_name),
       ),
       body: ListView(
+        physics: BouncingScrollPhysics(),
         padding: const EdgeInsets.only(bottom: 100),
         shrinkWrap: true,
         children: [

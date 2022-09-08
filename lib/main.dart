@@ -7,6 +7,7 @@ import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/pages/splash_screen.dart';
 import 'package:virtual_ranger/services/LoginProviders.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/services/readyData.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import 'firebase_options.dart';
 
@@ -42,6 +43,9 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (context) => MapsData(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => GoogleSignInProvider(),
         ),
         ChangeNotifierProvider(
@@ -60,8 +64,8 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         themeMode: ThemeMode.light,
         theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.black12,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             foregroundColor: Colors.black,
             elevation: 0,
             //scrolledUnderElevation: 1,

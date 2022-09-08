@@ -34,20 +34,13 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
               labelColor: Colors.blue,
               tabs: [
                 Tab(
-
-                  child:Text(
-                    'News',
-                    style:TextStyle(fontSize:17,color: Colors.lightBlue)
-                  )
-
-                ),
+                    child: Text('News',
+                        style:
+                            TextStyle(fontSize: 17, color: Colors.lightBlue))),
                 Tab(
-                    child:Text(
-                        'Deals',
-                        style:TextStyle(fontSize:17,color: Colors.lightBlue)
-
-                    )
-                )
+                    child: Text('Deals',
+                        style:
+                            TextStyle(fontSize: 17, color: Colors.lightBlue)))
               ]),
           backgroundColor: Colors.white,
           leading: IconButton(

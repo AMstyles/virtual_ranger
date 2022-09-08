@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:virtual_ranger/apis/locationapi.dart';
 import 'package:virtual_ranger/models/animalforSIGHT.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:virtual_ranger/services/readyData.dart';
 import '../apis/Sightingsapi.dart';
 import '../widgets/MapLegend_widg.dart';
 
@@ -15,21 +15,28 @@ class SightingslistPage extends StatefulWidget {
   State<SightingslistPage> createState() => _SightingslistPageState();
 }
 
-class _SightingslistPageState extends State<SightingslistPage> {
-  late final legendItems;
+class _SightingslistPageState extends State<SightingslistPage>
+    with AutomaticKeepAliveClientMixin<SightingslistPage> {
+  //late final legendItems;
+
   AnimalSight? currentAnimal = null;
   var mapType = MapType.normal;
-  var markers = Set<Marker>();
-  late List<Sighting> fetchedSites;
 
-  void putSightings() async {
-    fetchedSites = await Sightings.getSightings();
+  var markers = Set<Marker>();
+
+  void putSightings() {
+    var fetchedSites = Provider.of<MapsData>(context).fetchedSites;
     setState(() {
-      fetchedSites.forEach((element) {
+      fetchedSites.forEach((element) async {
         print(element.animal_id);
+
+        late BitmapDescriptor pinLocationIcon;
+        pinLocationIcon = await setCustomMapPin(element.animal_id.toString());
+
         markers.add(Marker(
           markerId: MarkerId(element.animal_id.toString()),
           position: LatLng(element.latitude, element.longitude),
+          icon: pinLocationIcon,
           infoWindow: InfoWindow(
             title: getName(element.animal_id),
             snippet:
@@ -52,7 +59,15 @@ class _SightingslistPageState extends State<SightingslistPage> {
     super.initState();
     askLocationPermission();
     Sightings.getSightings();
-    putLegend();
+    //putLegend();
+    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+  }
+
+  Future<BitmapDescriptor> setCustomMapPin(id) {
+    return BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(30, 45), devicePixelRatio: 5),
+      'lib/icons/location' + id + '.png',
+    );
   }
 
   @override
@@ -129,7 +144,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
       ]),
       body: Container(
         child: GoogleMap(
-          
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
           zoomGesturesEnabled: true,
@@ -142,34 +156,20 @@ class _SightingslistPageState extends State<SightingslistPage> {
             putSightings();
           },
           initialCameraPosition: const CameraPosition(
-            target: LatLng(-25.452076, 28.483199),
-            zoom: 13,
+            target: LatLng(-25.377812607116923, 28.315522686420948),
+            zoom: 15,
           ),
         ),
       ),
     );
   }
 
-  void putLegend() async {
+  /*void putLegend() async {
     legendItems = await Sightings.getColouredAnimal(context);
-  }
-
-  Marker putMarkerNow(Sighting sighting) {
-    return Marker(
-      markerId: MarkerId(sighting.animal_id.toString() +
-          sighting.latitude.toString() +
-          sighting.longitude.toString()),
-      position: LatLng(sighting.latitude, sighting.longitude),
-      icon: BitmapDescriptor.defaultMarkerWithHue(0),
-      infoWindow: InfoWindow(
-        title: getName(sighting.animal_id),
-        snippet: sighting.sighting_time.toString(),
-      ),
-    );
-  }
+  }*/
 
   String getName(String id) {
-    for (var item in legendItems) {
+    for (var item in Provider.of<MapsData>(context).legendItems) {
       if (item.id == id) {
         return item.name;
       }
@@ -178,7 +178,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }
 
   Color getColor(String id) {
-    for (var item in legendItems) {
+    for (var item in currentAnimal =
+        Provider.of<MapsData>(context).legendItems) {
       if (item.id == id) {
         return item.color;
       }
@@ -195,7 +196,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
           title: getName(sighting.id),
           snippet: TimeOfDay.now().toString(),
         ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+        icon: await setCustomMapPin(sighting.id));
 
     setState(() {
       markers.add(marker);
@@ -253,10 +254,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ListView.builder(
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: legendItems.length,
+                  itemCount: currentAnimal =
+                      Provider.of<MapsData>(context).legendItems.length,
                   itemBuilder: (context, index) {
                     return LegendWidget(
-                      animalSight: legendItems[index],
+                      animalSight: currentAnimal =
+                          Provider.of<MapsData>(context).legendItems[index],
                       callback: () {
                         setCurrentAnimal(index);
                       },
@@ -321,7 +324,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Choose The Animal You spotted',
+                      'Choose The Animal',
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.blueGrey,
@@ -350,10 +353,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ListView.builder(
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: legendItems.length,
+                  itemCount: currentAnimal =
+                      Provider.of<MapsData>(context).legendItems.length,
                   itemBuilder: (context, index) {
                     return ChooseWidget(
-                      animalSight: legendItems[index],
+                      animalSight: currentAnimal =
+                          Provider.of<MapsData>(context).legendItems[index],
                       callback: () {
                         setCurrentAnimal(index);
                       },
@@ -430,7 +435,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   void setCurrentAnimal(index) {
     setState(() {
-      currentAnimal = legendItems[index];
+      currentAnimal = Provider.of<MapsData>(context).legendItems[index];
       //print(currentAnimal.name);
     });
 
@@ -458,4 +463,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
     String time = '${dateTime.hour}:${dateTime.minute}';
     return time;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

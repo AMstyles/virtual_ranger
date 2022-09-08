@@ -10,7 +10,8 @@ class DrawerContainer extends StatefulWidget {
   State<DrawerContainer> createState() => _DrawerContainerState();
 }
 
-class _DrawerContainerState extends State<DrawerContainer> {
+class _DrawerContainerState extends State<DrawerContainer>
+    with AutomaticKeepAliveClientMixin<DrawerContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -25,7 +26,6 @@ class _DrawerContainerState extends State<DrawerContainer> {
             blurRadius: 12,
           )
         ]),
-
         transform: Matrix4.translationValues(
             Provider.of<Anime>(context).xOffset,
             Provider.of<Anime>(context).yOffset,
@@ -38,4 +38,8 @@ class _DrawerContainerState extends State<DrawerContainer> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

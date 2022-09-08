@@ -67,18 +67,27 @@ class _ProfilePageState extends State<ProfilePage> {
     switch (Provider.of<UserProvider>(context, listen: false).user!.gender) {
       case 'male':
         {
-          isMale = true;
+          setState(() {
+            isMale = true;
+          });
+
           break;
         }
 
       case 'female':
         {
-          isFemale = true;
+          setState(() {
+            isFemale = true;
+          });
+
           break;
         }
       case 'none':
         {
-          isOther = true;
+          setState(() {
+            isOther = true;
+          });
+
           break;
         }
     }
@@ -194,8 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text('Gender:',
-                  style: TextStyle(fontSize: 18)),
+              const Text('Gender:', style: TextStyle(fontSize: 18)),
               ChoiceChip(
                 backgroundColor: Colors.blueAccent.shade100,
                 selectedColor: Color.fromARGB(255, 0, 0, 197),

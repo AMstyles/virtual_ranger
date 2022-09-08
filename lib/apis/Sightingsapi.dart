@@ -18,7 +18,7 @@ class Sightings {
         .post(Uri.parse('http://dinokengapp.co.za/add_animal_sighting'), body: {
       'user_id': UserData.user.id,
       'animal_id': currentAnimal.id,
-      'plartform': Platform.isAndroid ? 'android' : 'ios',
+      'platform': Platform.isAndroid ? 'android' : 'ios',
       'device_id': Platform.version,
       'lat_seq': position.latitude.toString(),
       'lng_seq': position.longitude.toString(),
