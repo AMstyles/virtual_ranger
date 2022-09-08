@@ -60,8 +60,8 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         themeMode: ThemeMode.light,
         theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.black12,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             foregroundColor: Colors.black,
             elevation: 0,
             //scrolledUnderElevation: 1,
