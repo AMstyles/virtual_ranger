@@ -25,7 +25,8 @@ class _SightingslistPageState extends State<SightingslistPage>
   var markers = Set<Marker>();
 
   void putSightings() {
-    var fetchedSites = Provider.of<MapsData>(context).fetchedSites;
+    var fetchedSites =
+        Provider.of<MapsData>(context, listen: false).fetchedSites;
     setState(() {
       fetchedSites.forEach((element) async {
         print(element.animal_id);
@@ -169,7 +170,8 @@ class _SightingslistPageState extends State<SightingslistPage>
   }*/
 
   String getName(String id) {
-    for (var item in Provider.of<MapsData>(context).legendItems) {
+    for (var item
+        in Provider.of<MapsData>(context, listen: false).legendItems) {
       if (item.id == id) {
         return item.name;
       }
@@ -179,7 +181,7 @@ class _SightingslistPageState extends State<SightingslistPage>
 
   Color getColor(String id) {
     for (var item in currentAnimal =
-        Provider.of<MapsData>(context).legendItems) {
+        Provider.of<MapsData>(context, listen: false).legendItems) {
       if (item.id == id) {
         return item.color;
       }
@@ -254,12 +256,14 @@ class _SightingslistPageState extends State<SightingslistPage>
               ListView.builder(
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: currentAnimal =
-                      Provider.of<MapsData>(context).legendItems.length,
+                  itemCount: Provider.of<MapsData>(context, listen: false)
+                      .legendItems
+                      .length,
                   itemBuilder: (context, index) {
                     return LegendWidget(
                       animalSight: currentAnimal =
-                          Provider.of<MapsData>(context).legendItems[index],
+                          Provider.of<MapsData>(context, listen: false)
+                              .legendItems[index],
                       callback: () {
                         setCurrentAnimal(index);
                       },
@@ -353,12 +357,14 @@ class _SightingslistPageState extends State<SightingslistPage>
               ListView.builder(
                   physics: ClampingScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: currentAnimal =
-                      Provider.of<MapsData>(context).legendItems.length,
+                  itemCount: Provider.of<MapsData>(context, listen: false)
+                      .legendItems
+                      .length,
                   itemBuilder: (context, index) {
                     return ChooseWidget(
                       animalSight: currentAnimal =
-                          Provider.of<MapsData>(context).legendItems[index],
+                          Provider.of<MapsData>(context, listen: false)
+                              .legendItems[index],
                       callback: () {
                         setCurrentAnimal(index);
                       },
@@ -435,7 +441,8 @@ class _SightingslistPageState extends State<SightingslistPage>
 
   void setCurrentAnimal(index) {
     setState(() {
-      currentAnimal = Provider.of<MapsData>(context).legendItems[index];
+      currentAnimal =
+          Provider.of<MapsData>(context, listen: false).legendItems[index];
       //print(currentAnimal.name);
     });
 

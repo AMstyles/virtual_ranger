@@ -16,13 +16,13 @@ class PageProvider extends ChangeNotifier {
   late int currentPageNum;
 
   PageProvider() {
-    currentPage = pages[1];
+    //currentPage = pages[1];
     currentPageNum = 1;
     notifyListeners();
   }
 
   void switchPage(int num) {
-    currentPage = pages[num];
+    //currentPage = pages[num];
     currentPageNum = num;
 
     notifyListeners();
@@ -30,7 +30,7 @@ class PageProvider extends ChangeNotifier {
     print(currentPageNum);
   }
 
-  final List<Widget> pages = [
+  /*final List<Widget> pages = [
     ProfilePage(),
     NewsAndDealsPage(),
     const GuidePage(),
@@ -40,7 +40,7 @@ class PageProvider extends ChangeNotifier {
     RulesPage(),
     BusinessListingsPage(),
     SettingsPage(),
-  ];
+  ];*/
 }
 
 class UserProvider extends ChangeNotifier {

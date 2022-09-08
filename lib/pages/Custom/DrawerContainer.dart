@@ -2,16 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import '../business_listings.dart';
+import '../faq_page.dart';
+import '../guide_page.dart';
+import '../kestrel_club_page.dart';
+import '../news_and_deals_page.dart';
+import '../profile_page.dart';
+import '../rule_page.dart';
+import '../settings_page.dart';
+import '../sighting_list.dart';
 
-class DrawerContainer extends StatefulWidget {
-  const DrawerContainer({Key? key}) : super(key: key);
+class DrawerContainer extends StatelessWidget {
+  DrawerContainer({Key? key}) : super(key: key);
 
-  @override
-  State<DrawerContainer> createState() => _DrawerContainerState();
-}
+  //pages
+  final List<Widget> pages = [
+    ProfilePage(),
+    NewsAndDealsPage(),
+    GuidePage(),
+    Kestrel_club_page(),
+    SightingslistPage(),
+    FAQPage(),
+    RulesPage(),
+    BusinessListingsPage(),
+    SettingsPage(),
+  ];
 
-class _DrawerContainerState extends State<DrawerContainer>
-    with AutomaticKeepAliveClientMixin<DrawerContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -33,13 +49,9 @@ class _DrawerContainerState extends State<DrawerContainer>
           ..scale(Provider.of<Anime>(context).scaleFactor),
         child: AbsorbPointer(
           absorbing: Provider.of<Anime>(context).isOpen ? true : false,
-          child: Provider.of<PageProvider>(context).currentPage,
+          child: pages[Provider.of<PageProvider>(context).currentPageNum],
         ),
       ),
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
