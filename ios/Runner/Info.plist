@@ -28,10 +28,12 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string></string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>need location to track user</string>
 	<key>NSLocationDefaultAccuracyReduced</key>
 	<false/>
 	<key>NSLocationUsageDescription</key>
-	<string></string>
+	<string>need location to track user</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string></string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -55,5 +57,25 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+<!-- Google Sign-in Section -->
+<key>CFBundleURLTypes</key>
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<!-- TODO Replace this value: -->
+			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+			<string>com.googleusercontent.apps.734421281531-4lgf1qn576dm1g4stufvrbff917amjre</string>
+		</array>
+	</dict>
+</array>
+<!-- End of the Google Sign-in Section -->
+
+
+
 </dict>
 </plist>

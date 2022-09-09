@@ -1,14 +1,16 @@
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:virtual_ranger/pages/prePage.dart';
+
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:virtual_ranger/apis/Download.dart';
-import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
-import 'package:virtual_ranger/pages/splash_screen.dart';
-import 'package:virtual_ranger/services/LoginProviders.dart';
-import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/readyData.dart';
-import 'firebase_options.dart';
+import 'package:virtual_ranger/pages/splash_screen.dart';
+import 'package:virtual_ranger/services/page_service.dart';
+import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
+import 'package:virtual_ranger/services/LoginProviders.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 
 Future main() async {
@@ -63,7 +65,6 @@ class MyApp extends StatelessWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             foregroundColor: Colors.black,
             elevation: 0,
-            //scrolledUnderElevation: 1,
             centerTitle: true,
             titleTextStyle: TextStyle(
               color: Colors.black,
@@ -76,7 +77,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: PrepPage(),
       ),
     );
   }

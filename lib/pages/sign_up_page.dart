@@ -166,33 +166,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  //! signOut google
-  Widget _buildLogOut(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        await auth.FirebaseAuth.instance.signOut();
-        String name = auth.FirebaseAuth.instance.currentUser!.displayName ??
-            "didn't work";
-        String email =
-            auth.FirebaseAuth.instance.currentUser!.email ?? "didn't work";
-        Fluttertoast.showToast(
-          msg: name + " " + email,
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: MyColors.primaryColor,
-        ),
-        child: const Text(
-          'logOut',
-          style: TextStyle(fontSize: 15, color: Colors.white),
-        ),
-      ),
-    );
-  }
-
   //!fancy
   Widget _buildGoogleSignInButton(BuildContext context) {
     return GestureDetector(
@@ -212,14 +185,15 @@ class _SignUpPageState extends State<SignUpPage> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
           } else {
-            final things = await signUpAPI.signUp(
+            final things = await signUpAPI.signUpG(
                 nice.displayName ?? "",
                 nice.email ?? '',
                 nice.phoneNumber ?? '  ',
                 'none',
                 'none',
                 '000000',
-                '000000');
+                '000000',
+                nice.photoURL ?? '');
 
             await auth.FirebaseAuth.instance.signOut();
 
