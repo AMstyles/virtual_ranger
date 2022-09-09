@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/pages/splash_screen.dart';
 import '../DrawerApp.dart';
+import '../models/constants.dart';
 import '../models/user.dart';
 import '../services/page_service.dart';
 import '../services/shared_preferences.dart';
@@ -39,7 +42,12 @@ class _PrepPageState extends State<PrepPage> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator.adaptive(),
+          LoadingBouncingGrid.circle(
+            size: 100,
+            backgroundColor: MyColors.primaryColor,
+            duration: Duration(seconds: 1),
+            inverted: true,
+          ),
           Text(
             'Preparing for your adventure...',
             style: TextStyle(color: Colors.green),
@@ -55,8 +63,11 @@ class _PrepPageState extends State<PrepPage> {
       print(await UserData.isLoggedIn());
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => DrawerApp()));
+      Future<User> user = UserData.getUser();
+      Provider.of<UserProvider>(context, listen: false).setUser(await user);
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => SplashScreen()));
     }
-    Future<User> user = UserData.getUser();
-    Provider.of<UserProvider>(context, listen: false).setUser(await user);
   }
 }
