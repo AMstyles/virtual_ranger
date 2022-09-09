@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
@@ -272,7 +271,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildFacebookSignInButton(BuildContext context) {
     return GestureDetector(
-      onTap: () => FacebookLoginProvider.signInWithFacebook(),
+      onTap: () async => FacebookLoginProvider.SWF(),
       child: Container(
         padding: const EdgeInsets.only(left: 5),
         alignment: Alignment.center,

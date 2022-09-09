@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../apis/Sightingsapi.dart';
 import '../services/readyData.dart';
 import '../widgets/MapLegend_widg.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class SightingslistPage extends StatefulWidget {
   SightingslistPage({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
   late final legendItems;
 
   AnimalSight? currentAnimal = null;
+  String _mapStyle = '';
   var mapType = MapType.normal;
   var markers = Set<Marker>();
 
@@ -35,6 +37,9 @@ class _SightingslistPageState extends State<SightingslistPage> {
     // TODO: implement initState
     super.initState();
     askLocationPermission();
+    rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {
+      _mapStyle = string;
+    });
     BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
   }
 
@@ -140,6 +145,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
       ]),
       body: Container(
         child: GoogleMap(
+          buildingsEnabled: true,
+          compassEnabled: true,
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
           zoomGesturesEnabled: true,
@@ -149,6 +156,9 @@ class _SightingslistPageState extends State<SightingslistPage> {
           markers: markers,
           onMapCreated: (controller) {
             _googleMapController = controller;
+            _googleMapController.setMapStyle(
+              _mapStyle,
+            );
 
             putSightings();
           },

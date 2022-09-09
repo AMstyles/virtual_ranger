@@ -43,6 +43,12 @@ class GoogleSignInProvider extends ChangeNotifier {
 }
 
 class FacebookLoginProvider extends ChangeNotifier {
+  static Future<void> SWF() async {
+    FacebookAuth.instance.login(
+      permissions: ['public_profile', 'email'],
+    );
+  }
+
   static Future<UserCredential> signInWithFacebook() async {
     final LoginResult loginResult = await FacebookAuth.instance
         .login(permissions: ['email', 'public_profile']);
