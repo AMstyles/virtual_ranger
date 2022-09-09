@@ -48,7 +48,6 @@ class _DrawerAppState extends State<DrawerApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     askPermission();
 
     UserData.getOfflineMode().then((value) => setState(() {

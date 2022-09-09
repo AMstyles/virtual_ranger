@@ -36,18 +36,19 @@ class _QRScannerPageState extends State<QRScannerPage> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       body: SafeArea(
+          top: false,
           child: QRView(
-        overlay: QrScannerOverlayShape(
-          borderColor: Colors.white,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 8,
-          cutOutHeight: MediaQuery.of(context).size.width * 0.85,
-          cutOutWidth: MediaQuery.of(context).size.width * .85,
-        ),
-        onQRViewCreated: _onQRViewCreated,
-        key: qrKey,
-      )),
+            overlay: QrScannerOverlayShape(
+              borderColor: Colors.white,
+              borderRadius: 10,
+              borderLength: 30,
+              borderWidth: 8,
+              cutOutHeight: MediaQuery.of(context).size.width * 0.85,
+              cutOutWidth: MediaQuery.of(context).size.width * .85,
+            ),
+            onQRViewCreated: _onQRViewCreated,
+            key: qrKey,
+          )),
       bottomNavigationBar: Container(
         color: Colors.black,
         height: 60,

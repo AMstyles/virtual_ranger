@@ -1,12 +1,15 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/animalforSIGHT.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:virtual_ranger/services/readyData.dart';
 import '../apis/Sightingsapi.dart';
+import '../services/readyData.dart';
 import '../widgets/MapLegend_widg.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class SightingslistPage extends StatefulWidget {
   SightingslistPage({Key? key}) : super(key: key);
@@ -15,18 +18,163 @@ class SightingslistPage extends StatefulWidget {
   State<SightingslistPage> createState() => _SightingslistPageState();
 }
 
-class _SightingslistPageState extends State<SightingslistPage>
-    with AutomaticKeepAliveClientMixin<SightingslistPage> {
-  //late final legendItems;
+class _SightingslistPageState extends State<SightingslistPage> {
+  late final legendItems;
 
   AnimalSight? currentAnimal = null;
+  String _mapStyle = '';
   var mapType = MapType.normal;
-
   var markers = Set<Marker>();
 
-  void putSightings() {
-    var fetchedSites =
-        Provider.of<MapsData>(context, listen: false).fetchedSites;
+  void askLocationPermission() async {
+    await Permission.location.request();
+  }
+
+  late GoogleMapController _googleMapController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    askLocationPermission();
+    rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {
+      _mapStyle = string;
+    });
+    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
+  }
+
+  Future<BitmapDescriptor> setCustomMapPin(id) {
+    return BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(devicePixelRatio: 2.5, size: Size(10, 10)),
+      'lib/icons/location' + id + '.png',
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _googleMapController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: Platform.isIOS,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      extendBody: true,
+      // extendBodyBehindAppBar: true,
+      appBar: Platform.isAndroid
+          ? AppBar(
+              leading: Container(
+                margin: const EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed:
+                      Provider.of<Anime>(context, listen: false).handleDrawer,
+                ),
+              ),
+              actions: [
+                Container(
+                    margin: EdgeInsets.only(right: 5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(0),
+                    ),
+                    child: IconButton(
+                        onPressed: chooseMapType, icon: Icon(Icons.settings)))
+              ],
+              title: const Text('Sightings List'),
+            )
+          : AppBar(
+              leading: Container(
+                margin: const EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(.3),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed:
+                      Provider.of<Anime>(context, listen: false).handleDrawer,
+                ),
+              ),
+              backgroundColor: Colors.transparent,
+              //title: const Text('Sightings List'),
+              actions: [
+                Container(
+                    margin: EdgeInsets.only(right: 5),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(.3),
+                    ),
+                    child: IconButton(
+                        onPressed: chooseMapIOS, icon: Icon(Icons.settings)))
+              ],
+            ),
+      floatingActionButton:
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FloatingActionButton(
+            heroTag: 'add sight',
+            elevation: 0,
+            backgroundColor: Colors.black.withOpacity(.4),
+            onPressed: () {
+              chooseAnimal();
+            },
+            child: const Icon(Icons.add_location_alt_outlined),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FloatingActionButton(
+            heroTag: 'legend',
+            elevation: 0,
+            backgroundColor: Colors.black.withOpacity(.4),
+            onPressed: () {
+              showLegend();
+            },
+            child: const Icon(Icons.map),
+          ),
+        ),
+      ]),
+      body: Container(
+        child: GoogleMap(
+          buildingsEnabled: true,
+          compassEnabled: true,
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+          zoomGesturesEnabled: true,
+          zoomControlsEnabled: false,
+          mapType: mapType,
+          onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
+          markers: markers,
+          onMapCreated: (controller) {
+            _googleMapController = controller;
+            _googleMapController.setMapStyle(
+              _mapStyle,
+            );
+
+            putSightings();
+          },
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(-25.377812607116923, 28.315522686420948),
+            zoom: 15,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> putSightings() async {
+    await putLegend(context);
+    var fetchedSites = await Sightings.getSightings();
+
     setState(() {
       fetchedSites.forEach((element) async {
         print(element.animal_id);
@@ -48,130 +196,8 @@ class _SightingslistPageState extends State<SightingslistPage>
     });
   }
 
-  void askLocationPermission() async {
-    await Permission.location.request();
-  }
-
-  late GoogleMapController _googleMapController;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    askLocationPermission();
-    Sightings.getSightings();
-    //putLegend();
-    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
-  }
-
-  Future<BitmapDescriptor> setCustomMapPin(id) {
-    return BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(size: Size(30, 45), devicePixelRatio: 5),
-      'lib/icons/location' + id + '.png',
-    );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _googleMapController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      extendBody: true,
-      // extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          leading: Container(
-            margin: const EdgeInsets.only(left: 5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed:
-                  Provider.of<Anime>(context, listen: false).handleDrawer,
-            ),
-          ),
-          actions: [
-            Container(
-                margin: EdgeInsets.only(right: 5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0),
-                ),
-                child: IconButton(
-                    onPressed: chooseMapType, icon: Icon(Icons.settings)))
-          ],
-          title: const Text('Sightings List')),
-      floatingActionButton:
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-            elevation: 0,
-            backgroundColor: Colors.black.withOpacity(.4),
-            onPressed: () {
-              chooseAnimal();
-            },
-            child: const Icon(Icons.add_location_alt_outlined),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-            elevation: 0,
-            backgroundColor: Colors.black.withOpacity(.4),
-            onPressed: () {
-              showLegend();
-            },
-            child: const Icon(Icons.map),
-          ),
-        ),
-        //Location Button
-        /*Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-            elevation: 0,
-            backgroundColor: Colors.black.withOpacity(.4),
-            onPressed: () {},
-            child: const Icon(Icons.my_location),
-          ),
-        ),*/
-      ]),
-      body: Container(
-        child: GoogleMap(
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
-          zoomGesturesEnabled: true,
-          zoomControlsEnabled: false,
-          mapType: mapType,
-          onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
-          markers: markers,
-          onMapCreated: (controller) {
-            _googleMapController = controller;
-            putSightings();
-          },
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(-25.377812607116923, 28.315522686420948),
-            zoom: 15,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /*void putLegend() async {
-    legendItems = await Sightings.getColouredAnimal(context);
-  }*/
-
   String getName(String id) {
-    for (var item
-        in Provider.of<MapsData>(context, listen: false).legendItems) {
+    for (var item in legendItems) {
       if (item.id == id) {
         return item.name;
       }
@@ -207,6 +233,10 @@ class _SightingslistPageState extends State<SightingslistPage>
     setState(() {
       currentAnimal = null;
     });
+  }
+
+  Future<void> putLegend(BuildContext context) async {
+    legendItems = await Sightings.getColouredAnimal(context);
   }
 
   void showLegend() {
@@ -375,6 +405,43 @@ class _SightingslistPageState extends State<SightingslistPage>
         });
   }
 
+  void chooseMapIOS() {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return CupertinoActionSheet(
+            title: Text('Choose Map'),
+            actions: [
+              CupertinoActionSheetAction(
+                child: Text('Normal'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    mapType = MapType.normal;
+                  });
+                },
+              ),
+              CupertinoActionSheetAction(
+                child: Text('Satellite'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    mapType = MapType.hybrid;
+                  });
+                },
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              isDestructiveAction: true,
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          );
+        });
+  }
+
   void chooseMapType() {
     showDialog(
         context: context,
@@ -470,8 +537,4 @@ class _SightingslistPageState extends State<SightingslistPage>
     String time = '${dateTime.hour}:${dateTime.minute}';
     return time;
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
