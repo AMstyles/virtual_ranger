@@ -79,6 +79,25 @@
 </array>
 <!-- End of the Google Sign-in Section -->
 
+<!--Start of Facebook shenanigans-->
+
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+  <key>CFBundleURLSchemes</key>
+  <array>
+    <string>fb394839172762400</string>
+  </array>
+  </dict>
+</array>
+<key>FacebookAppID</key>
+<string>394839172762400</string>
+<key>FacebookClientToken</key>
+<string>CLIENT-TOKEN</string>
+<key>FacebookDisplayName</key>
+<string>Virtual Ranger</string>
+
+<!-- Facebook Section -->
 
 </dict>
 </plist>
