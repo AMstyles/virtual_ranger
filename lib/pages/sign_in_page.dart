@@ -10,12 +10,9 @@ import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
-import 'package:virtual_ranger/models/constants.dart';
-import 'package:virtual_ranger/models/user.dart';
 import 'package:virtual_ranger/pages/sign_up_page.dart';
 import 'dart:io' show Platform;
 import '../services/LoginProviders.dart';
-import '../services/page_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -190,7 +187,54 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildFacebookSignInButton(BuildContext context) {
     return GestureDetector(
-      onTap: () => FacebookLoginProvider.signInWithFacebook(),
+      onTap: () async {
+        //loading dialog
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const Center(child: CircularProgressIndicator());
+            });
+
+        await FacebookLoginProvider.signInWithFacebook();
+
+        if (auth.FirebaseAuth.instance.currentUser != null) {
+          final nice = auth.FirebaseAuth.instance.currentUser;
+
+          final vedict = await signUpAPI.signInWithGoogle(nice!.email ?? '');
+          final finalVedict = jsonDecode(vedict);
+
+          if (finalVedict['success'] == true) {
+            final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          } else {
+            final things = await signUpAPI.signUpG(
+                nice.displayName ?? "",
+                nice.email ?? '${nice.displayName}@autoEmail.com',
+                nice.phoneNumber ?? '  ',
+                'none',
+                'none',
+                '000000',
+                '000000',
+                nice.photoURL ?? '');
+
+            await auth.FirebaseAuth.instance.signOut();
+
+            Navigator.pop(context);
+
+            print(things);
+            final perfectThings = jsonDecode(things);
+
+            final userToBe = User.fromjson(perfectThings['data']);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: ((context) => DrawerApp()),
+            ));
+          }
+        }
+      },
       child: Container(
         padding: const EdgeInsets.only(left: 5),
         alignment: Alignment.center,

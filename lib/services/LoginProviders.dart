@@ -49,14 +49,21 @@ class FacebookLoginProvider extends ChangeNotifier {
     );
   }
 
-  static Future<UserCredential> signInWithFacebook() async {
+  static Future<void> signInWithFacebook() async {
+    late var userIn;
+
     final LoginResult loginResult = await FacebookAuth.instance
         .login(permissions: ['email', 'public_profile']);
 
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+
+    //notifyListeners();
+
+    final user = FirebaseAuth.instance.currentUser;
+    userIn = user;
   }
 
   Future<void> facebookLogout() async {
