@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/event.dart';
 
 import '../../apis/eventapi.dart';
+import '../../models/constants.dart';
 import '../../services/page_service.dart';
 import '../../widgets/eventWidg.dart';
 
@@ -24,6 +26,8 @@ class _DealsTabState extends State<DealsTab>
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
+            cacheExtent: 10,
+            addAutomaticKeepAlives: true,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return EventWidg(event: snapshot.data![index]);
@@ -32,7 +36,13 @@ class _DealsTabState extends State<DealsTab>
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-        return const Center(child: CircularProgressIndicator.adaptive());
+        return Center(
+          child: LoadingBouncingGrid.square(
+            backgroundColor: MyColors.primaryColor,
+            duration: Duration(milliseconds: 500),
+            inverted: true,
+          ),
+        );
       },
     );
   }

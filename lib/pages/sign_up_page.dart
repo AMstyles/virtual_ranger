@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
@@ -22,6 +22,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   late String data;
   late User user;
+  Map userObj = {};
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -166,33 +167,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  //! signOut google
-  Widget _buildLogOut(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        await auth.FirebaseAuth.instance.signOut();
-        String name = auth.FirebaseAuth.instance.currentUser!.displayName ??
-            "didn't work";
-        String email =
-            auth.FirebaseAuth.instance.currentUser!.email ?? "didn't work";
-        Fluttertoast.showToast(
-          msg: name + " " + email,
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: MyColors.primaryColor,
-        ),
-        child: const Text(
-          'logOut',
-          style: TextStyle(fontSize: 15, color: Colors.white),
-        ),
-      ),
-    );
-  }
-
   //!fancy
   Widget _buildGoogleSignInButton(BuildContext context) {
     return GestureDetector(
@@ -212,14 +186,15 @@ class _SignUpPageState extends State<SignUpPage> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
           } else {
-            final things = await signUpAPI.signUp(
+            final things = await signUpAPI.signUpG(
                 nice.displayName ?? "",
                 nice.email ?? '',
                 nice.phoneNumber ?? '  ',
                 'none',
                 'none',
                 '000000',
-                '000000');
+                '000000',
+                nice.photoURL ?? '');
 
             await auth.FirebaseAuth.instance.signOut();
 
@@ -298,7 +273,54 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildFacebookSignInButton(BuildContext context) {
     return GestureDetector(
-      onTap: () => FacebookLoginProvider.signInWithFacebook(),
+      onTap: () async {
+        //loading dialog
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const Center(child: CircularProgressIndicator());
+            });
+
+        await FacebookLoginProvider.signInWithFacebook();
+
+        if (auth.FirebaseAuth.instance.currentUser != null) {
+          final nice = auth.FirebaseAuth.instance.currentUser;
+
+          final vedict = await signUpAPI.signInWithGoogle(nice!.email ?? '');
+          final finalVedict = jsonDecode(vedict);
+
+          if (finalVedict['success'] == true) {
+            final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          } else {
+            final things = await signUpAPI.signUpG(
+                nice.displayName ?? "",
+                nice.email ?? '${nice.displayName}@autoEmail.com',
+                nice.phoneNumber ?? '  ',
+                'none',
+                'none',
+                '000000',
+                '000000',
+                nice.photoURL ?? '');
+
+            await auth.FirebaseAuth.instance.signOut();
+
+            Navigator.pop(context);
+
+            print(things);
+            final perfectThings = jsonDecode(things);
+
+            final userToBe = User.fromjson(perfectThings['data']);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: ((context) => DrawerApp()),
+            ));
+          }
+        }
+      },
       child: Container(
         padding: const EdgeInsets.only(left: 5),
         alignment: Alignment.center,

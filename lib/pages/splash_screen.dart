@@ -21,13 +21,13 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
-    startUser();
+    //startUser();
     setState(() {
       _alignment = Alignment.topCenter;
     });
   }
 
-  Future<void> startUser() async {
+  /*Future<void> startUser() async {
     print(await UserData.isLoggedIn());
     if (await UserData.isLoggedIn() == true) {
       print(await UserData.isLoggedIn());
@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
     }
     Future<User> user = UserData.getUser();
     Provider.of<UserProvider>(context, listen: false).setUser(await user);
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

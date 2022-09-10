@@ -60,6 +60,7 @@ dependencies:
   date_time_format: ^2.0.1
   location: ^4.4.0
   font_awesome_flutter: ^10.1.0
+  loading_animations: ^2.2.0
   #show_up_animation: ^1.0.2
 
 dev_dependencies:

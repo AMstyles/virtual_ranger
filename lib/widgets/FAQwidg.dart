@@ -10,21 +10,24 @@ class FAQWidg extends StatelessWidget {
   Widget build(BuildContext context) {
     return
         //expansion tile
-        ExpansionTile(
-      backgroundColor: Colors.white,
-      collapsedBackgroundColor: Colors.grey[200],
-      collapsedIconColor: Colors.green,
-      title: Text(faq.question,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      children: [
         Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(faq.answer,
-              style: const TextStyle(
-                fontSize: 16,
-              )),
-        ),
-      ],
+      padding: const EdgeInsets.all(5.0),
+      child: ExpansionTile(
+        backgroundColor: Colors.white,
+        collapsedBackgroundColor: Colors.grey[100],
+        collapsedIconColor: Colors.green,
+        title: Text(faq.question,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(faq.answer,
+                style: const TextStyle(
+                  fontSize: 16,
+                )),
+          ),
+        ],
+      ),
     );
 
     ; /*Padding(

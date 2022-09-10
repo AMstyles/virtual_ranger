@@ -29,6 +29,33 @@ class signUpAPI {
     return data;
   }
 
+  static Future<String> signUpG(
+      String name,
+      String email,
+      String mobile,
+      String gender,
+      String age_ranger,
+      String password,
+      String password_confirm,
+      String profile_image) async {
+    final response =
+        await http.post(Uri.parse('https://dinokengapp.co.za/signup'), body: {
+      'accept_term': '1',
+      'name': name,
+      'email': email,
+      'mobile': mobile,
+      'password': password,
+      'confirm_password': password_confirm,
+      'user_role': 'Attendee',
+      'age_range': age_ranger,
+      'country': 'Unknown',
+      'gender': gender,
+      'profile_image': profile_image
+    });
+    final data = response.body;
+    return data;
+  }
+
   static Future<String> signIn(String email, String password) async {
     final response = await http
         .post(Uri.parse('https://dinokengapp.co.za/attendee_login'), body: {
@@ -84,7 +111,7 @@ class signUpAPI {
       'name': name,
       'email': email,
       'mobile': phone,
-      //'country': country,
+      'country': country,
       'age_range': age_range,
       'secret_key': secretKey,
       'user_role': 'Attendee',
