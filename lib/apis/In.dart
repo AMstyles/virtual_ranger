@@ -111,7 +111,7 @@ class signUpAPI {
       'name': name,
       'email': email,
       'mobile': phone,
-      //'country': country,
+      'country': country,
       'age_range': age_range,
       'secret_key': secretKey,
       'user_role': 'Attendee',

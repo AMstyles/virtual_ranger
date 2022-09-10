@@ -26,6 +26,7 @@ class _DealsTabState extends State<DealsTab>
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
+            addAutomaticKeepAlives: true,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return EventWidg(event: snapshot.data![index]);

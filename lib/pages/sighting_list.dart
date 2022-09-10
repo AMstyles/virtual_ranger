@@ -222,7 +222,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
         position: latLng,
         infoWindow: InfoWindow(
           title: getName(sighting.id),
-          snippet: TimeOfDay.now().toString(),
+          snippet: TimeOfDay.now().format(context),
         ),
         icon: await setCustomMapPin(sighting.id));
 
