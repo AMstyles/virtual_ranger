@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/prePage.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         themeMode: ThemeMode.light,
         theme: ThemeData(
+          primarySwatch: Colors.green,
           appBarTheme: AppBarTheme(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             foregroundColor: Colors.black,

@@ -58,7 +58,6 @@ class _ProfilePageState extends State<ProfilePage> {
     // TODO: implement initState
     super.initState();
     initControllers();
-    print("hello world");
     getApplicationDocumentsDirectory().then((directory) {
       final dir = directory;
       imageFile = File('${dir.path}/ProfilePhoto.jpg');

@@ -73,6 +73,8 @@ class _LoginPageState extends State<LoginPage> {
               )),
           const SizedBox(height: 10),
           TextField(
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             decoration: const InputDecoration(
               hintText: 'Email',
@@ -83,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 20),
 
           TextField(
+            keyboardType: TextInputType.visiblePassword,
             controller: _passwordController,
             obscureText: true,
             decoration: const InputDecoration(
