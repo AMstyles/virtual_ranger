@@ -260,7 +260,10 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Legend',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   //close button

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
@@ -177,6 +178,18 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildGoogleSignInButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Center(
+                child: LoadingBouncingGrid.circle(
+                  backgroundColor: Colors.lightGreen,
+                  duration: Duration(milliseconds: 500),
+                  inverted: true,
+                ),
+              );
+            });
+
         await Provider.of<GoogleSignInProvider>(context, listen: false)
             .googleLogin();
         if (auth.FirebaseAuth.instance.currentUser != null) {
@@ -209,6 +222,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
             final userToBe = User.fromjson(perfectThings['data']);
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
           }
@@ -284,7 +298,13 @@ class _SignUpPageState extends State<SignUpPage> {
         showDialog(
             context: context,
             builder: (context) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingBouncingGrid.circle(
+                  backgroundColor: Colors.lightGreen,
+                  duration: Duration(milliseconds: 500),
+                  inverted: true,
+                ),
+              );
             });
 
         await FacebookLoginProvider.signInWithFacebook();

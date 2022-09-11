@@ -89,6 +89,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
           break;
         }
+      //default case
+      default:
+        {
+          setState(() {
+            isOther = true;
+          });
+        }
     }
 
     _nameController.text =
