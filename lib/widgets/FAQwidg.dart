@@ -15,7 +15,7 @@ class FAQWidg extends StatelessWidget {
       child: ExpansionTile(
         backgroundColor: Colors.white,
         collapsedBackgroundColor: Colors.grey[100],
-        collapsedIconColor: Colors.green,
+        collapsedIconColor: Colors.blueGrey,
         title: Text(faq.question,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         children: [

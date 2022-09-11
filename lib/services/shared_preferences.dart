@@ -67,6 +67,7 @@ class UserData {
     await _userData.setString('user_age_range', user.age_range ?? '');
     await _userData.setString('user_image', user.image ?? '');
     await _userData.setString('user_secret_key', user.secret_key ?? '');
+    await _userData.setString('gender', user.gender ?? '');
   }
 
   static Future<User> getUser() async {
@@ -75,16 +76,16 @@ class UserData {
     isLog = await _userData.getString('isLog') ?? '0';
 
     return await User(
-      id: await _userData.getString('user_id') ?? '',
-      name: await _userData.getString('user_name') ?? '',
-      email: await _userData.getString('user_email') ?? '',
-      mobile: await _userData.getString('user_mobile'),
-      country: await _userData.getString('user_country'),
-      city: await _userData.getString('user_city'),
-      age_range: await _userData.getString('user_age_range'),
-      image: await _userData.getString('user_image'),
-      secret_key: await _userData.getString('user_secret_key'),
-    );
+        id: await _userData.getString('user_id') ?? '',
+        name: await _userData.getString('user_name') ?? '',
+        email: await _userData.getString('user_email') ?? '',
+        mobile: await _userData.getString('user_mobile'),
+        country: await _userData.getString('user_country'),
+        city: await _userData.getString('user_city'),
+        age_range: await _userData.getString('user_age_range'),
+        image: await _userData.getString('user_image'),
+        secret_key: await _userData.getString('user_secret_key'),
+        gender: await _userData.getString('gender') ?? 'none');
   }
 
 //!settings

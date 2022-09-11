@@ -48,7 +48,8 @@ class signUpAPI {
       'confirm_password': password_confirm,
       'user_role': 'Attendee',
       'age_range': age_ranger,
-      'country': 'Unknown',
+      'country': '',
+      'city': '',
       'gender': gender,
       'profile_image': profile_image
     });
@@ -112,6 +113,7 @@ class signUpAPI {
       'email': email,
       'mobile': phone,
       'country': country,
+      'gender': gender,
       'age_range': age_range,
       'secret_key': secretKey,
       'user_role': 'Attendee',

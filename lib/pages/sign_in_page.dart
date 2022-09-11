@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
@@ -73,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
               )),
           const SizedBox(height: 10),
           TextField(
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.emailAddress,
             controller: _emailController,
             decoration: const InputDecoration(
               hintText: 'Email',
@@ -83,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 20),
 
           TextField(
+            keyboardType: TextInputType.visiblePassword,
             controller: _passwordController,
             obscureText: true,
             decoration: const InputDecoration(
@@ -192,7 +196,13 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
             context: context,
             builder: (context) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingBouncingGrid.circle(
+                  backgroundColor: Colors.lightGreen,
+                  duration: Duration(milliseconds: 500),
+                  inverted: true,
+                ),
+              );
             });
 
         await FacebookLoginProvider.signInWithFacebook();
@@ -266,6 +276,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildGoogleSignInButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Center(
+                child: LoadingBouncingGrid.circle(
+                  backgroundColor: Colors.lightGreen,
+                  duration: Duration(milliseconds: 500),
+                  inverted: true,
+                ),
+              );
+            });
         await Provider.of<GoogleSignInProvider>(context, listen: false)
             .googleLogin();
         if (auth.FirebaseAuth.instance.currentUser != null) {
@@ -297,6 +318,7 @@ class _LoginPageState extends State<LoginPage> {
 
             final userToBe = User.fromjson(perfectThings['data']);
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
           }

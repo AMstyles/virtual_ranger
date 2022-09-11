@@ -26,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late bool isMale = false;
   late bool isFemale = false;
   late bool isOther = false;
+  bool show = false;
 
   late User user;
   late String data;
@@ -58,7 +59,6 @@ class _ProfilePageState extends State<ProfilePage> {
     // TODO: implement initState
     super.initState();
     initControllers();
-    print("hello world");
     getApplicationDocumentsDirectory().then((directory) {
       final dir = directory;
       imageFile = File('${dir.path}/ProfilePhoto.jpg');
@@ -89,6 +89,13 @@ class _ProfilePageState extends State<ProfilePage> {
           });
 
           break;
+        }
+      //default case
+      default:
+        {
+          setState(() {
+            isOther = true;
+          });
         }
     }
 
@@ -190,16 +197,26 @@ class _ProfilePageState extends State<ProfilePage> {
             controller: _phoneController,
             hint: 'phone Number',
           ),
-          GestureDetector(
-            onTap: buildAgeSheet,
-            child: IgnorePointer(
-              ignoring: true,
-              child: ProfileTextField(
-                controller: _ageController,
-                hint: 'Age thingy',
-              ),
+          CupertinoTextField(
+            onTap: () {
+              show = true;
+              setState(() {});
+            },
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              //fontSize: 14,
             ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            controller: _ageController,
+            placeholder: 'Age Range',
           ),
+          show ? buildAgeRange(context) : SizedBox(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -326,8 +343,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-//! Methods touching these is not recommended
+//! Methods, touching these is not recommended
 
   void onUpdateProfile(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -607,14 +623,61 @@ class _ProfilePageState extends State<ProfilePage> {
         }));
   }
 
-  void buildAgeSheet() {
-    showBottomSheet(
-        context: context,
-        builder: (context) {
-          return const SizedBox(
-            height: 300,
-            child: Center(child: Text('yey')),
-          );
-        });
+//!dropdown
+  Widget buildAgeRange(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField(
+          decoration: const InputDecoration(
+            hintText: 'Edit age range',
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          ),
+          isExpanded: false,
+          items: const [
+            DropdownMenuItem<String>(
+              value: 'Under 12',
+              child: Text('Under 12'),
+            ),
+            DropdownMenuItem<String>(
+              value: '12 to 17',
+              child: Text('12 to 17'),
+            ),
+            DropdownMenuItem<String>(
+              value: '18 to 24',
+              child: Text('18-24'),
+            ),
+            DropdownMenuItem<String>(
+              value: '25-34',
+              child: Text('25-34'),
+            ),
+            DropdownMenuItem<String>(
+              value: '35 - 44',
+              child: Text('35 - 44'),
+            ),
+            DropdownMenuItem<String>(
+              value: '45 - 54',
+              child: Text('45 - 54'),
+            ),
+            DropdownMenuItem<String>(
+              value: '55 - 64',
+              child: Text('55 - 64'),
+            ),
+            DropdownMenuItem<String>(
+              value: '65 - 75',
+              child: Text('65 - 74'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'Over 75',
+              child: Text('Over 75'),
+            ),
+          ],
+          onChanged: ((value) {
+            setState(() {
+              _ageController.text = value.toString();
+              show = !show;
+            });
+          })),
+    );
   }
 }

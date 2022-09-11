@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/Home/deals_tab.dart';
 import 'package:virtual_ranger/pages/Home/news_tab.dart';
 import 'package:virtual_ranger/services/getRequests.dart';
@@ -26,21 +27,22 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          bottom: const TabBar(
-              labelStyle: TextStyle(color: Colors.blue),
-              unselectedLabelColor: Colors.black,
+          bottom: TabBar(
+              unselectedLabelColor: Colors.green,
               automaticIndicatorColorAdjustment: true,
               enableFeedback: true,
-              labelColor: Colors.blue,
+              labelColor: Colors.green.shade700,
               tabs: [
                 Tab(
                     child: Text('News',
-                        style:
-                            TextStyle(fontSize: 17, color: Colors.lightBlue))),
+                        style: TextStyle(
+                          fontSize: 17,
+                        ))),
                 Tab(
                     child: Text('Deals',
-                        style:
-                            TextStyle(fontSize: 17, color: Colors.lightBlue)))
+                        style: TextStyle(
+                          fontSize: 17,
+                        )))
               ]),
           backgroundColor: Colors.white,
           leading: IconButton(

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
@@ -90,6 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: TextStyle(fontSize: 30, color: Colors.blueGrey),
                   )),
               TextField(
+                textInputAction: TextInputAction.next,
                 controller: _nameController,
                 decoration: const InputDecoration(
                   hintText: 'Name and Surname',
@@ -99,6 +100,8 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 10),
               TextField(
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
                 controller: _emailController,
                 decoration: const InputDecoration(
                   hintText: 'Email',
@@ -108,6 +111,8 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 10),
               TextField(
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.number,
                 controller: _mobileController,
                 decoration: const InputDecoration(
                   hintText: 'Phone Number',
@@ -122,6 +127,7 @@ class _SignUpPageState extends State<SignUpPage> {
               //_buildRadioButtonGroup(context),
               const SizedBox(height: 10),
               TextField(
+                textInputAction: TextInputAction.next,
                 controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -132,6 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 10),
               TextField(
+                textInputAction: TextInputAction.done,
                 controller: _confirmPasswordController,
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -171,6 +178,18 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildGoogleSignInButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return Center(
+                child: LoadingBouncingGrid.circle(
+                  backgroundColor: Colors.lightGreen,
+                  duration: Duration(milliseconds: 500),
+                  inverted: true,
+                ),
+              );
+            });
+
         await Provider.of<GoogleSignInProvider>(context, listen: false)
             .googleLogin();
         if (auth.FirebaseAuth.instance.currentUser != null) {
@@ -203,6 +222,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
             final userToBe = User.fromjson(perfectThings['data']);
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
           }
@@ -278,7 +298,13 @@ class _SignUpPageState extends State<SignUpPage> {
         showDialog(
             context: context,
             builder: (context) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingBouncingGrid.circle(
+                  backgroundColor: Colors.lightGreen,
+                  duration: Duration(milliseconds: 500),
+                  inverted: true,
+                ),
+              );
             });
 
         await FacebookLoginProvider.signInWithFacebook();
