@@ -269,7 +269,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
                   //close button
                   Container(
                     alignment: Alignment.center,
-                    //padding: const EdgeInsets.all(1),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(.1),
                       shape: BoxShape.circle,
