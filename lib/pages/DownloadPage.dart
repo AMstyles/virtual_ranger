@@ -194,13 +194,13 @@ class _DownloadPageState extends State<DownloadPage>
     _downloading = true;
     await DownLoad.downloadAllImages(context);
 
-    _downloading = false;
     canBeOffline = true;
     setState(() {
       UserData.setSettings('canBeOffline', true);
     });
 
     UserData.canGoOffline(true);
+    _downloading = false;
   }
 
   Future<void> off() async {
