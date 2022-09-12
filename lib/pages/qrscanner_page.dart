@@ -47,6 +47,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
             key: qrKey,
           )),
       bottomNavigationBar: Container(
+        padding: EdgeInsets.only(bottom: 30),
         color: Colors.black,
         height: 60,
         child: GestureDetector(
@@ -75,7 +76,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
     controller.scannedDataStream.listen((scanData) {
       controller.pauseCamera();
-
       setState(() {
         QRapi.getQR(context, scanData.code ?? '', controller);
       });
