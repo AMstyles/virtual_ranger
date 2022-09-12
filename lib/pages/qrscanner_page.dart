@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:virtual_ranger/apis/qrapis.dart';
 
@@ -19,13 +18,11 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller?.dispose();
     super.dispose();
   }
@@ -58,7 +55,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
           }),
           child: const Center(
             child: Text(
-              'Cancel',
+              'Done',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -78,7 +75,10 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
     controller.scannedDataStream.listen((scanData) {
       controller.pauseCamera();
-      QRapi.getQR(context, scanData.code ?? '', controller);
+
+      setState(() {
+        QRapi.getQR(context, scanData.code ?? '', controller);
+      });
     });
   }
 
@@ -87,12 +87,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
     super.reassemble();
     if (Platform.isAndroid) {
       qrKey.currentState?.reassemble();
-    }
-  }
-
-  void _onPermissionSet(PermissionStatus status) {
-    if (status == PermissionStatus.granted) {
-      controller!.resumeCamera();
     }
   }
 }

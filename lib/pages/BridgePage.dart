@@ -14,7 +14,6 @@ class BridgePage extends StatefulWidget {
 class _BridgePageState extends State<BridgePage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {

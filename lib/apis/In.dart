@@ -51,7 +51,7 @@ class signUpAPI {
       'country': '',
       'city': '',
       'gender': gender,
-      'profile_image': profile_image
+      //'profile_image': profile_image
     });
     final data = response.body;
     return data;

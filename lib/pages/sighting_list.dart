@@ -34,7 +34,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     askLocationPermission();
     rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {

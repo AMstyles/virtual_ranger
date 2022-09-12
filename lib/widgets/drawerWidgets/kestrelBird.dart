@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/page_service.dart';
 
 class KestrelBirds extends StatefulWidget {
-  KestrelBirds({Key? key}) : super(key: key);
+  KestrelBirds({Key? key, required this.count}) : super(key: key);
+  int count;
 
   @override
   State<KestrelBirds> createState() => _KestrelBirdsState();
@@ -22,7 +26,6 @@ class _KestrelBirdsState extends State<KestrelBirds> {
             itemBuilder: ((context, index) {
               return Bird(
                 index: index,
-                count: 6,
               );
             })),
       ),
@@ -30,11 +33,15 @@ class _KestrelBirdsState extends State<KestrelBirds> {
   }
 }
 
-class Bird extends StatelessWidget {
-  const Bird({Key? key, required this.index, required this.count})
-      : super(key: key);
-  final int index;
-  final int count;
+class Bird extends StatefulWidget {
+  Bird({Key? key, required this.index}) : super(key: key);
+  int index;
+
+  @override
+  State<Bird> createState() => _BirdState();
+}
+
+class _BirdState extends State<Bird> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,11 +49,12 @@ class Bird extends StatelessWidget {
       child: Stack(
         children: [
           Image.asset(
-            index != 11
+            widget.index != 11
                 ? 'lib/assets/kestrel_empty.png'
                 : 'lib/assets/kestrel_free.png',
           ),
-          (index <= (count - 1))
+          (widget.index <=
+                  (Provider.of<UserProvider>(context).user!.kestle_points - 1))
               ? Image.asset(
                   'lib/assets/kestrel_check.png',
                   width: 25,

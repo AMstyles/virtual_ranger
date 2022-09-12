@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
@@ -68,6 +66,7 @@ class UserData {
     await _userData.setString('user_image', user.image ?? '');
     await _userData.setString('user_secret_key', user.secret_key ?? '');
     await _userData.setString('gender', user.gender ?? '');
+    await _userData.setInt('kestle_points', user.kestle_points);
   }
 
   static Future<User> getUser() async {
@@ -85,7 +84,8 @@ class UserData {
         age_range: await _userData.getString('user_age_range'),
         image: await _userData.getString('user_image'),
         secret_key: await _userData.getString('user_secret_key'),
-        gender: await _userData.getString('gender') ?? 'none');
+        gender: await _userData.getString('gender') ?? 'none',
+        kestle_points: await _userData.getInt('kestle_points') ?? 0);
   }
 
 //!settings

@@ -19,8 +19,6 @@ class _DownloadPageState extends State<DownloadPage>
     with SingleTickerProviderStateMixin {
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
 
     UserData.getOfflineMode().then((value) {

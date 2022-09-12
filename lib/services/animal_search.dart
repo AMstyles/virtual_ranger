@@ -13,7 +13,6 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   List<Widget>? buildActions(BuildContext context) {
-    // TODO: implement buildActions
     return <Widget>[
       IconButton(
         icon: const Icon(Icons.clear),
@@ -26,8 +25,6 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget? buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-
     IconButton(
       icon: Platform.isAndroid
           ? const Icon(Icons.arrow_back)
@@ -40,7 +37,6 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     List<Specy> match = [];
     for (var i = 0; i < searchItems.length; i++) {
       if (searchItems[i]
@@ -90,8 +86,6 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-
     return FutureBuilder<List<Specy>>(
       future: Provider.of<UserProvider>(context).isOffLine ?? false
           ? Specyapi.getSpeciesFromLocal()

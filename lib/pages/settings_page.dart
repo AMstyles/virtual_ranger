@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
-import 'package:virtual_ranger/pages/DownloadPage.dart';
 
 import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';

@@ -56,7 +56,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initControllers();
     getApplicationDocumentsDirectory().then((directory) {
@@ -118,7 +117,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     disposeControllers();
     super.dispose();
   }
@@ -516,7 +514,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         .then((image) async {
                       if (image != null) {
                         Dio dio = Dio();
-                        FormData formData = FormData.fromMap({});
+                        //FormData formData = FormData.fromMap({});
 
                         final response = dio.post(
                           "http://dinokengapp.co.za/edit_profile",

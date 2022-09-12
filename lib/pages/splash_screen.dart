@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen>
   double _opacity2 = 0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     //startUser();
     setState(() {
