@@ -16,7 +16,6 @@ class _RulesPageState extends State<RulesPage> {
   //late String rules;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     //rules = something();
   }
@@ -29,16 +28,15 @@ class _RulesPageState extends State<RulesPage> {
             icon: const Icon(Icons.menu),
             onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
           ),
-
           title: const Text('Rules and Regulations')),
-
       body: ListView(
         children: [
           Container(
             //alignment: Alignment.center,
             margin: EdgeInsets.all(10.0),
-            decoration: BoxDecoration( borderRadius: BorderRadius.circular(8),
-                color: MyColors.secondaryColor ),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: MyColors.secondaryColor),
             padding: const EdgeInsets.symmetric(vertical: 8),
 
             child: const Center(
@@ -62,9 +60,7 @@ class _RulesPageState extends State<RulesPage> {
             child: Text(
               constRulesAndRegulations,
               textAlign: TextAlign.left,
-
               style: TextStyle(color: MyColors.secondaryColor, fontSize: 15),
-
             ),
           ),
         ],

@@ -23,7 +23,6 @@ class _SpecyPageState extends State<SpecyPage> {
   late bool isOffline;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     UserData.getOfflineMode().then((value) => setState(() {
           isOffline = value;
@@ -255,7 +254,6 @@ class Pages extends StatefulWidget {
 class _PagesState extends State<Pages> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     print("here we go booooy");
     print(widget.specyImage.images);

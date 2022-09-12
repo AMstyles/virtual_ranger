@@ -1,5 +1,26 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
+import '../pages/business_listings.dart';
+import '../pages/faq_page.dart';
+import '../pages/guide_page.dart';
+import '../pages/kestrel_club_page.dart';
+import '../pages/news_and_deals_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/rule_page.dart';
+import '../pages/settings_page.dart';
+import '../pages/sighting_list.dart';
+
+List<Widget> mainPages = [
+  ProfilePage(),
+  NewsAndDealsPage(),
+  GuidePage(),
+  Kestrel_club_page(),
+  SightingslistPage(),
+  FAQPage(),
+  RulesPage(),
+  BusinessListingsPage(),
+  SettingsPage(),
+];
 
 class PageProvider extends ChangeNotifier {
   var currentPage;
@@ -25,7 +46,12 @@ class UserProvider extends ChangeNotifier {
   bool? isOffLine;
 
   void setUser(User x) {
-    user = x;
+    this.user = x;
+    notifyListeners();
+  }
+
+  void incrementKestel_points() {
+    user!.kestle_points++;
     notifyListeners();
   }
 

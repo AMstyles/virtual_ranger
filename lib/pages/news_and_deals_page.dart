@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/Home/deals_tab.dart';
 import 'package:virtual_ranger/pages/Home/news_tab.dart';
 import 'package:virtual_ranger/services/getRequests.dart';

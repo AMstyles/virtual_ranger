@@ -20,7 +20,7 @@ class FAQWidg extends StatelessWidget {
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         children: [
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.only(left: 30, right: 20, bottom: 20),
             child: Text(faq.answer,
                 style: const TextStyle(
                   fontSize: 16,
@@ -30,7 +30,7 @@ class FAQWidg extends StatelessWidget {
       ),
     );
 
-    ; /*Padding(
+    /*Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

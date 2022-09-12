@@ -46,7 +46,6 @@ class _DrawerAppState extends State<DrawerApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     askPermission();
 

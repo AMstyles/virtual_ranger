@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
@@ -488,8 +489,9 @@ class _SignUpPageState extends State<SignUpPage> {
           .push(MaterialPageRoute(builder: (context) => DrawerApp()));
     } else {
       showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
+        context: context,
+        builder: (context) => Platform.isAndroid
+            ? AlertDialog(
                 title: const Text('Error'),
                 content: Text(finalData['data']),
                 actions: <Widget>[
@@ -500,7 +502,20 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   )
                 ],
-              ));
+              )
+            : CupertinoAlertDialog(
+                title: const Text('Error'),
+                content: Text(finalData['data']),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+      );
     }
     //print(finalData['success']);
   }

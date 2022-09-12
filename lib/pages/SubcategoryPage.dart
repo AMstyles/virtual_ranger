@@ -60,6 +60,5 @@ class _SubcategoryPageState extends State<SubcategoryPage> {
         },
       ),
     );
-    ;
   }
 }

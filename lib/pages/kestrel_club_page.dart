@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/qrscanner_page.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 import '../models/constants.dart';
 import '../widgets/drawerWidgets/kestrelBird.dart';
 import 'Custom/AnimeVals.dart';
@@ -36,7 +37,9 @@ class _Kestrel_club_pageState extends State<Kestrel_club_page> {
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
               )),
-          KestrelBirds(),
+          KestrelBirds(
+            count: Provider.of<UserProvider>(context).user!.kestle_points,
+          ),
           _buildSignUpButton(
             context,
             "SCAN QR CODE",

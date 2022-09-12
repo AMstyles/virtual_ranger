@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:virtual_ranger/apis/qrapis.dart';
 
@@ -19,13 +18,11 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller?.dispose();
     super.dispose();
   }
@@ -35,6 +32,36 @@ class _QRScannerPageState extends State<QRScannerPage> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          'Scan QR Code',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+          color: Colors.white,
+          iconSize: 24,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(isFlashOn ? Icons.flash_on : Icons.flash_off_rounded),
+            color: isFlashOn ? Colors.yellow : Colors.white,
+            iconSize: 24,
+            onPressed: () {
+              controller?.toggleFlash();
+              setState(() {
+                isFlashOn = !isFlashOn;
+              });
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
           top: false,
           child: QRView(
@@ -50,6 +77,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
             key: qrKey,
           )),
       bottomNavigationBar: Container(
+        padding: EdgeInsets.only(bottom: 30),
         color: Colors.black,
         height: 60,
         child: GestureDetector(
@@ -58,7 +86,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
           }),
           child: const Center(
             child: Text(
-              'Cancel',
+              'Done',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -78,7 +106,9 @@ class _QRScannerPageState extends State<QRScannerPage> {
 
     controller.scannedDataStream.listen((scanData) {
       controller.pauseCamera();
-      QRapi.getQR(context, scanData.code ?? '', controller);
+      setState(() {
+        QRapi.getQR(context, scanData.code ?? '', controller);
+      });
     });
   }
 
@@ -87,12 +117,6 @@ class _QRScannerPageState extends State<QRScannerPage> {
     super.reassemble();
     if (Platform.isAndroid) {
       qrKey.currentState?.reassemble();
-    }
-  }
-
-  void _onPermissionSet(PermissionStatus status) {
-    if (status == PermissionStatus.granted) {
-      controller!.resumeCamera();
     }
   }
 }

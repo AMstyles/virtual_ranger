@@ -10,6 +10,7 @@ import '../apis/Sightingsapi.dart';
 import '../services/readyData.dart';
 import '../widgets/MapLegend_widg.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/cupertino.dart';
 
 class SightingslistPage extends StatefulWidget {
   SightingslistPage({Key? key}) : super(key: key);
@@ -34,7 +35,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     askLocationPermission();
     rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {
@@ -240,70 +240,106 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }
 
   void showLegend() {
-    showModalBottomSheet(
-        clipBehavior: Clip.hardEdge,
-        anchorPoint: const Offset(0, 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        enableDrag: true,
-        context: context,
-        builder: (BuildContext context) {
-          return ListView(
-            padding: const EdgeInsets.all(8),
-            shrinkWrap: true,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    Platform.isAndroid
+        ? showModalBottomSheet(
+            clipBehavior: Clip.hardEdge,
+            anchorPoint: const Offset(0, 1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            enableDrag: true,
+            context: context,
+            builder: (BuildContext context) {
+              return ListView(
+                padding: const EdgeInsets.all(8),
+                shrinkWrap: true,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Legend',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Legend',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      //close button
+                      Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.close,
+                          ),
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
                   ),
-                  //close button
-                  Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
+                  ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: Provider.of<MapsData>(context, listen: false)
+                          .legendItems
+                          .length,
+                      itemBuilder: (context, index) {
+                        return LegendWidget(
+                          animalSight: currentAnimal =
+                              Provider.of<MapsData>(context, listen: false)
+                                  .legendItems[index],
+                          callback: () {
+                            setCurrentAnimal(index);
+                          },
+                        );
+                      }),
+                ],
+              );
+            })
+        : showCupertinoModalPopup(
+            context: context,
+            builder: (context) {
+              return CupertinoActionSheet(
+                title: Text('Legend'),
+                actions: [
+                  for (var item in legendItems)
+                    CupertinoActionSheetAction(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(item.name),
+                          CircleAvatar(
+                            backgroundColor: item.color,
+                            radius: 20,
+                          ),
+                        ],
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
+                        setState(() {
+                          currentAnimal = item;
+                        });
                       },
-                      icon: Icon(
-                        Icons.close,
-                      ),
-                      color: Colors.red,
-                    ),
-                  ),
+                    )
                 ],
-              ),
-              ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: Provider.of<MapsData>(context, listen: false)
-                      .legendItems
-                      .length,
-                  itemBuilder: (context, index) {
-                    return LegendWidget(
-                      animalSight: currentAnimal =
-                          Provider.of<MapsData>(context, listen: false)
-                              .legendItems[index],
-                      callback: () {
-                        setCurrentAnimal(index);
-                      },
-                    );
-                  }),
-            ],
-          );
-        });
+                cancelButton: CupertinoActionSheetAction(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            });
+    ;
   }
 
   void showConfirmDialog(LatLng latLng) {
@@ -312,99 +348,165 @@ class _SightingslistPageState extends State<SightingslistPage> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Confirm'),
-            content: Text('Are you sure you want to add this sighting?'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    setState(() {
-                      currentAnimal = null;
-                    });
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.red),
-                  )),
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    addMaker_(currPos, currentAnimal!);
-                  },
-                  child: Text('Confirm')),
-            ],
-          );
+          return Platform.isAndroid
+              ? AlertDialog(
+                  title: Text('Confirm'),
+                  content: Text('Are you sure you want to add this sighting?'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            currentAnimal = null;
+                          });
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.red),
+                        )),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          addMaker_(currPos, currentAnimal!);
+                        },
+                        child: Text('Confirm')),
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: Text('Confirm'),
+                  content: Text('Are you sure you want to add this sighting?'),
+                  actions: [
+                    CupertinoDialogAction(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            currentAnimal = null;
+                          });
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.red),
+                        )),
+                    CupertinoDialogAction(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          addMaker_(currPos, currentAnimal!);
+                        },
+                        child: Text('Confirm')),
+                  ],
+                );
         });
     //alert dialog
   }
 
   void chooseAnimal() {
-    showModalBottomSheet(
-        clipBehavior: Clip.hardEdge,
-        anchorPoint: const Offset(0, 1),
-        //isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        enableDrag: true,
-        context: context,
-        builder: (BuildContext context) {
-          return ListView(
-            padding: const EdgeInsets.all(8),
-            shrinkWrap: true,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    Platform.isAndroid
+        ? showModalBottomSheet(
+            clipBehavior: Clip.hardEdge,
+            anchorPoint: const Offset(0, 1),
+            //isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            enableDrag: true,
+            context: context,
+            builder: (BuildContext context) {
+              return ListView(
+                padding: const EdgeInsets.all(8),
+                shrinkWrap: true,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Choose The Animal',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Choose The Animal',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      //close button
+                      Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.close,
+                          ),
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
                   ),
-                  //close button
-                  Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
+                  ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: Provider.of<MapsData>(context, listen: false)
+                          .legendItems
+                          .length,
+                      itemBuilder: (context, index) {
+                        return ChooseWidget(
+                          animalSight: currentAnimal =
+                              Provider.of<MapsData>(context, listen: false)
+                                  .legendItems[index],
+                          callback: () {
+                            setCurrentAnimal(index);
+                          },
+                        );
+                      }),
+                ],
+              );
+            })
+        : showCupertinoModalPopup(
+            context: context,
+            builder: (context) {
+              return CupertinoActionSheet(
+                title: Text('Choose The Animal'),
+                actions: [
+                  for (var item in legendItems)
+                    CupertinoActionSheetAction(
+                      child: Text(item.name),
                       onPressed: () {
                         Navigator.pop(context);
+                        setState(() {
+                          currentAnimal = item;
+                        });
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text('Info'),
+                                content: Text(
+                                    'Tap on the map to add the sighting of ${currentAnimal!.name}'),
+                                actions: [
+                                  CupertinoDialogAction(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('Ok'))
+                                ],
+                              );
+                            });
                       },
-                      icon: Icon(
-                        Icons.close,
-                      ),
-                      color: Colors.red,
-                    ),
-                  ),
+                    )
                 ],
-              ),
-              ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: Provider.of<MapsData>(context, listen: false)
-                      .legendItems
-                      .length,
-                  itemBuilder: (context, index) {
-                    return ChooseWidget(
-                      animalSight: currentAnimal =
-                          Provider.of<MapsData>(context, listen: false)
-                              .legendItems[index],
-                      callback: () {
-                        setCurrentAnimal(index);
-                      },
-                    );
-                  }),
-            ],
-          );
-        });
+                cancelButton: CupertinoActionSheetAction(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            });
   }
 
   void chooseMapIOS() {
@@ -519,18 +621,31 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
     showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: Text('Add Sighting'),
-              content: Text(
-                  'Simply tap on the map where you spotted the ${currentAnimal!.name}'),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Ok'))
-              ],
-            ));
+        builder: (context) => Platform.isAndroid
+            ? AlertDialog(
+                title: Text('Add Sighting'),
+                content: Text(
+                    'Simply tap on the map where you spotted the ${currentAnimal!.name}'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Ok'))
+                ],
+              )
+            : CupertinoAlertDialog(
+                title: Text('Add Sighting'),
+                content: Text(
+                    'Simply tap on the map where you spotted the ${currentAnimal!.name}'),
+                actions: [
+                  CupertinoDialogAction(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Ok'))
+                ],
+              ));
   }
 
   String readTimeStamp(String timeStamp) {

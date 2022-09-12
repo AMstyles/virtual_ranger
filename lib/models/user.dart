@@ -12,6 +12,8 @@ class User {
   String? secret_key;
   String? gender;
 
+  int kestle_points;
+
   bool isImageNull() {
     return image == null;
   }
@@ -31,6 +33,7 @@ class User {
     this.image,
     required this.secret_key,
     this.gender,
+    required this.kestle_points,
   });
 
   static User fromjson(json) {
@@ -45,6 +48,7 @@ class User {
       image: json['profile_image'],
       secret_key: json['secret_key'],
       gender: json['gender'],
+      kestle_points: int.parse(json['kestle_points']),
     );
   }
 
@@ -60,6 +64,7 @@ class User {
       'age_range': age_range ?? '',
       'profile_image': image ?? '',
       'secret_key': secret_key ?? '',
+      'kestle_points': kestle_points.toString(),
     };
   }
 }

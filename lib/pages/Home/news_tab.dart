@@ -19,7 +19,6 @@ class _NewsTabState extends State<NewsTab>
     with AutomaticKeepAliveClientMixin<NewsTab> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -54,6 +53,5 @@ class _NewsTabState extends State<NewsTab>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
