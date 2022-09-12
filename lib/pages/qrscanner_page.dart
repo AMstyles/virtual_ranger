@@ -33,23 +33,20 @@ class _QRScannerPageState extends State<QRScannerPage> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        title: Text(
+          'Scan QR Code',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Container(
-          margin: EdgeInsets.all(5),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.black.withOpacity(.3),
-          ),
-          child: IconButton(
-            icon: Icon(
-                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
-            color: Colors.white,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+        leading: IconButton(
+          icon: Icon(
+              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+          color: Colors.white,
+          iconSize: 24,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: SafeArea(
