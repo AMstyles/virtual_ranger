@@ -48,6 +48,19 @@ class _QRScannerPageState extends State<QRScannerPage> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(isFlashOn ? Icons.flash_on : Icons.flash_off_rounded),
+            color: isFlashOn ? Colors.yellow : Colors.white,
+            iconSize: 24,
+            onPressed: () {
+              controller?.toggleFlash();
+              setState(() {
+                isFlashOn = !isFlashOn;
+              });
+            },
+          ),
+        ],
       ),
       body: SafeArea(
           top: false,

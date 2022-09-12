@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -98,18 +100,31 @@ class _DownloadPageState extends State<DownloadPage>
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('You cannot go offline'),
-                                    content: Text(
-                                        'You need to download content to go offline'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Ok'))
-                                    ],
-                                  );
+                                  return Platform.isAndroid
+                                      ? AlertDialog(
+                                          title: Text('You cannot go offline'),
+                                          content: Text(
+                                              'You need to download content to go offline'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Ok'))
+                                          ],
+                                        )
+                                      : CupertinoAlertDialog(
+                                          title: Text('You cannot go offline'),
+                                          content: Text(
+                                              'You need to download content to go offline'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Ok'))
+                                          ],
+                                        );
                                 });
                           } else {
                             isOffline = newbBol;

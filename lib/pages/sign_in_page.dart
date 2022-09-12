@@ -14,6 +14,7 @@ import '../models/user.dart';
 import 'package:virtual_ranger/pages/sign_up_page.dart';
 import 'dart:io' show Platform;
 import '../services/LoginProviders.dart';
+import 'package:flutter/cupertino.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -391,21 +392,39 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-                title: const Text(
-                  'Error',
-                  style: TextStyle(color: Colors.red),
-                ),
-                content: Text(finalData['data']),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Ok'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ));
+          builder: (context) => Platform.isAndroid
+              ? AlertDialog(
+                  title: const Text(
+                    'Error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  content: Text(finalData['data']),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: const Text(
+                    'Error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  content: Text(finalData['data']),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ));
+      //cupertion
+
     }
     //print(finalData['success']);
   }

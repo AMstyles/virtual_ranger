@@ -372,39 +372,71 @@ class _ProfilePageState extends State<ProfilePage> {
       UserData.setUser(User.fromjson(finalData['data']));
       showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-                title: const Text(
-                  'Success',
-                  style: TextStyle(color: Colors.green),
-                ),
-                content: const Text("profile updated"),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Ok'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ));
+          builder: (context) => Platform.isAndroid
+              ? AlertDialog(
+                  title: const Text(
+                    'Success',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  content: const Text("profile updated"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: const Text(
+                    'Success',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  content: const Text("profile updated"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ));
     } else {
       showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-                title: const Text(
-                  'Error',
-                  style: TextStyle(color: Colors.red),
-                ),
-                content: Text(finalData['data']),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Ok'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ));
+          builder: (context) => Platform.isAndroid
+              ? AlertDialog(
+                  title: const Text(
+                    'Error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  content: Text(finalData['data']),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: const Text(
+                    'Error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  content: Text(finalData['data']),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ));
     }
   }
 
@@ -432,39 +464,71 @@ class _ProfilePageState extends State<ProfilePage> {
     if (finalData['success'] == true) {
       showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-                title: const Text(
-                  'Success',
-                  style: TextStyle(color: Colors.green),
-                ),
-                content: const Text("Profile updated"),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Ok'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ));
+          builder: (context) => Platform.isAndroid
+              ? AlertDialog(
+                  title: const Text(
+                    'Success',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  content: const Text("Profile updated"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: const Text(
+                    'Success',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  content: const Text("Profile updated"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ));
     } else {
       showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-                title: const Text(
-                  'Error',
-                  style: TextStyle(color: Colors.red),
-                ),
-                content: Text(finalData['data']),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Ok'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ));
+          builder: (context) => Platform.isAndroid
+              ? AlertDialog(
+                  title: const Text(
+                    'Error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  content: Text(finalData['data']),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: const Text(
+                    'Error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  content: Text(finalData['data']),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Ok'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ));
     }
   }
 
@@ -494,97 +558,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void handleImagePicker() {
-    showCupertinoModalPopup(
-        context: context,
-        builder: ((context) {
-          return CupertinoActionSheet(
-            actions: [
-              CupertinoActionSheetAction(
-                  onPressed: () async {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const Center(
-                              child: CircularProgressIndicator.adaptive());
-                        });
-
-                    final ImagePicker _picker = ImagePicker();
-                    final File? photo = await _picker
-                        .pickImage(source: ImageSource.camera)
-                        .then((image) async {
-                      if (image != null) {
-                        Dio dio = Dio();
-                        //FormData formData = FormData.fromMap({});
-
-                        final response = dio.post(
-                          "http://dinokengapp.co.za/edit_profile",
-                          data: FormData.fromMap({
-                            "profile_image":
-                                await MultipartFile.fromFile(image.path),
-                            "id": Provider.of<UserProvider>(context,
-                                    listen: false)
-                                .user!
-                                .id,
-                            "email": Provider.of<UserProvider>(context,
-                                    listen: false)
-                                .user!
-                                .email,
-                            "user_role": "Attendee",
-                            "secret_key": Provider.of<UserProvider>(context,
-                                        listen: false)
-                                    .user!
-                                    .secret_key ??
-                                ' ',
-                          }),
-                        );
-                        await response.then((value) {
-                          final data = value.data;
-                          print(data);
-                          User UserToBe = User.fromjson(data['data']);
-                          UserData.setUser(UserToBe);
-                          Provider.of<UserProvider>(context, listen: false)
-                              .setUser(UserToBe);
-                        });
-
-                        Navigator.pop(context);
-                      }
-                      Navigator.pop(context);
-                      return;
-                    });
-                  },
-                  child: const Text('Camera')),
-              CupertinoActionSheetAction(
-                  onPressed: () async {
-                    final ImagePicker _picker = ImagePicker();
-                    final XFile? photo = await _picker
-                        .pickImage(source: ImageSource.gallery)
-                        .then((Image) async {
-                      if (Image != null) {
-                        Dio dio = Dio();
-                        FormData formData = FormData.fromMap({});
-                        final response = dio.post(
-                          "http://dinokengapp.co.za/edit_profile",
-                          data: FormData.fromMap({
-                            "profile_image":
-                                await MultipartFile.fromFile(Image.path),
-                            "id": Provider.of<UserProvider>(context,
-                                    listen: false)
-                                .user!
-                                .id,
-                            "email": Provider.of<UserProvider>(context,
-                                    listen: false)
-                                .user!
-                                .email,
-                            "user_role": "Attendee",
-                            "secret_key": Provider.of<UserProvider>(context,
-                                        listen: false)
-                                    .user!
-                                    .secret_key ??
-                                ' ',
-                          }),
-                        );
-
-                        //showDialog
+    Platform.isIOS
+        ? showCupertinoModalPopup(
+            context: context,
+            builder: ((context) {
+              return CupertinoActionSheet(
+                actions: [
+                  CupertinoActionSheetAction(
+                      onPressed: () async {
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -592,33 +573,266 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: CircularProgressIndicator.adaptive());
                             });
 
-                        await response.then((value) {
-                          final data = value.data;
-                          print(data);
-                          User UserToBe = User.fromjson(data['data']);
-                          //set user to shared prefs
-                          UserData.setUser(UserToBe);
-                          print(UserToBe.name);
-                          Provider.of<UserProvider>(context, listen: false)
-                              .setUser(UserToBe);
-                        });
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      }
+                        final ImagePicker _picker = ImagePicker();
+                        final File? photo = await _picker
+                            .pickImage(source: ImageSource.camera)
+                            .then((image) async {
+                          if (image != null) {
+                            Dio dio = Dio();
+                            //FormData formData = FormData.fromMap({});
 
-                      return;
-                    });
-                  },
-                  child: const Text('Gallery')),
-            ],
-            cancelButton: CupertinoActionSheetAction(
-                isDestructiveAction: true,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel')),
+                            final response = dio.post(
+                              "http://dinokengapp.co.za/edit_profile",
+                              data: FormData.fromMap({
+                                "profile_image":
+                                    await MultipartFile.fromFile(image.path),
+                                "id": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .id,
+                                "email": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .email,
+                                "user_role": "Attendee",
+                                "secret_key": Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .user!
+                                        .secret_key ??
+                                    ' ',
+                              }),
+                            );
+                            await response.then((value) {
+                              final data = value.data;
+                              print(data);
+                              User UserToBe = User.fromjson(data['data']);
+                              UserData.setUser(UserToBe);
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .setUser(UserToBe);
+                            });
+
+                            Navigator.pop(context);
+                          }
+                          Navigator.pop(context);
+                          return;
+                        });
+                      },
+                      child: const Text('Camera')),
+                  CupertinoActionSheetAction(
+                      onPressed: () async {
+                        final ImagePicker _picker = ImagePicker();
+                        final XFile? photo = await _picker
+                            .pickImage(source: ImageSource.gallery)
+                            .then((Image) async {
+                          if (Image != null) {
+                            Dio dio = Dio();
+                            FormData formData = FormData.fromMap({});
+                            final response = dio.post(
+                              "http://dinokengapp.co.za/edit_profile",
+                              data: FormData.fromMap({
+                                "profile_image":
+                                    await MultipartFile.fromFile(Image.path),
+                                "id": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .id,
+                                "email": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .email,
+                                "user_role": "Attendee",
+                                "secret_key": Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .user!
+                                        .secret_key ??
+                                    ' ',
+                              }),
+                            );
+
+                            //showDialog
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const Center(
+                                      child:
+                                          CircularProgressIndicator.adaptive());
+                                });
+
+                            await response.then((value) {
+                              final data = value.data;
+                              print(data);
+                              User UserToBe = User.fromjson(data['data']);
+                              //set user to shared prefs
+                              UserData.setUser(UserToBe);
+                              print(UserToBe.name);
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .setUser(UserToBe);
+                            });
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
+
+                          return;
+                        });
+                      },
+                      child: const Text('Gallery')),
+                ],
+                cancelButton: CupertinoActionSheetAction(
+                    isDestructiveAction: true,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel')),
+              );
+            }))
+        : showModalBottomSheet(
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(25.0))),
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                  child: ListView(
+                      padding: EdgeInsets.only(bottom: 50),
+                      shrinkWrap: true,
+                      children: [
+                    ListTile(
+                      leading: Icon(Icons.camera_alt),
+                      title: Text('Camera'),
+                      onTap: () async {
+                        final ImagePicker _picker = ImagePicker();
+                        final File? photo = await _picker
+                            .pickImage(source: ImageSource.camera)
+                            .then((image) async {
+                          if (image != null) {
+                            Dio dio = Dio();
+                            FormData formData = FormData.fromMap({});
+                            final response = dio.post(
+                              "http://dinokengapp.co.za/edit_profile",
+                              data: FormData.fromMap({
+                                "profile_image":
+                                    await MultipartFile.fromFile(image.path),
+                                "id": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .id,
+                                "email": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .email,
+                                "user_role": "Attendee",
+                                "secret_key": Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .user!
+                                        .secret_key ??
+                                    ' ',
+                              }),
+                            );
+
+                            //showDialog
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const Center(
+                                      child:
+                                          CircularProgressIndicator.adaptive());
+                                });
+
+                            await response.then((value) {
+                              final data = value.data;
+                              print(data);
+                              User UserToBe = User.fromjson(data['data']);
+                              //set user to shared prefs
+                              UserData.setUser(UserToBe);
+                              print(UserToBe.name);
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .setUser(UserToBe);
+                            });
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
+
+                          return;
+                        });
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.photo),
+                      title: Text('Gallery'),
+                      onTap: () async {
+                        final ImagePicker _picker = ImagePicker();
+                        final File? photo = await _picker
+                            .pickImage(source: ImageSource.gallery)
+                            .then((Image) async {
+                          if (Image != null) {
+                            Dio dio = Dio();
+                            FormData formData = FormData.fromMap({});
+                            final response = dio.post(
+                              "http://dinokengapp.co.za/edit_profile",
+                              data: FormData.fromMap({
+                                "profile_image":
+                                    await MultipartFile.fromFile(Image.path),
+                                "id": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .id,
+                                "email": Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .email,
+                                "user_role": "Attendee",
+                                "secret_key": Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .user!
+                                        .secret_key ??
+                                    ' ',
+                              }),
+                            );
+
+                            //showDialog
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const Center(
+                                      child:
+                                          CircularProgressIndicator.adaptive());
+                                });
+
+                            await response.then((value) {
+                              final data = value.data;
+                              print(data);
+                              User UserToBe = User.fromjson(data['data']);
+                              //set user to shared prefs
+                              UserData.setUser(UserToBe);
+                              print(UserToBe.name);
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .setUser(UserToBe);
+                            });
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
+
+                          return;
+                        });
+                      },
+                    )
+                    //cancel button
+                    ,
+                    TextButton(
+                        style: TextButton.styleFrom(
+                            primary: Colors.red,
+                            textStyle: const TextStyle(fontSize: 20)),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cancel'))
+                  ]));
+
+              //end
+            },
+//ends here
           );
-        }));
   }
 
 //!dropdown

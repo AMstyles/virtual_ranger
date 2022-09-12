@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -130,15 +132,25 @@ class signUpAPI {
     showDialog(
         context: context,
         builder: ((context) {
-          return AlertDialog(
-            title: Text('Please wait...'),
-            content: Container(
-              height: 100,
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          );
+          return Platform.isAndroid
+              ? AlertDialog(
+                  title: Text('Please wait...'),
+                  content: Container(
+                    height: 100,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+              : CupertinoAlertDialog(
+                  title: Text('Please wait...'),
+                  content: Container(
+                    height: 100,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
         }));
     final response = await http
         .post(Uri.parse('https://dinokengapp.co.za/forgot_password'), body: {
@@ -152,17 +164,29 @@ class signUpAPI {
     showDialog(
         context: context,
         builder: ((context) {
-          return AlertDialog(
-            title: Text(finalData['success'] ? 'Success' : 'Error'),
-            content: Text(finalData['data']),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Ok'))
-            ],
-          );
+          return Platform.isAndroid
+              ? AlertDialog(
+                  title: Text(finalData['success'] ? 'Success' : 'Error'),
+                  content: Text(finalData['data']),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Ok'))
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: Text(finalData['success'] ? 'Success' : 'Error'),
+                  content: Text(finalData['data']),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Ok'))
+                  ],
+                );
         }));
     print(response.body);
   }

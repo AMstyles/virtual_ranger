@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -34,26 +35,48 @@ class Sightings {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: data['success']
-                ? Text(
-                    "Success",
-                    style: TextStyle(color: Colors.green),
-                  )
-                : Text(
-                    "Error",
-                    style: TextStyle(color: Colors.red),
-                  ),
-            content: Text(data['data'].toString()),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
+          return Platform.isAndroid
+              ? AlertDialog(
+                  title: data['success']
+                      ? Text(
+                          "Success",
+                          style: TextStyle(color: Colors.green),
+                        )
+                      : Text(
+                          "Error",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                  content: Text(data['data'].toString()),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                )
+              : CupertinoAlertDialog(
+                  title: data['success']
+                      ? Text(
+                          "Success",
+                          style: TextStyle(color: Colors.green),
+                        )
+                      : Text(
+                          "Error",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                  content: Text(data['data'].toString()),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+          ;
         });
   }
 

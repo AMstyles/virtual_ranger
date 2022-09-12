@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -19,7 +21,7 @@ class QRapi {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator.adaptive(),
         );
       },
     );
@@ -36,36 +38,67 @@ class QRapi {
 
     await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: responseJson['success']
-                  ? Text(
-                      'Success',
-                      style: TextStyle(color: Colors.green),
-                    )
-                  : Text(
-                      'Error',
-                      style: TextStyle(color: Colors.red),
-                    ),
-              content: (!responseJson['success'])
-                  ? Text(responseJson['data'])
-                  : Text('The QR has been scanned successfully'),
-              actions: [
-                TextButton(
-                  onPressed: responseJson['success']
-                      ? () {
-                          mainPages.remove(3);
-                          mainPages.add(Kestrel_club_page());
-                          Navigator.pop(context);
-                          qrViewController.resumeCamera();
-                        }
-                      : () {
-                          Navigator.pop(context);
-                          qrViewController.resumeCamera();
-                        },
-                  child: Text('OK'),
-                ),
-              ],
-            ));
+        builder: (context) => Platform.isAndroid
+            ? AlertDialog(
+                title: responseJson['success']
+                    ? Text(
+                        'Success',
+                        style: TextStyle(color: Colors.green),
+                      )
+                    : Text(
+                        'Error',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                content: (!responseJson['success'])
+                    ? Text(responseJson['data'])
+                    : Text('The QR has been scanned successfully'),
+                actions: [
+                  TextButton(
+                    onPressed: responseJson['success']
+                        ? () {
+                            mainPages.remove(3);
+                            mainPages.add(Kestrel_club_page());
+                            Navigator.pop(context);
+                            qrViewController.resumeCamera();
+                          }
+                        : () {
+                            Navigator.pop(context);
+                            qrViewController.resumeCamera();
+                          },
+                    child: Text('OK'),
+                  ),
+                ],
+              )
+            : CupertinoAlertDialog(
+                title: responseJson['success']
+                    ? Text(
+                        'Success',
+                        style: TextStyle(color: Colors.green),
+                      )
+                    : Text(
+                        'Error',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                content: (!responseJson['success'])
+                    ? Text(responseJson['data'])
+                    : Text('The QR has been scanned successfully'),
+                actions: [
+                  TextButton(
+                    onPressed: responseJson['success']
+                        ? () {
+                            mainPages.remove(3);
+                            mainPages.add(Kestrel_club_page());
+                            Navigator.pop(context);
+                            qrViewController.resumeCamera();
+                          }
+                        : () {
+                            Navigator.pop(context);
+                            qrViewController.resumeCamera();
+                          },
+                    child: Text('OK'),
+                  ),
+                ],
+              ));
 
     if (responseJson['success']) {
       //User userToBe = User.fromjson(responseJson['data']);
