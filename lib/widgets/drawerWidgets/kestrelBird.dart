@@ -22,7 +22,7 @@ class _KestrelBirdsState extends State<KestrelBirds> {
             itemBuilder: ((context, index) {
               return Bird(
                 index: index,
-                count: 0,
+                count: 6,
               );
             })),
       ),
