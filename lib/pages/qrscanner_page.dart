@@ -32,6 +32,26 @@ class _QRScannerPageState extends State<QRScannerPage> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: EdgeInsets.all(5),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.black.withOpacity(.3),
+          ),
+          child: IconButton(
+            icon: Icon(
+                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ),
       body: SafeArea(
           top: false,
           child: QRView(
