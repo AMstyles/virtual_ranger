@@ -18,6 +18,8 @@ import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/readyData.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 
+import 'apis/Download.dart';
+
 class DrawerApp extends StatefulWidget {
   const DrawerApp({Key? key}) : super(key: key);
 
@@ -55,6 +57,11 @@ class _DrawerAppState extends State<DrawerApp> {
         }));
     Provider.of<MapsData>(context, listen: false).getEm();
     Provider.of<MapsData>(context, listen: false).putLegend(context);
+    try {
+      DownLoad.updateAlert(context);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
