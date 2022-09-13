@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import '../models/constants.dart';
+import '../pages/Custom/AnimeVals.dart';
 import '../services/shared_preferences.dart';
 import 'businesslistingsapi.dart';
 import 'eventapi.dart';
@@ -143,6 +145,52 @@ class DownLoad {
     await downloadSubCategoryImage(context);
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
+    showDialog(
+        context: context,
+        builder: (context) => Platform.isAndroid
+            ? AlertDialog(
+                title: Text("Download Complete"),
+                content: Text(
+                    "All images have been downloaded, you can toggle the offline mode in the settings page"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("Ok")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Provider.of<PageProvider>(context, listen: false)
+                            .jumpToDownload();
+                        if (Provider.of<Anime>(context).isOpen) {
+                          Provider.of<Anime>(context, listen: false)
+                              .closeDrawer();
+                        }
+                      },
+                      child: Text("toggle now"))
+                ],
+              )
+            : CupertinoAlertDialog(
+                title: Text("Download Complete"),
+                content: Text(
+                    "All images have been downloaded, you can toggle the offline mode in the settings page"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("Ok")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Provider.of<PageProvider>(context, listen: false)
+                            .jumpToDownload();
+                        if (Provider.of<Anime>(context).isOpen) {
+                          Provider.of<Anime>(context, listen: false)
+                              .closeDrawer();
+                        }
+                      },
+                      child: Text("toggle now"))
+                ],
+              ));
   }
 
   static downloadNewsImages(BuildContext context) {

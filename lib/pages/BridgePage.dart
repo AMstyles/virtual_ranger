@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/DownloadPage.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 
 import '../apis/Download.dart';
 
@@ -41,8 +43,10 @@ class _BridgePageState extends State<BridgePage> {
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('downloaded', true);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => DownloadPage()));
+      Navigator.pop(context);
+      Provider.of<PageProvider>(context, listen: false).jumpToDownload();
+      /*Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => DownloadPage()));*/
     });
   }
 
