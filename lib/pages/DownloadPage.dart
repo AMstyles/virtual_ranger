@@ -167,7 +167,7 @@ class _DownloadPageState extends State<DownloadPage>
                                       ? AlertDialog(
                                           title: Text('Alert'),
                                           content: Text(
-                                              'You have successfully changed your offline mode , this will take effect the next time you open the app'),
+                                              'You have successfully changed your offline mode, this will take effect the next time you open the app'),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
@@ -179,7 +179,7 @@ class _DownloadPageState extends State<DownloadPage>
                                       : CupertinoAlertDialog(
                                           title: Text('Offline mode'),
                                           content: Text(
-                                              'You have successfully changed your offline mode , this will take effect the next time you open the app'),
+                                              'You have successfully changed your offline mode, this will take effect the next time you open the app'),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
