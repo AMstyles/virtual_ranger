@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -48,6 +47,14 @@ class _DownloadPageState extends State<DownloadPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon:
+              Icon(Platform.isAndroid ? Icons.arrow_back : CupertinoIcons.back),
+          onPressed: () {
+            Provider.of<PageProvider>(context, listen: false).jumpToSettings();
+          },
+        ),
         title: Text('Download content',
             style: TextStyle(
               fontSize: 20,
@@ -60,9 +67,27 @@ class _DownloadPageState extends State<DownloadPage>
             _downloading
                 ? Column(
                     children: [
-                      Text(
-                        'Please do not exit this page until the download finishes',
-                        style: TextStyle(color: Colors.red),
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Please do not exit the app while downloading, this may take a while depending on your internet connection, you will be notified when the download is complete. Stay within the App to ensure the download is successful.',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
@@ -96,7 +121,7 @@ class _DownloadPageState extends State<DownloadPage>
                       //if the get settings is false in shared preferences, disable the switch
                       UserData.getSettings('canBeOffline').then((value) {
                         setState(() {
-                          if (value == null || value == false) {
+                          if (value == false) {
                             showDialog(
                                 context: context,
                                 builder: (context) {
@@ -127,12 +152,43 @@ class _DownloadPageState extends State<DownloadPage>
                                         );
                                 });
                           } else {
+                            //TODO: add a check to see if the user has downloaded content
                             isOffline = newbBol;
                             SharedPreferences.getInstance().then((prefs) {
                               setState(() {
                                 UserData.toggleOfflineMode(newbBol);
+                                UserData.setSettings('canBeOffline', true);
                               });
                             });
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Platform.isAndroid
+                                      ? AlertDialog(
+                                          title: Text('Alert'),
+                                          content: Text(
+                                              'You have successfully changed your offline mode , this will take effect the next time you open the app'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Ok'))
+                                          ],
+                                        )
+                                      : CupertinoAlertDialog(
+                                          title: Text('Offline mode'),
+                                          content: Text(
+                                              'You have successfully changed your offline mode , this will take effect the next time you open the app'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Ok'))
+                                          ],
+                                        );
+                                });
                           }
                         });
                       });
@@ -231,5 +287,13 @@ class _DownloadPageState extends State<DownloadPage>
   Future<void> canOffline() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     canBeOffline = prefs.getBool('canOffline') ?? false;
+  }
+
+  String makeBool(bool value) {
+    if (value == 'true') {
+      return 'On';
+    } else {
+      return 'Off';
+    }
   }
 }

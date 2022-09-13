@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_ranger/pages/DownloadPage.dart';
 import '../models/user.dart';
 import '../pages/business_listings.dart';
 import '../pages/faq_page.dart';
@@ -20,6 +21,7 @@ List<Widget> mainPages = [
   RulesPage(),
   BusinessListingsPage(),
   SettingsPage(),
+  DownloadPage()
 ];
 
 class PageProvider extends ChangeNotifier {
@@ -32,12 +34,18 @@ class PageProvider extends ChangeNotifier {
   }
 
   void switchPage(int num) {
-    //currentPage = pages[num];
     currentPageNum = num;
-
     notifyListeners();
     setState() {}
     print(currentPageNum);
+  }
+
+  void jumpToSettings() {
+    switchPage(8);
+  }
+
+  void jumpToDownload() {
+    switchPage(9);
   }
 }
 
