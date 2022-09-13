@@ -192,7 +192,6 @@ class _DownloadPageState extends State<DownloadPage>
                           }
                         });
                       });
-
                       //write to shared preferences
                     });
                   }),
@@ -206,7 +205,6 @@ class _DownloadPageState extends State<DownloadPage>
                     Colors.red,
                     Colors.amber,
                     Colors.yellow,
-                    Colors.greenAccent,
                     Colors.green,
                   ],
                 ),

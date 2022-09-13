@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
 import 'package:virtual_ranger/services/page_service.dart';
@@ -32,16 +33,64 @@ class DownLoad {
     DownloadImages();
   }
 
-  static void DownloadNews() async {
+  static Future<void> updateAlert(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (await UserData.getSettings('checkContent') &&
+        await UserData.getOfflineMode()) {
+      if (await checkNewsUpdates() ||
+          await checkEventsUpdates() ||
+          await checkBusinessListingsUpdates() ||
+          await checkFAQUpdates() ||
+          await checkSpeciesUpdates() ||
+          await checkCategoriesUpdates() ||
+          await checkSubCategoriesUpdates()) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Update Available"),
+                content: Text("New content is available, please update"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Ok")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Update now"))
+                ],
+              );
+            });
+      }
+    }
+  }
+
+  static Future<void> DownloadNews() async {
     final response = await http.get(Uri.parse(NEWS_URL));
     final data = response.body;
     final file = File('${UserData.path}/news.json');
-
     if (!file.existsSync()) {
       file.createSync(recursive: true); // create file if not exists
 
     } else {
       file.writeAsStringSync(data);
+    }
+  }
+
+  static Future<bool> checkNewsUpdates() async {
+    final response = await http.get(Uri.parse(NEWS_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/news.json');
+    if (!file.existsSync()) {
+      return true;
+    } else {
+      if (file.readAsStringSync() != data) {
+        return true;
+      }
+      return false;
     }
   }
 
@@ -56,7 +105,21 @@ class DownLoad {
     }
   }
 
-  static void DownloadSpecies() async {
+  static Future<bool> checkEventsUpdates() async {
+    final response = await http.get(Uri.parse(EVENT_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/events.json');
+    if (!file.existsSync()) {
+      return true;
+    } else {
+      if (file.readAsStringSync() != data) {
+        return true;
+      }
+      return false;
+    }
+  }
+
+  static Future<void> DownloadSpecies() async {
     final response = await http.get(Uri.parse(SPECIES_URL));
     final data = response.body;
     File file = await File('${UserData.path}/species.json');
@@ -67,7 +130,21 @@ class DownLoad {
     }
   }
 
-  static void DownloadCategories() async {
+  static Future<bool> checkSpeciesUpdates() async {
+    final response = await http.get(Uri.parse(SPECIES_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/species.json');
+    if (!file.existsSync()) {
+      return true;
+    } else {
+      if (file.readAsStringSync() != data) {
+        return true;
+      }
+      return false;
+    }
+  }
+
+  static Future<void> DownloadCategories() async {
     final response = await http.get(Uri.parse(CATEGORY_URL));
     final data = response.body;
     File file = await File('${UserData.path}/categories.json');
@@ -78,7 +155,21 @@ class DownLoad {
     }
   }
 
-  static void DownloadSubCategories() async {
+  static Future<bool> checkCategoriesUpdates() async {
+    final response = await http.get(Uri.parse(CATEGORY_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/categories.json');
+    if (!file.existsSync()) {
+      return true;
+    } else {
+      if (file.readAsStringSync() != data) {
+        return true;
+      }
+      return false;
+    }
+  }
+
+  static Future<void> DownloadSubCategories() async {
     final response = await http.get(Uri.parse(SUBCATEGORY_URL));
     final data = response.body;
     File file = await File('${UserData.path}/sub_categories.json');
@@ -89,7 +180,21 @@ class DownLoad {
     }
   }
 
-  static void DownloadBusinessListings() async {
+  static Future<bool> checkSubCategoriesUpdates() async {
+    final response = await http.get(Uri.parse(SUBCATEGORY_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/sub_categories.json');
+    if (!file.existsSync()) {
+      return true;
+    } else {
+      if (file.readAsStringSync() != data) {
+        return true;
+      }
+      return false;
+    }
+  }
+
+  static Future<void> DownloadBusinessListings() async {
     final response = await http.get(Uri.parse(BUSINESS_LISTINGS_URL));
     final data = response.body;
     File file = await File('${UserData.path}/business_listings.json');
@@ -100,7 +205,21 @@ class DownLoad {
     }
   }
 
-  static void DownloadFAQ() async {
+  static Future<bool> checkBusinessListingsUpdates() async {
+    final response = await http.get(Uri.parse(BUSINESS_LISTINGS_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/business_listings.json');
+    if (!file.existsSync()) {
+      return true;
+    } else {
+      if (file.readAsStringSync() != data) {
+        return true;
+      }
+      return false;
+    }
+  }
+
+  static Future<void> DownloadFAQ() async {
     final response = await http.get(Uri.parse(FAQ_URL));
     final data = response.body;
     File file = await File('${UserData.path}/faq.json');
@@ -111,9 +230,23 @@ class DownLoad {
     }
   }
 
+  static Future<bool> checkFAQUpdates() async {
+    final response = await http.get(Uri.parse(FAQ_URL));
+    final data = response.body;
+    final file = File('${UserData.path}/faq.json');
+    if (!file.existsSync()) {
+      return true;
+    } else {
+      if (file.readAsStringSync() != data) {
+        return true;
+      }
+      return false;
+    }
+  }
+
   void DownloadSightings() async {}
 
-  static void DownloadImages() async {
+  static Future<void> DownloadImages() async {
     final response = await http.get(Uri.parse(SPECIES_IMAGE_URL));
     final data = response.body;
     File file = await File('${UserData.path}/images.json');
@@ -125,7 +258,7 @@ class DownLoad {
     }
   }
 
-  static downloadImage(String url, String name) async {
+  static Future<void> downloadImage(String url, String name) async {
     Dio dio = Dio();
     File imageFile = await File("${UserData.path}/images/$name");
     try {
