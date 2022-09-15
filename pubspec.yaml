@@ -61,6 +61,7 @@ dependencies:
   location: ^4.4.0
   font_awesome_flutter: ^10.1.0
   loading_animations: ^2.2.0
+  sticky_headers: ^0.3.0+2
   #show_up_animation: ^1.0.2
 
 dev_dependencies:
