@@ -80,23 +80,18 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-</dict>
 
-<dict>
-  <!-- When in use -->
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Reason why app needs location</string>
   <!-- Always -->
   <!-- for iOS 11 + -->
   <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>Reason why app needs location</string>
+  <string>To scan for beacons</string>
   <!-- for iOS 9/10 -->
   <key>NSLocationAlwaysUsageDescription</key>
-  <string>Reason why app needs location</string>
+  <string>To scan for beacons</string>
   <!-- Bluetooth Privacy -->
   <!-- for iOS 13 + -->
   <key>NSBluetoothAlwaysUsageDescription</key>
-  <string>Reason why app needs bluetooth</string>
+  <string>To be able to detect nearby beacons</string>
 </dict>
 
 
