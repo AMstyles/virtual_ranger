@@ -62,7 +62,9 @@ dependencies:
   font_awesome_flutter: ^10.1.0
   loading_animations: ^2.2.0
   sticky_headers: ^0.3.0+2
-  #show_up_animation: ^1.0.2
+  flutter_beacon: ^0.5.1
+  avatar_glow: ^2.0.2
+
 
 dev_dependencies:
   flutter_test:

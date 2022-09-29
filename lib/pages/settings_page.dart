@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/pages/Beaconpage.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
 
 import '../services/shared_preferences.dart';
@@ -83,12 +84,16 @@ class _SettingsPageState extends State<SettingsPage> {
           const Divider(),
           ListTile(
             title: const Text('Scan for beacons near me'),
+            subtitle: const Text('This will scan for beacons near you'),
             onTap: () {
-              setState(() {
+              /*setState(() {
                 beacons = !beacons;
                 //set the value in the shared preferences
                 UserData.setSettings('beacons', beacons);
-              });
+              });*/
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return BeaconPage();
+              }));
             },
             trailing: Switch.adaptive(
                 value: beacons,
