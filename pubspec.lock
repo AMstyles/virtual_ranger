@@ -471,6 +471,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
+  in_app_notification:
+    dependency: "direct main"
+    description:
+      name: in_app_notification
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   intl:
     dependency: transitive
     description:
