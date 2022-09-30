@@ -64,6 +64,7 @@ dependencies:
   sticky_headers: ^0.3.0+2
   flutter_beacon: ^0.5.1
   avatar_glow: ^2.0.2
+  in_app_notification: ^1.1.2
 
 
 dev_dependencies:

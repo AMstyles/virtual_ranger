@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const Divider(),
           ListTile(
             title: const Text('Scan for beacons near me'),
-            subtitle: const Text('This will scan for beacons near you'),
+            subtitle: const Text('Tap to manually scan for beacons'),
             onTap: () {
               /*setState(() {
                 beacons = !beacons;

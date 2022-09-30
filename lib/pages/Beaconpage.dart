@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
+import 'package:in_app_notification/in_app_notification.dart';
+
+import 'BeaconInfo.dart';
 
 class BeaconPage extends StatefulWidget {
   BeaconPage({Key? key}) : super(key: key);
@@ -39,20 +43,66 @@ class _BeaconPageState extends State<BeaconPage> {
       appBar: AppBar(
         title: const Text("Beacon Page"),
       ),
-      body: const Center(
-        child: AvatarGlow(
-          child: Icon(Icons.phone_iphone_rounded, size: 60),
-          endRadius: 200,
-          glowColor: Colors.green,
-          showTwoGlows: true,
-          startDelay: Duration(milliseconds: 1000),
+      body: Center(
+        child: GestureDetector(
+          onTap: () => InAppNotification.show(
+              duration: Duration(seconds: 8),
+              child: Card(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  height: 100,
+                  width: 100,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Beacon Detected",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                            Text("An event is happening nearby",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.blueGrey)),
+                          ],
+                        ),
+                        CupertinoButton(
+                            child: Text('view'),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => BeaconInfo()));
+                            })
+                      ]),
+                ),
+              ),
+              context: context),
+          child: AvatarGlow(
+            child: Icon(Icons.phone_iphone_rounded, size: 60),
+            endRadius: 200,
+            glowColor: Colors.green,
+            showTwoGlows: true,
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
         bottom: true,
-        child: Container(
-          height: 50,
-          child: Center(child: Text('Scaniing for Beacons')),
+        child: GestureDetector(
+          onTap: () => InAppNotification.show(
+              child: Card(
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  child: Center(
+                    child: Text("Hello"),
+                  ),
+                ),
+              ),
+              context: context),
+          child: Container(
+            height: 50,
+            child: Center(child: Text('Scaniing for Beacons')),
+          ),
         ),
       ),
     );

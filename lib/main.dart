@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:in_app_notification/in_app_notification.dart';
+
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,27 +58,29 @@ class MyApp extends StatelessWidget {
           create: (context) => DownloadProvider(),
         ),
       ],
-      child: MaterialApp(
-        themeMode: ThemeMode.light,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          appBarTheme: AppBarTheme(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            foregroundColor: Colors.black,
-            elevation: 0,
-            centerTitle: true,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-              fontSize: 24,
-            ),
-            actionsIconTheme: IconThemeData(
-              color: Colors.black,
+      child: InAppNotification(
+        child: MaterialApp(
+          themeMode: ThemeMode.light,
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              foregroundColor: Colors.black,
+              elevation: 0,
+              centerTitle: true,
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: 24,
+              ),
+              actionsIconTheme: IconThemeData(
+                color: Colors.black,
+              ),
             ),
           ),
+          debugShowCheckedModeBanner: false,
+          home: PrepPage(),
         ),
-        debugShowCheckedModeBanner: false,
-        home: PrepPage(),
       ),
     );
   }
