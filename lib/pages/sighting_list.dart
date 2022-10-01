@@ -10,7 +10,6 @@ import '../apis/Sightingsapi.dart';
 import '../services/readyData.dart';
 import '../widgets/MapLegend_widg.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter/cupertino.dart';
 
 class SightingslistPage extends StatefulWidget {
   SightingslistPage({Key? key}) : super(key: key);

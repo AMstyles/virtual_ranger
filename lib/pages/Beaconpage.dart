@@ -25,6 +25,7 @@ class _BeaconPageState extends State<BeaconPage> {
       await flutterBeacon.initializeAndCheckScanning;
     } on PlatformException catch (e) {
       // library failed to initialize, check code and message
+      print(e.code);
     }
   }
 
@@ -114,9 +115,11 @@ class _BeaconPageState extends State<BeaconPage> {
 
     if (Platform.isIOS) {
       // iOS platform, at least set identifier and proximityUUID for region scanning
-      regions.add(Region(
-          identifier: 'denokeng',
-          proximityUUID: 'e2c56db5-dffb-48d2-b060-d0f5a71096e0'));
+      regions.add(
+        Region(
+            identifier: 'denokeng',
+            proximityUUID: 'e9b74c2f-8977-4788-bbb4-7ccd9cf19aad'),
+      );
     } else {
       // android platform, it can ranging out of beacon that filter all of Proximity UUID
       regions.add(Region(identifier: 'com.beacon'));
@@ -143,7 +146,7 @@ class _BeaconPageState extends State<BeaconPage> {
       // iOS platform, at least set identifier and proximityUUID for region scanning
       regions.add(Region(
           identifier: 'denokeng Airlocate',
-          proximityUUID: 'e2c56db5-dffb-48d2-b060-d0f5a71096e0'));
+          proximityUUID: 'e9b74c2f-8977-4788-bbb4-7ccd9cf19aad'));
     } else {
       // Android platform, it can ranging out of beacon that filter all of Proximity UUID
       regions.add(Region(identifier: 'com.beacon'));

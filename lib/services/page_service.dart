@@ -36,7 +36,6 @@ class PageProvider extends ChangeNotifier {
   void switchPage(int num) {
     currentPageNum = num;
     notifyListeners();
-    setState() {}
     print(currentPageNum);
   }
 
@@ -73,7 +72,6 @@ class DownloadProvider extends ChangeNotifier {
   int imagesToDownload = 0;
   int imagesDownloaded = 0;
   double percentage = 0.0;
-  bool _downloading = false;
   bool isOffline = false;
 
   void getPercentage() {

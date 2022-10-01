@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
 import 'package:virtual_ranger/services/page_service.dart';
@@ -34,7 +33,7 @@ class DownLoad {
   }
 
   static Future<void> updateAlert(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
     if (await UserData.getSettings('checkContent') &&
         await UserData.getOfflineMode()) {
       if (await checkNewsUpdates() ||
