@@ -76,7 +76,6 @@ class Sightings {
                     ),
                   ],
                 );
-          ;
         });
   }
 
@@ -86,10 +85,10 @@ class Sightings {
       'secret_key': UserData.user.secret_key,
       'user_role': 'Attendee'
     });
-    print(response.body);
+    //print(response.body);
     final pre_data = jsonDecode(response.body);
     final data = pre_data['data'];
-    print(data);
+    //print(data);
     final List<dynamic> finalData = data;
     List<Sighting> events = [];
     for (var i = 0; i < finalData.length; i++) {

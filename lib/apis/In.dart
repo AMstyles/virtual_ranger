@@ -76,7 +76,7 @@ class signUpAPI {
         .post(Uri.parse('https://dinokengapp.co.za/google_login'), body: {
       'email': email,
     });
-    print(response.body);
+    //print(response.body);
     final data = response.body;
     return data;
   }
@@ -93,7 +93,7 @@ class signUpAPI {
       'user_role': 'Attendee',
     });
     final data = response.body;
-    print(data);
+    //print(data);
     return data;
   }
 
@@ -123,7 +123,7 @@ class signUpAPI {
     });
 
     final data = response.body;
-    print(data);
+    //print(data);
 
     return data;
   }
@@ -188,6 +188,6 @@ class signUpAPI {
                   ],
                 );
         }));
-    print(response.body);
+    //print(response.body);
   }
 }

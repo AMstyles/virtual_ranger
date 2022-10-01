@@ -16,18 +16,15 @@ class DownloadPage extends StatefulWidget {
   State<DownloadPage> createState() => _DownloadPageState();
 }
 
-class _DownloadPageState extends State<DownloadPage>
-    with SingleTickerProviderStateMixin {
+class _DownloadPageState extends State<DownloadPage> {
   @override
   void initState() {
     super.initState();
 
-    UserData.getOfflineMode().then((value) {
-      setState(() {
-        isOffline = value;
-        print(value);
-      });
-    });
+    UserData.getOfflineMode().then((value) => setState(() {
+          isOffline = value;
+          print(value);
+        }));
 
     print("success 1");
 
@@ -39,7 +36,7 @@ class _DownloadPageState extends State<DownloadPage>
     super.initState();
   }
 
-  late bool isOffline;
+  bool isOffline = true;
   late bool canBeOffline;
   bool _downloading = false;
 

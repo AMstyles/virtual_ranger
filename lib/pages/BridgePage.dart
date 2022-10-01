@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:virtual_ranger/pages/DownloadPage.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 
 import '../apis/Download.dart';
