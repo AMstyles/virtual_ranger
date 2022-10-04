@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/pages/Profile/textFieds.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
@@ -701,6 +702,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: Icon(Icons.camera_alt),
                       title: Text('Camera'),
                       onTap: () async {
+                        Permissionsapi.askCameraPermission();
                         final ImagePicker _picker = ImagePicker();
                         final File? photo = await _picker
                             .pickImage(source: ImageSource.camera)

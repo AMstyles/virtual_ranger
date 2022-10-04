@@ -6,6 +6,7 @@ import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/BeaconInfo.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
@@ -46,16 +47,11 @@ class _DrawerAppState extends State<DrawerApp> {
     BusinessListingsPage(),
     SettingsPage(),
   ];
-  void askPermission() async {
-    await Permission.storage.request();
-    await Permission.location.request();
-    await Permission.camera.request();
-  }
 
   @override
   void initState() {
     super.initState();
-    askPermission();
+    Permissionsapi.askLocationPermission();
 
     UserData.getOfflineMode().then((value) => setState(() {
           Provider.of<UserProvider>(context, listen: false).setOffline(value);
@@ -68,8 +64,6 @@ class _DrawerAppState extends State<DrawerApp> {
     } catch (e) {
       print(e);
     }
-
-    delayed();
   }
 
   @override
@@ -95,7 +89,7 @@ class _DrawerAppState extends State<DrawerApp> {
   }
 
   //delayed function
-  Future<void> delayed() async {
+  /*Future<void> delayed() async {
     await Future.delayed(
       const Duration(milliseconds: 500),
       () async {
@@ -159,5 +153,5 @@ class _DrawerAppState extends State<DrawerApp> {
         _streamMonitoring.cancel();
       },
     );
-  }
+  }*/
 }
