@@ -213,15 +213,4 @@ class BusinessListingWidg extends StatelessWidget {
     );
     await launchUrl(launchUri);
   }
-
-  /*Future<void> _makeBooking() async {
-    String str = 'https://hsolutions.app/h-book/user/virtualRanger';
-    Uri url = Uri.parse(str);
-    if (!await launchUrl(url)) {
-      throw 'Could not launch $url';
-    } else {
-      launchUrl(url);
-    }
-  }}*/
-
 }
