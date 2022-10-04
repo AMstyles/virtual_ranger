@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../apis/Download.dart';
@@ -239,6 +240,7 @@ class _DownloadPageState extends State<DownloadPage> {
               color: MyColors.primaryColor,
               child: const Text('Downnload / Update content'),
               onPressed: () {
+                Permissionsapi.askStoragePermission();
                 setState(() {
                   _downloading = true;
                   getMetaData();

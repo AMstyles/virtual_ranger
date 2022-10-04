@@ -156,8 +156,13 @@ class _BeaconPageState extends State<BeaconPage> {
     var _streamMonitoring =
         flutterBeacon.monitoring(regions).listen((MonitoringResult result) {
       // result contains a region, event type and event state
-      print("scanner two catched");
-      print(result);
+
+      final major = result.region.major;
+      final minor = result.region.minor;
+      final proximityUUID = result.region.proximityUUID;
+      final identifier = result.region.identifier;
+
+      print('major: $major, minor: $minor, proximityUUID: $proximityUUID');
     });
 
 // to stop monitoring beacons

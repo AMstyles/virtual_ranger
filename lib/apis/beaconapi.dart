@@ -1,1 +1,3 @@
-class BeaconApi {}
+class BeaconApi {
+  
+}

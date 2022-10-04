@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/apis/qrapis.dart';
 
 class QRScannerPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
   @override
   void initState() {
     super.initState();
+    Permissionsapi.askCameraPermission();
   }
 
   @override
