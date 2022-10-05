@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:in_app_notification/in_app_notification.dart';
-
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
