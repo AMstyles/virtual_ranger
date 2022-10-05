@@ -49,10 +49,8 @@
 	<string>Virtual Ranger</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>To be able to detect nearby beacons</string>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>To scan for qr codes and take profile pictures</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To scan for beacons</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -64,11 +62,11 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>need location to track user</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>Need access to photo library to choose a profile picture</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>Main.storyboard</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
