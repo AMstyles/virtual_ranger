@@ -49,8 +49,14 @@
 	<string>Virtual Ranger</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>To be able to detect nearby beacons</string>
 	<key>NSCameraUsageDescription</key>
 	<string></string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>To scan for beacons</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>To scan for beacons</string>
 	<key>NSLocationDefaultAccuracyReduced</key>
 	<false/>
 	<key>NSLocationUsageDescription</key>
@@ -80,19 +86,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-  <!-- Always -->
-  <!-- for iOS 11 + -->
-  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>To scan for beacons</string>
-  <!-- for iOS 9/10 -->
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>To scan for beacons</string>
-  <!-- Bluetooth Privacy -->
-  <!-- for iOS 13 + -->
-  <key>NSBluetoothAlwaysUsageDescription</key>
-  <string>To be able to detect nearby beacons</string>
 </dict>
-
-
 </plist>

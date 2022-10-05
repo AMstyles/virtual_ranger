@@ -1,14 +1,7 @@
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_beacon/flutter_beacon.dart';
-import 'package:in_app_notification/in_app_notification.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/models/constants.dart';
-import 'package:virtual_ranger/pages/BeaconInfo.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:virtual_ranger/pages/Custom/DrawerContainer.dart';
 import 'package:virtual_ranger/pages/Custom/customDrawer.dart';
@@ -34,7 +27,6 @@ class DrawerApp extends StatefulWidget {
 }
 
 class _DrawerAppState extends State<DrawerApp> {
-  var _streamMonitoring;
   //pages
   final List<Widget> pages = [
     ProfilePage(),
