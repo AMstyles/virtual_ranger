@@ -1,5 +1,8 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/Beaconpage.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
 
@@ -17,6 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
   bool showNotifications = false;
   bool beacons = false;
   bool checkContent = false;
+  bool isOffline = false;
 
   @override
   void initState() {
@@ -35,6 +39,11 @@ class _SettingsPageState extends State<SettingsPage> {
     UserData.getSettings('checkContent').then((value) {
       setState(() {
         checkContent = value;
+      });
+    });
+    UserData.getSettings('offlineMode').then((value) {
+      setState(() {
+        isOffline = value;
       });
     });
   }
@@ -135,6 +144,97 @@ class _SettingsPageState extends State<SettingsPage> {
                   fontWeight: FontWeight.w600,
                   color: Colors.blueGrey),
             ),
+          ),
+          ListTile(
+            title: const Text(
+              'Offline Mode',
+            ),
+            onTap: () {
+              setState(() {
+                isOffline = !isOffline;
+              });
+            },
+            trailing: Switch.adaptive(
+                value: isOffline,
+                onChanged: (newbBol) {
+                  setState(() {
+                    //if the get settings is false in shared preferences, disable the switch
+                    UserData.getSettings('canBeOffline').then((value) {
+                      setState(() {
+                        if (value == false) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Platform.isAndroid
+                                    ? AlertDialog(
+                                        title: Text('You cannot go offline'),
+                                        content: Text(
+                                            'You need to download content to go offline'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Ok'))
+                                        ],
+                                      )
+                                    : CupertinoAlertDialog(
+                                        title: Text('You cannot go offline'),
+                                        content: Text(
+                                            'You need to download content to go offline'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Ok'))
+                                        ],
+                                      );
+                              });
+                        } else {
+                          //TODO: add a check to see if the user has downloaded content
+                          isOffline = newbBol;
+                          SharedPreferences.getInstance().then((prefs) {
+                            setState(() {
+                              UserData.toggleOfflineMode(newbBol);
+                              UserData.setSettings('canBeOffline', true);
+                            });
+                          });
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Platform.isAndroid
+                                    ? AlertDialog(
+                                        title: Text('Alert'),
+                                        content: Text(
+                                            'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Ok'))
+                                        ],
+                                      )
+                                    : CupertinoAlertDialog(
+                                        title: Text('Offline mode'),
+                                        content: Text(
+                                            'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Ok'))
+                                        ],
+                                      );
+                              });
+                        }
+                      });
+                    });
+                    //write to shared preferences
+                  });
+                }),
           ),
           ListTile(
             textColor: Colors.red,

@@ -34,16 +34,50 @@ class _DownloadPageState extends State<DownloadPage> {
           print(value);
         }));
     print("success 2");
+
+    UserData.getSettingsString('lastSync').then((value) => setState(() {
+          lastSync = value;
+          print(value);
+        }));
     super.initState();
   }
 
   bool isOffline = true;
   late bool canBeOffline;
   bool _downloading = false;
+  late String lastSync;
+
+  String date =
+      '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        height: 110,
+        color: Colors.grey[200],
+        child: SafeArea(
+            child: Column(
+          children: [
+            ListTile(
+              title: Text("Last Updated:"),
+              trailing: Text(lastSync),
+              subtitle: isOffline
+                  ? Row(
+                      //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text("update available"),
+                        CircleAvatar(
+                          radius: 5,
+                          backgroundColor: Colors.red,
+                        )
+                      ],
+                    )
+                  : SizedBox(),
+            )
+          ],
+        )),
+      ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -238,7 +272,7 @@ class _DownloadPageState extends State<DownloadPage> {
             ),
             CupertinoButton(
               color: MyColors.primaryColor,
-              child: const Text('Downnload / Update content'),
+              child: const Text('Downnload & Sync'),
               onPressed: () {
                 Permissionsapi.askStoragePermission();
                 setState(() {
@@ -263,10 +297,13 @@ class _DownloadPageState extends State<DownloadPage> {
     canBeOffline = true;
     setState(() {
       UserData.setSettings('canBeOffline', true);
+      lastSync = date;
     });
 
     UserData.canGoOffline(true);
+
     _downloading = false;
+    UserData.setSettingsString('lastSync', date);
   }
 
   Future<void> off() async {

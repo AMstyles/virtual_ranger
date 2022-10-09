@@ -73,6 +73,7 @@ class DownloadProvider extends ChangeNotifier {
   int imagesDownloaded = 0;
   double percentage = 0.0;
   bool isOffline = false;
+  List<int> updates = [];
 
   void getPercentage() {
     if (imagesDownloaded / imagesToDownload < 1) {

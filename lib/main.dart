@@ -4,7 +4,6 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:virtual_ranger/apis/Download.dart';
 import 'package:virtual_ranger/pages/prePage.dart';
 import 'package:virtual_ranger/services/readyData.dart';
 import 'package:virtual_ranger/services/page_service.dart';
@@ -24,7 +23,7 @@ Future main() async {
   await UserData.init();
 
   try {
-    await DownLoad.downloadAllJson();
+    //await DownLoad.downloadAllJson();
   } catch (e) {
     print(e);
   }

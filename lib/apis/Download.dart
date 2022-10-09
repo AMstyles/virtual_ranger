@@ -34,6 +34,8 @@ class DownLoad {
 
   static Future<void> updateAlert(BuildContext context) async {
     //SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    print("Running the update alert");
     if (await UserData.getSettings('checkContent') &&
         await UserData.getOfflineMode()) {
       if (await checkNewsUpdates() ||
@@ -63,6 +65,7 @@ class DownLoad {
                 ],
               );
             });
+        print("update available");
       }
     }
   }
@@ -137,6 +140,7 @@ class DownLoad {
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("species updated");
         return true;
       }
       return false;
@@ -159,9 +163,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/categories.json');
     if (!file.existsSync()) {
+      print("categories updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("categories updated");
         return true;
       }
       return false;
@@ -184,9 +190,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/sub_categories.json');
     if (!file.existsSync()) {
+      print("subcategories updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("subcategories updated");
         return true;
       }
       return false;
@@ -209,9 +217,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/business_listings.json');
     if (!file.existsSync()) {
+      print("business listings updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("business listings updated");
         return true;
       }
       return false;
@@ -234,9 +244,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/faq.json');
     if (!file.existsSync()) {
+      print("faq updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("faq updated");
         return true;
       }
       return false;
@@ -419,10 +431,15 @@ class DownLoad {
     Dio dio = await Dio();
     String filePath = UserData.path + "/" + url.split('/').last;
     print(filePath);
-    try {
-      await dio.download(url, filePath);
-    } catch (e) {
-      print(e);
+    //check if the file exists
+    final file = File(filePath);
+
+    if (!file.existsSync()) {
+      try {
+        await dio.download(url, filePath);
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }
