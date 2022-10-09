@@ -162,29 +162,72 @@ class _LoginPageState extends State<LoginPage> {
 
 //!fancy
   Widget _buildAppleSignInButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5),
-      alignment: Alignment.center,
-      height: 45,
-      width: 140,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          Icon(
-            Icons.apple,
-            color: Colors.white,
-            size: 40,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "Sign in with Apple",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () async {
+        final provider =
+            Provider.of<AppleLoginProvider>(context, listen: false);
+        await provider.LoginWithApple();
+        if (auth.FirebaseAuth.instance.currentUser != null) {
+          final nice = auth.FirebaseAuth.instance.currentUser;
+
+          final vedict = await signUpAPI.signInWithGoogle(nice!.email ?? '');
+          final finalVedict = jsonDecode(vedict);
+          print(finalVedict);
+
+          if (finalVedict['success'] == true) {
+            final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          } else {
+            final things = await signUpAPI.signUp(
+                nice.displayName ?? "",
+                nice.email ?? '',
+                nice.phoneNumber ?? '  ',
+                'none',
+                'none',
+                '000000',
+                '000000');
+
+            await auth.FirebaseAuth.instance.signOut();
+
+            print(things);
+            final perfectThings = jsonDecode(things);
+
+            final userToBe = User.fromjson(perfectThings['data']);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          }
+        } else {}
+        auth.FirebaseAuth.instance.signOut();
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 5),
+        alignment: Alignment.center,
+        height: 45,
+        width: 140,
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Icon(
+              Icons.apple,
+              color: Colors.white,
+              size: 40,
+            ),
+            SizedBox(width: 20),
+            Text(
+              "Sign in with Apple",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -205,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
               );
             });
 
-        await FacebookLoginProvider.signInWithFacebook();
+        await FacebookLoginProvider.signInWithFacebook(context);
 
         if (auth.FirebaseAuth.instance.currentUser != null) {
           final nice = auth.FirebaseAuth.instance.currentUser;
@@ -288,7 +331,7 @@ class _LoginPageState extends State<LoginPage> {
               );
             });
         await Provider.of<GoogleSignInProvider>(context, listen: false)
-            .googleLogin();
+            .googleLogin(context);
         if (auth.FirebaseAuth.instance.currentUser != null) {
           final nice = auth.FirebaseAuth.instance.currentUser;
 

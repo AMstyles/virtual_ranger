@@ -96,4 +96,12 @@ class UserData {
   static Future<bool> getSettings(String key) async {
     return await _userData.getBool(key) ?? false;
   }
+
+  static Future<void> setSettingsString(String key, String value) async {
+    await _userData.setString(key, value);
+  }
+
+  static Future<String> getSettingsString(String key) async {
+    return await _userData.getString(key) ?? 'never synched';
+  }
 }

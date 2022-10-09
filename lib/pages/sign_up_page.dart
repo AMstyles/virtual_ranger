@@ -192,7 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
             });
 
         await Provider.of<GoogleSignInProvider>(context, listen: false)
-            .googleLogin();
+            .googleLogin(context);
         if (auth.FirebaseAuth.instance.currentUser != null) {
           final nice = auth.FirebaseAuth.instance.currentUser;
 
@@ -308,7 +308,7 @@ class _SignUpPageState extends State<SignUpPage> {
               );
             });
 
-        await FacebookLoginProvider.signInWithFacebook();
+        await FacebookLoginProvider.signInWithFacebook(context);
 
         if (auth.FirebaseAuth.instance.currentUser != null) {
           final nice = auth.FirebaseAuth.instance.currentUser;

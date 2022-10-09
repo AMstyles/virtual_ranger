@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
@@ -35,10 +34,10 @@ class _SpecyPageState extends State<SpecyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
+      //extendBody: true,
+      //extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: IconButton(
+        /*leading: IconButton(
           icon: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -55,9 +54,12 @@ class _SpecyPageState extends State<SpecyPage> {
           onPressed: () {
             Navigator.pop(context);
           },
+        ),*/
+        //backgroundColor: Colors.transparent,
+        title: Text(
+          widget.specy.english_name,
+          style: TextStyle(fontSize: 17),
         ),
-        backgroundColor: Colors.transparent,
-        title: Text(widget.specy.english_name),
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),
@@ -91,9 +93,11 @@ class _SpecyPageState extends State<SpecyPage> {
                           },
                         ),
                         SmoothPageIndicator(
-                          effect: ExpandingDotsEffect(
-                            dotColor: Colors.black.withOpacity(.5),
+                          effect: SlideEffect(
+                            dotColor: Colors.grey,
                             activeDotColor: Colors.white,
+                            dotHeight: 10,
+                            dotWidth: 10,
                           ),
                           controller: _controller,
                           count: snapshot.data!.length,

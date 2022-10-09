@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
@@ -12,7 +14,7 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   GoogleSignInAccount get currentUser => _currentUser!;
 
-  Future<void> googleLogin() async {
+  Future<void> googleLogin(BuildContext context) async {
     //try cacth
 
     final googleUser = await googleSignIn.signIn();
@@ -27,6 +29,64 @@ class GoogleSignInProvider extends ChangeNotifier {
     );
 
     await FirebaseAuth.instance.signInWithCredential(credential);
+
+    try {
+      userIn = await FirebaseAuth.instance.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        //handle the error here
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text(
+                    'The account already exists with a different credential'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      } else if (e.code == 'invalid-credential') {
+        //handle the error here
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Invalid Credential'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      } else {
+        //handle the error here
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text(e.message!),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      }
+    }
 
     notifyListeners();
 
@@ -49,7 +109,7 @@ class FacebookLoginProvider extends ChangeNotifier {
     );
   }
 
-  static Future<void> signInWithFacebook() async {
+  static Future<void> signInWithFacebook(BuildContext context) async {
     late var userIn;
 
     final LoginResult loginResult = await FacebookAuth.instance
@@ -58,15 +118,115 @@ class FacebookLoginProvider extends ChangeNotifier {
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-    await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    try {
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop();
+      if (e.code == 'account-exists-with-different-credential') {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Error"),
+                  content: Text(e.toString()),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"))
+                  ],
+                ));
+        // handle the error here
+      } else if (e.code == 'invalid-credential') {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Error"),
+                  content: Text(e.toString()),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"))
+                  ],
+                ));
 
-    //notifyListeners();
+        // handle the error here
+      }
+    } catch (e) {
+      // handle the error here
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Error"),
+                content: Text(e.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("OK"))
+                ],
+              ));
 
-    final user = FirebaseAuth.instance.currentUser;
-    userIn = user;
+      //notifyListeners();
+
+      final user = FirebaseAuth.instance.currentUser;
+      userIn = user;
+    }
+
+    Future<void> facebookLogout() async {
+      await FacebookAuth.instance.logOut();
+    }
   }
+}
 
-  Future<void> facebookLogout() async {
-    await FacebookAuth.instance.logOut();
+class AppleLoginProvider extends ChangeNotifier {
+  final _firebaseAuth = FirebaseAuth.instance;
+
+  Future<List<String>> LoginWithApple({List<Scope> scopes = const []}) async {
+    // 1. perform the sign-in request
+    final result = await TheAppleSignIn.performRequests(
+        [AppleIdRequest(requestedScopes: scopes)]);
+    // 2. check the result
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        final appleIdCredential = result.credential!;
+        final oAuthProvider = OAuthProvider('apple.com');
+        final credential = oAuthProvider.credential(
+          idToken: String.fromCharCodes(appleIdCredential.identityToken!),
+          accessToken:
+              String.fromCharCodes(appleIdCredential.authorizationCode!),
+        );
+        final email = appleIdCredential.email;
+        print(email);
+        final name = appleIdCredential.fullName;
+        final mobile = "";
+        final authResult = await _firebaseAuth.signInWithCredential(credential);
+        return [email.toString(), name.toString()];
+        break;
+
+      /*final userCredential =
+            await _firebaseAuth.signInWithCredential(credential);
+        final firebaseUser = userCredential.user!;
+        if (scopes.contains(Scope.fullName)) {
+          final fullName = appleIdCredential.fullName;
+          if (fullName != null &&
+              fullName.givenName != null &&
+              fullName.familyName != null) {
+            final displayName = '${fullName.givenName} ${fullName.familyName}';
+            await firebaseUser.updateDisplayName(displayName);
+          }
+        }*/
+      //return firebaseUser;
+      case AuthorizationStatus.error:
+        throw PlatformException(
+          code: 'ERROR_AUTHORIZATION_DENIED',
+          message: result.error.toString(),
+        );
+
+      case AuthorizationStatus.cancelled:
+        throw PlatformException(
+          code: 'ERROR_ABORTED_BY_USER',
+          message: 'Sign in aborted by user',
+        );
+      default:
+        throw UnimplementedError();
+    }
   }
 }

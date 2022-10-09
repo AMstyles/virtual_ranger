@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:in_app_notification/in_app_notification.dart';
-
+import 'apis/Download.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:virtual_ranger/apis/Download.dart';
 import 'package:virtual_ranger/pages/prePage.dart';
 import 'package:virtual_ranger/services/readyData.dart';
 import 'package:virtual_ranger/services/page_service.dart';
@@ -44,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => GoogleSignInProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AppleLoginProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => Anime(),
