@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:virtual_ranger/pages/Beaconpage.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
-
 import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 
@@ -95,14 +93,11 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text('Scan for beacons near me'),
             subtitle: const Text('Tap to manually scan for beacons'),
             onTap: () {
-              /*setState(() {
+              setState(() {
                 beacons = !beacons;
                 //set the value in the shared preferences
                 UserData.setSettings('beacons', beacons);
-              });*/
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return BeaconPage();
-              }));
+              });
             },
             trailing: Switch.adaptive(
                 value: beacons,
@@ -116,12 +111,33 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const Divider(),
           ListTile(
-            title: const Text('check for updates'),
+            title: const Text('Automatic updates'),
+            subtitle: Text(
+                'automatically download & sync new content, when offline is toggled ON'),
             onTap: () {
               setState(() {
-                checkContent = !checkContent;
-                //set the value in the shared preferences
-                UserData.setSettings('checkContent', checkContent);
+                if (isOffline) {
+                  checkContent = !checkContent;
+                  //set the value in the shared preferences
+                  UserData.setSettings('checkContent', checkContent);
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Error'),
+                          content:
+                              const Text('Please turn on offline mode first'),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('OK'))
+                          ],
+                        );
+                      });
+                }
               });
             },
             trailing: Switch.adaptive(

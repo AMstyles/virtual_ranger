@@ -51,7 +51,7 @@ class FacebookLoginProvider extends ChangeNotifier {
     );
   }
 
-  static Future<void> signInWithFacebook() async {
+  static Future<void> signInWithFacebook(BuildContext context) async {
     late var userIn;
 
     final LoginResult loginResult = await FacebookAuth.instance
@@ -60,16 +60,61 @@ class FacebookLoginProvider extends ChangeNotifier {
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-    await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    try {
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop();
+      if (e.code == 'account-exists-with-different-credential') {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Error"),
+                  content: Text(e.toString()),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"))
+                  ],
+                ));
+        // handle the error here
+      } else if (e.code == 'invalid-credential') {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Error"),
+                  content: Text(e.toString()),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"))
+                  ],
+                ));
 
-    //notifyListeners();
+        // handle the error here
+      }
+    } catch (e) {
+      // handle the error here
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Error"),
+                content: Text(e.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("OK"))
+                ],
+              ));
 
-    final user = FirebaseAuth.instance.currentUser;
-    userIn = user;
-  }
+      //notifyListeners();
 
-  Future<void> facebookLogout() async {
-    await FacebookAuth.instance.logOut();
+      final user = FirebaseAuth.instance.currentUser;
+      userIn = user;
+    }
+
+    Future<void> facebookLogout() async {
+      await FacebookAuth.instance.logOut();
+    }
   }
 }
 

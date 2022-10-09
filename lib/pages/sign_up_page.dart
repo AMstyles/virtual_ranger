@@ -308,7 +308,7 @@ class _SignUpPageState extends State<SignUpPage> {
               );
             });
 
-        await FacebookLoginProvider.signInWithFacebook();
+        await FacebookLoginProvider.signInWithFacebook(context);
 
         if (auth.FirebaseAuth.instance.currentUser != null) {
           final nice = auth.FirebaseAuth.instance.currentUser;

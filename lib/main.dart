@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:in_app_notification/in_app_notification.dart';
+import 'apis/Download.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ Future main() async {
   await UserData.init();
 
   try {
-    //await DownLoad.downloadAllJson();
+    await DownLoad.downloadAllJson();
   } catch (e) {
     print(e);
   }

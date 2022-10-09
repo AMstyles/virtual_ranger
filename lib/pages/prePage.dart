@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/apis/Download.dart';
 import 'package:virtual_ranger/pages/splash_screen.dart';
 import '../DrawerApp.dart';
 import '../models/constants.dart';
@@ -17,6 +18,8 @@ class PrepPage extends StatefulWidget {
 
 class _PrepPageState extends State<PrepPage> {
   String? _msg;
+  String date =
+      '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
 
   @override
   void initState() {
@@ -58,6 +61,11 @@ class _PrepPageState extends State<PrepPage> {
   }
 
   Future<void> startUser() async {
+    if (await UserData.getSettings('checkContent')) {
+      await DownLoad.downloadAllJson();
+      await DownLoad.downloadAllImages(context);
+      UserData.setSettingsString('lastSync', date);
+    }
     print(await UserData.isLoggedIn());
     if (await UserData.isLoggedIn() == true) {
       print(await UserData.isLoggedIn());
