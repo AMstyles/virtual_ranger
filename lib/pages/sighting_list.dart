@@ -44,9 +44,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   Future<BitmapDescriptor> setCustomMapPin(id) {
     return BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(
-        devicePixelRatio: 1,
-      ),
+      mipmaps: true,
+      ImageConfiguration(devicePixelRatio: 2.5, size: Size(10, 10)),
       'lib/icons/location' + id + '.png',
     );
   }
@@ -92,7 +91,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
               title: const Text('Sightings List'),
             )
           : AppBar(
-              title: const Text('Sightings List'),
               leading: Container(
                 margin: const EdgeInsets.only(left: 5),
                 decoration: BoxDecoration(

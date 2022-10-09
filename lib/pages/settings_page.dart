@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 
@@ -113,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: const Text('Automatic updates'),
             subtitle: Text(
-                'automatically download & sync new content, when offline is toggled ON'),
+                'Automatically download & sync new content when Offline Mode is toggled ON'),
             onTap: () {
               setState(() {
                 if (isOffline) {
@@ -132,6 +133,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
+                                  Provider.of<PageProvider>(context)
+                                      .jumpToDownload();
                                 },
                                 child: const Text('OK'))
                           ],
@@ -253,9 +256,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 }),
           ),
           ListTile(
+            subtitle: Text('Downloaded content details'),
             textColor: Colors.red,
             title: const Text(
-              'Download For Offline',
+              'Manage Downloads',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             onTap: () {

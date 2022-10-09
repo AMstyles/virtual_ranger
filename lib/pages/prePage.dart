@@ -17,7 +17,7 @@ class PrepPage extends StatefulWidget {
 }
 
 class _PrepPageState extends State<PrepPage> {
-  String? _msg;
+  String _msg = 'Preparing for your adventure...';
   String date =
       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
 
@@ -26,6 +26,11 @@ class _PrepPageState extends State<PrepPage> {
     // TODO: implement initState
     super.initState();
     startUser();
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        _msg = 'Downloading & Syching Content...';
+      });
+    });
   }
 
   @override
@@ -42,26 +47,28 @@ class _PrepPageState extends State<PrepPage> {
         ),
       ),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          LoadingBouncingGrid.circle(
-            size: 100,
-            backgroundColor: MyColors.primaryColor,
-            duration: Duration(seconds: 1),
-            inverted: true,
-          ),
-          Text(
-            'Preparing for your adventure...',
-            style: TextStyle(color: Colors.green),
-          ),
-        ],
-      )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            LoadingBouncingGrid.circle(
+              size: 100,
+              backgroundColor: MyColors.primaryColor,
+              duration: Duration(seconds: 1),
+              inverted: true,
+            ),
+            Text(
+              'Preparing for your adventure...',
+              style: TextStyle(color: Colors.green),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Future<void> startUser() async {
-    if (await UserData.getSettings('checkContent')) {
+    if (await UserData.getSettings('checkContent') &&
+        await UserData.getOfflineMode()) {
       await DownLoad.downloadAllJson();
       await DownLoad.downloadAllImages(context);
       UserData.setSettingsString('lastSync', date);

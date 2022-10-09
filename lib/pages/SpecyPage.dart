@@ -55,7 +55,7 @@ class _SpecyPageState extends State<SpecyPage> {
             Navigator.pop(context);
           },
         ),*/
-        backgroundColor: Colors.transparent,
+        //backgroundColor: Colors.transparent,
         title: Text(
           widget.specy.english_name,
           style: TextStyle(fontSize: 17),

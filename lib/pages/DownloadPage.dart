@@ -62,7 +62,7 @@ class _DownloadPageState extends State<DownloadPage> {
             ListTile(
               title: Text("Last Updated:"),
               trailing: Text(lastSync),
-              subtitle: isOffline
+              /*subtitle: isOffline
                   ? Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -73,7 +73,7 @@ class _DownloadPageState extends State<DownloadPage> {
                         )
                       ],
                     )
-                  : SizedBox(),
+                  : SizedBox(),*/
             )
           ],
         )),
