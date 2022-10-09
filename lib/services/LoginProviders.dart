@@ -14,7 +14,7 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   GoogleSignInAccount get currentUser => _currentUser!;
 
-  Future<void> googleLogin() async {
+  Future<void> googleLogin(BuildContext context) async {
     //try cacth
 
     final googleUser = await googleSignIn.signIn();
@@ -29,6 +29,64 @@ class GoogleSignInProvider extends ChangeNotifier {
     );
 
     await FirebaseAuth.instance.signInWithCredential(credential);
+
+    try {
+      userIn = await FirebaseAuth.instance.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        //handle the error here
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text(
+                    'The account already exists with a different credential'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      } else if (e.code == 'invalid-credential') {
+        //handle the error here
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Invalid Credential'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      } else {
+        //handle the error here
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text(e.message!),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'))
+                ],
+              );
+            });
+      }
+    }
 
     notifyListeners();
 
