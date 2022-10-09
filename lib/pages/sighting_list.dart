@@ -59,11 +59,11 @@ class _SightingslistPageState extends State<SightingslistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: Platform.isIOS,
+      //extendBodyBehindAppBar: Platform.isIOS,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
       // extendBodyBehindAppBar: true,
-      appBar: Platform.isAndroid
+      appBar: (Platform.isAndroid || Platform.isIOS)
           ? AppBar(
               leading: Container(
                 margin: const EdgeInsets.only(left: 5),

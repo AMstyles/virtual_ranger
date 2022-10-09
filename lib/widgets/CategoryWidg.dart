@@ -37,12 +37,12 @@ class _CategoryWidgState extends State<CategoryWidg> {
         }));
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 120,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            //borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
                 image: Provider.of<UserProvider>(context).isOffLine ?? false
                     ? FileImage(File(
@@ -51,13 +51,13 @@ class _CategoryWidgState extends State<CategoryWidg> {
                     : CachedNetworkImageProvider(
                         CATEGORY_IMAGE_URL + widget.category.backgroundImage,
                       ),
-                fit: BoxFit.cover),
+                fit: BoxFit.fill),
           ),
           child: Center(
               child: Text(
-            widget.category.name,
+            widget.category.name.toUpperCase(),
             style: TextStyle(
-                backgroundColor: Colors.black.withOpacity(.1),
+                //backgroundColor: Colors.black.withOpacity(.1),
                 color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold),

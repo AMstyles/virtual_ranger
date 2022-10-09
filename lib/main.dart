@@ -45,6 +45,9 @@ class MyApp extends StatelessWidget {
           create: (context) => GoogleSignInProvider(),
         ),
         ChangeNotifierProvider(
+          create: (context) => AppleLoginProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => Anime(),
         ),
         ChangeNotifierProvider(
