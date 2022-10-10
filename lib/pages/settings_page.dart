@@ -220,15 +220,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                       );
                               });
                         } else {
-                          //TODO: add a check to see if the user has downloaded content
                           Provider.of<PageProvider>(context, listen: false)
-                              .setUniversalOffline(newbBol);
+                              .toggleUniversalOffline();
                           SharedPreferences.getInstance().then((prefs) {
                             setState(() {
                               UserData.toggleOfflineMode(newbBol);
                               UserData.setSettings('canBeOffline', true);
                             });
                           });
+                          removeAndAddPage();
                           showDialog(
                               context: context,
                               builder: (context) {

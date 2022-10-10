@@ -60,7 +60,7 @@ class _DownloadPageState extends State<DownloadPage> {
             child: Column(
           children: [
             ListTile(
-              title: Text("Last Updated:"),
+              title: Text("Last Updated:", style: TextStyle(fontSize: 15)),
               trailing: Text(lastSync),
               /*subtitle: isOffline
                   ? Row(

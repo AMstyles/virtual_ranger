@@ -25,6 +25,19 @@ List<Widget> mainPages = [
   DownloadPage()
 ];
 
+void removeAndAddPage() {
+  removePage();
+  addPage();
+}
+
+void removePage() {
+  mainPages.removeAt(9);
+}
+
+void addPage() {
+  mainPages.add(DownloadPage());
+}
+
 class PageProvider extends ChangeNotifier {
   var currentPage;
   late int currentPageNum;
