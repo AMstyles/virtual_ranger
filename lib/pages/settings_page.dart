@@ -19,7 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
   bool showNotifications = false;
   bool beacons = false;
   bool checkContent = false;
-  bool isOffline = false;
+  //bool isOffline = false;
 
   @override
   void initState() {
@@ -40,11 +40,11 @@ class _SettingsPageState extends State<SettingsPage> {
         checkContent = value;
       });
     });
-    UserData.getSettings('offlineMode').then((value) {
+    /*UserData.getSettings('offlineMode').then((value) {
       setState(() {
         isOffline = value;
       });
-    });
+    });*/
   }
 
   @override
@@ -117,7 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 'Automatically download & sync new content when Offline Mode is toggled ON'),
             onTap: () {
               setState(() {
-                if (isOffline) {
+                if (Provider.of<PageProvider>(context).universalOffline) {
                   checkContent = !checkContent;
                   //set the value in the shared preferences
                   UserData.setSettings('checkContent', checkContent);
@@ -170,11 +170,12 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             onTap: () {
               setState(() {
-                isOffline = !isOffline;
+                Provider.of<PageProvider>(context, listen: false)
+                    .jumpToDownload();
               });
             },
             trailing: Switch.adaptive(
-                value: isOffline,
+                value: Provider.of<PageProvider>(context).universalOffline,
                 onChanged: (newbBol) {
                   setState(() {
                     //if the get settings is false in shared preferences, disable the switch
@@ -192,6 +193,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                         actions: [
                                           TextButton(
                                               onPressed: () {
+                                                Provider.of<PageProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .jumpToDownload();
                                                 Navigator.pop(context);
                                               },
                                               child: Text('Ok'))
@@ -204,6 +209,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                         actions: [
                                           TextButton(
                                               onPressed: () {
+                                                Provider.of<PageProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .jumpToDownload();
                                                 Navigator.pop(context);
                                               },
                                               child: Text('Ok'))
@@ -212,7 +221,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               });
                         } else {
                           //TODO: add a check to see if the user has downloaded content
-                          isOffline = newbBol;
+                          Provider.of<PageProvider>(context, listen: false)
+                              .setUniversalOffline(newbBol);
                           SharedPreferences.getInstance().then((prefs) {
                             setState(() {
                               UserData.toggleOfflineMode(newbBol);

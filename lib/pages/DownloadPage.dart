@@ -22,10 +22,10 @@ class _DownloadPageState extends State<DownloadPage> {
   void initState() {
     super.initState();
 
-    UserData.getOfflineMode().then((value) => setState(() {
+    /*UserData.getOfflineMode().then((value) => setState(() {
           isOffline = value;
           print(value);
-        }));
+        }));*/
 
     print("success 1");
 
@@ -42,7 +42,7 @@ class _DownloadPageState extends State<DownloadPage> {
     super.initState();
   }
 
-  bool isOffline = true;
+  //bool isOffline = true;
   late bool canBeOffline;
   bool _downloading = false;
   late String lastSync;
@@ -143,11 +143,13 @@ class _DownloadPageState extends State<DownloadPage> {
               ),
               onTap: () {
                 setState(() {
-                  isOffline = !isOffline;
+                  Provider.of<PageProvider>(context, listen: false)
+                      .toggleUniversalOffline();
                 });
               },
               trailing: Switch.adaptive(
-                  value: isOffline,
+                  value: Provider.of<PageProvider>(context, listen: false)
+                      .universalOffline,
                   onChanged: (newbBol) {
                     setState(() {
                       //if the get settings is false in shared preferences, disable the switch
@@ -185,7 +187,8 @@ class _DownloadPageState extends State<DownloadPage> {
                                 });
                           } else {
                             //TODO: add a check to see if the user has downloaded content
-                            isOffline = newbBol;
+                            Provider.of<PageProvider>(context, listen: false)
+                                .setUniversalOffline(newbBol);
                             SharedPreferences.getInstance().then((prefs) {
                               setState(() {
                                 UserData.toggleOfflineMode(newbBol);
@@ -306,10 +309,10 @@ class _DownloadPageState extends State<DownloadPage> {
     UserData.setSettingsString('lastSync', date);
   }
 
-  Future<void> off() async {
+  /*Future<void> off() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isOffline = prefs.getBool('offline') ?? false;
-  }
+  }*/
 
   Future<void> start() async {
     setState(() {

@@ -64,6 +64,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           themeMode: ThemeMode.light,
           theme: ThemeData(
+            visualDensity: VisualDensity.adaptivePlatformDensity,
             primarySwatch: Colors.green,
             appBarTheme: AppBarTheme(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
