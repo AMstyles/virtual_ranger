@@ -80,17 +80,21 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ),
               actions: [
                 Container(
-                    margin: EdgeInsets.only(right: 5),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0),
-                    ),
-                    child: IconButton(
-                        onPressed: chooseMapType, icon: Icon(Icons.settings)))
+                  margin: EdgeInsets.only(right: 5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0),
+                  ),
+                  child: IconButton(
+                    onPressed: chooseMapType,
+                    icon: Icon(Icons.settings),
+                  ),
+                )
               ],
               title: const Text('Sightings List'),
             )
           : AppBar(
+              title: Text('Sightings List'),
               leading: Container(
                 margin: const EdgeInsets.only(left: 5),
                 decoration: BoxDecoration(

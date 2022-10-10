@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_ranger/pages/DownloadPage.dart';
+import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/user.dart';
 import '../pages/business_listings.dart';
 import '../pages/faq_page.dart';
@@ -24,12 +25,42 @@ List<Widget> mainPages = [
   DownloadPage()
 ];
 
+void removeAndAddPage() {
+  removePage();
+  addPage();
+}
+
+void removePage() {
+  mainPages.removeAt(9);
+}
+
+void addPage() {
+  mainPages.add(DownloadPage());
+}
+
 class PageProvider extends ChangeNotifier {
   var currentPage;
   late int currentPageNum;
+  late bool universalOffline;
 
   PageProvider() {
     currentPageNum = 1;
+    setset();
+    notifyListeners();
+  }
+
+  void setset() async {
+    universalOffline = await UserData.getSettings('offlineMode');
+    notifyListeners();
+  }
+
+  void toggleUniversalOffline() {
+    universalOffline = !universalOffline;
+    notifyListeners();
+  }
+
+  void setUniversalOffline(bool value) {
+    universalOffline = value;
     notifyListeners();
   }
 

@@ -13,6 +13,7 @@ import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -31,6 +32,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _mobileController = TextEditingController();
 
+
   late String name;
   late String email;
   late String password;
@@ -38,6 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late String age_range;
   late String gender;
   late String mobile;
+
 
   @override
   void initState() {
