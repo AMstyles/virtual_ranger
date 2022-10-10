@@ -45,6 +45,8 @@
 	<string>CLIENT-TOKEN</string>
 	<key>FacebookDisplayName</key>
 	<string>Virtual Ranger</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -63,6 +65,8 @@
 	<string>need location to track user</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to photo library to choose a profile picture</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Need access to be able to send users a notification if a beacon is detected near them</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

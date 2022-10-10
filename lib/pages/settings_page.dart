@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
@@ -72,7 +73,23 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             title: const Text('Show notifications'),
-            onTap: () {
+            subtitle: Text('Allows the app to send you notifications '),
+            onTap: () async {
+              await Permission.notification.request;
+              //request notification permission
+              if (await Permission.notification.isGranted) {
+                //if granted
+                setState(() {
+                  showNotifications = !showNotifications;
+                });
+                UserData.setSettings('showNotification', showNotifications);
+              } else {
+                //if not granted
+                setState(() {
+                  showNotifications = false;
+                });
+                UserData.setSettings('showNotification', showNotifications);
+              }
               setState(() {
                 showNotifications = !showNotifications;
                 //set the value in the shared preferences
@@ -92,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const Divider(),
           ListTile(
             title: const Text('Scan for beacons near me'),
-            subtitle: const Text('Tap to manually scan for beacons'),
+            subtitle: const Text('Activate this to scan for beacons near you'),
             onTap: () {
               setState(() {
                 beacons = !beacons;
@@ -168,6 +185,8 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text(
               'Offline Mode',
             ),
+            subtitle: Text(
+                'Use the app without an internet connection. This will download all the content to your device.'),
             onTap: () {
               setState(() {
                 Provider.of<PageProvider>(context, listen: false)

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
@@ -289,7 +290,34 @@ class DownLoad {
     await downloadSubCategoryImage(context);
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
-    showDialog(
+
+    Future.delayed(Duration(seconds: 1), () {
+      InAppNotification.show(
+          duration: const Duration(seconds: 3),
+          onTap: () => Provider.of<PageProvider>(context, listen: false)
+              .jumpToDownload(),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Row(
+                  children: [
+                    Expanded(child: Text('Download is almost complete')),
+                    Expanded(
+                        child: CupertinoButton(
+                            child: Text('toggle offline'),
+                            onPressed: () => Provider.of<PageProvider>(context,
+                                    listen: false)
+                                .jumpToDownload()))
+                  ],
+                ),
+              ),
+            ),
+          ),
+          context: context);
+    });
+
+    /*showDialog(
         context: context,
         builder: (context) => Platform.isAndroid
             ? AlertDialog(
@@ -334,7 +362,7 @@ class DownLoad {
                       },
                       child: Text("toggle now"))
                 ],
-              ));
+              ));*/
   }
 
   static downloadNewsImages(BuildContext context) {

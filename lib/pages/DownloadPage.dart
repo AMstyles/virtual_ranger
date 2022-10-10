@@ -60,8 +60,13 @@ class _DownloadPageState extends State<DownloadPage> {
             child: Column(
           children: [
             ListTile(
-              title: Text("Last Updated:", style: TextStyle(fontSize: 15)),
-              trailing: Text(lastSync),
+              title: Text("Last Updated:",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold)),
+              trailing:
+                  Text(lastSync, style: TextStyle(color: Colors.blueGrey)),
               /*subtitle: isOffline
                   ? Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -275,7 +280,8 @@ class _DownloadPageState extends State<DownloadPage> {
             ),
             CupertinoButton(
               color: MyColors.primaryColor,
-              child: const Text('Downnload & Sync'),
+              child: Text(
+                  (lastSync == 'never synched') ? 'Downnload & Sync' : 'Sync'),
               onPressed: () {
                 Permissionsapi.askStoragePermission();
                 setState(() {

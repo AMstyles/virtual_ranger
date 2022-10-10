@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
@@ -17,7 +20,6 @@ import 'package:virtual_ranger/pages/sighting_list.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/readyData.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
-import 'apis/Download.dart';
 
 class DrawerApp extends StatefulWidget {
   const DrawerApp({Key? key}) : super(key: key);
@@ -27,6 +29,7 @@ class DrawerApp extends StatefulWidget {
 }
 
 class _DrawerAppState extends State<DrawerApp> {
+  late final sharePrefs;
   //pages
   final List<Widget> pages = [
     ProfilePage(),
@@ -44,18 +47,92 @@ class _DrawerAppState extends State<DrawerApp> {
   void initState() {
     super.initState();
     Permissionsapi.askLocationPermission();
-
+    sharePrefs = SharedPreferences.getInstance();
     UserData.getOfflineMode().then((value) => setState(() {
           Provider.of<UserProvider>(context, listen: false).setOffline(value);
           print(value);
         }));
     Provider.of<MapsData>(context, listen: false).getEm();
     Provider.of<MapsData>(context, listen: false).putLegend(context);
-    try {
-      DownLoad.updateAlert(context);
-    } catch (e) {
-      print(e);
-    }
+
+    getOffline().then((value) {
+      if (value) {
+        InAppNotification.show(
+          onTap: () => Provider.of<PageProvider>(context, listen: false)
+              .jumpToSettings(),
+          duration: Duration(seconds: 3),
+          child: Card(
+            borderOnForeground: true,
+            shadowColor: Colors.blue,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                "You are currently in offline mode. Toggle it off to use all features",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          context: context,
+        );
+      } else {
+        InAppNotification.show(
+          duration: Duration(seconds: 6),
+          child: Card(
+            borderOnForeground: true,
+            shadowColor: Colors.blue,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      child: Text(
+                        "Would you like to to use the application offline?",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        //dismiss button
+                        CupertinoButton(
+                            child: Text(
+                              'Dismiss',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              InAppNotification.dismiss(context: context);
+                            }),
+                        CupertinoButton(
+                            child: Text(
+                              'Yes',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {
+                              Provider.of<PageProvider>(context, listen: false)
+                                  .jumpToDownload();
+                              InAppNotification.dismiss(context: context);
+                            }),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          context: context,
+        );
+      }
+    });
   }
 
   @override
@@ -78,6 +155,11 @@ class _DrawerAppState extends State<DrawerApp> {
         ]),
       ),
     );
+  }
+
+  Future<bool> getOffline() async {
+    SharedPreferences prefs = await sharePrefs;
+    return await prefs.getBool('offlineMode') ?? false;
   }
 
   //delayed function
