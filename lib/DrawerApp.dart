@@ -89,35 +89,42 @@ class _DrawerAppState extends State<DrawerApp> {
                 builder: (context) => Platform.isAndroid
                     ? AlertDialog(
                         title: Text(
-                          "Welcome to Virtual Ranger?",
+                          "Welcome to Virtual Ranger",
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.black,
                             fontSize: 20,
                           ),
                         ),
-                        content: Text("Would you like to to use the app"),
+                        content: Text(
+                            "To use this app in areas without signal please go to settings, download content and toggle on offline mode"),
                         actions: [
                           TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: Text("No",
+                              child: Text("Dismiss",
                                   style: TextStyle(color: Colors.red))),
                           TextButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened", true);
                                 Navigator.pop(context);
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToDownload();
                               },
-                              child: Text("Yes"))
+                              child: Text("Go to settings"))
                         ],
                       )
                     : CupertinoAlertDialog(
                         title: Text(
-                          "Welcome to Virtual Ranger?",
+                          "Welcome to Virtual Ranger",
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.black,
                             fontSize: 20,
                           ),
                         ),
-                        content:
-                            Text("Would you like to to use the app offline?"),
+                        content: Text(
+                            "To use this app in areas without signal please go to settings, download content and toggle on offline mode"),
                         actions: [
                           TextButton(
                               onPressed: () => Navigator.pop(context),
@@ -133,7 +140,7 @@ class _DrawerAppState extends State<DrawerApp> {
                                         listen: false)
                                     .jumpToDownload();
                               },
-                              child: Text("Yes"))
+                              child: Text("Go to settings"))
                         ],
                       ),
               )
