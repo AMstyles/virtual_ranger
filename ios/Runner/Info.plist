@@ -49,8 +49,10 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Need access to bluetooth to scan for beacons</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Need access to be able to detect beacons</string>
+	<string>Need access bluetooth to be able to detect beacons nearby</string>
 	<key>NSCameraUsageDescription</key>
 	<string>To scan  qr codes and take profile pictures</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -60,7 +62,7 @@
 	<key>NSLocationDefaultAccuracyReduced</key>
 	<false/>
 	<key>NSLocationUsageDescription</key>
-	<string>need location to track user</string>
+	<string>need location to track user's location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>need location to track user</string>
 	<key>NSPhotoLibraryUsageDescription</key>
