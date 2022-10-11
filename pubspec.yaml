@@ -72,6 +72,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons: ^0.10.0
+  dart_code_metrics: ^4.19.1
 
 flutter_icons:
   android: true
