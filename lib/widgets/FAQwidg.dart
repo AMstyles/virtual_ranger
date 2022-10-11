@@ -10,7 +10,7 @@ class FAQWidg extends StatelessWidget {
   Widget build(BuildContext context) {
     return
         //expansion tile
-        Padding(
+        /*Padding(
       padding: const EdgeInsets.all(5.0),
       child: ExpansionTile(
         backgroundColor: Colors.white,
@@ -28,9 +28,9 @@ class FAQWidg extends StatelessWidget {
           ),
         ],
       ),
-    );
+    );*/
 
-    /*Padding(
+        Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,6 +48,6 @@ class FAQWidg extends StatelessWidget {
           const Divider()
         ],
       ),
-    );*/
+    );
   }
 }

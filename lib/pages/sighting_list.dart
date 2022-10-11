@@ -44,6 +44,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   Future<BitmapDescriptor> setCustomMapPin(id) {
     return BitmapDescriptor.fromAssetImage(
+      mipmaps: true,
       ImageConfiguration(devicePixelRatio: 2.5, size: Size(10, 10)),
       'lib/icons/location' + id + '.png',
     );
@@ -59,11 +60,11 @@ class _SightingslistPageState extends State<SightingslistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: Platform.isIOS,
+      //extendBodyBehindAppBar: Platform.isIOS,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
       // extendBodyBehindAppBar: true,
-      appBar: Platform.isAndroid
+      appBar: (Platform.isAndroid)
           ? AppBar(
               leading: Container(
                 margin: const EdgeInsets.only(left: 5),
@@ -79,17 +80,21 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ),
               actions: [
                 Container(
-                    margin: EdgeInsets.only(right: 5),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0),
-                    ),
-                    child: IconButton(
-                        onPressed: chooseMapType, icon: Icon(Icons.settings)))
+                  margin: EdgeInsets.only(right: 5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0),
+                  ),
+                  child: IconButton(
+                    onPressed: chooseMapType,
+                    icon: Icon(Icons.settings),
+                  ),
+                )
               ],
               title: const Text('Sightings List'),
             )
           : AppBar(
+              title: Text('Sightings List'),
               leading: Container(
                 margin: const EdgeInsets.only(left: 5),
                 decoration: BoxDecoration(
@@ -102,7 +107,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                       Provider.of<Anime>(context, listen: false).handleDrawer,
                 ),
               ),
-              backgroundColor: Colors.transparent,
+              //backgroundColor: Colors.transparent,
               //title: const Text('Sightings List'),
               actions: [
                 Container(

@@ -22,10 +22,10 @@ class _DownloadPageState extends State<DownloadPage> {
   void initState() {
     super.initState();
 
-    UserData.getOfflineMode().then((value) => setState(() {
+    /*UserData.getOfflineMode().then((value) => setState(() {
           isOffline = value;
           print(value);
-        }));
+        }));*/
 
     print("success 1");
 
@@ -34,16 +34,55 @@ class _DownloadPageState extends State<DownloadPage> {
           print(value);
         }));
     print("success 2");
+
+    UserData.getSettingsString('lastSync').then((value) => setState(() {
+          lastSync = value;
+          print(value);
+        }));
     super.initState();
   }
 
-  bool isOffline = true;
+  //bool isOffline = true;
   late bool canBeOffline;
   bool _downloading = false;
+  late String lastSync;
+
+  String date =
+      '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        height: 110,
+        color: Colors.grey[200],
+        child: SafeArea(
+            child: Column(
+          children: [
+            ListTile(
+              title: Text("Last Updated:",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold)),
+              trailing:
+                  Text(lastSync, style: TextStyle(color: Colors.blueGrey)),
+              /*subtitle: isOffline
+                  ? Row(
+                      //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text("update available"),
+                        CircleAvatar(
+                          radius: 5,
+                          backgroundColor: Colors.red,
+                        )
+                      ],
+                    )
+                  : SizedBox(),*/
+            )
+          ],
+        )),
+      ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -109,11 +148,13 @@ class _DownloadPageState extends State<DownloadPage> {
               ),
               onTap: () {
                 setState(() {
-                  isOffline = !isOffline;
+                  Provider.of<PageProvider>(context, listen: false)
+                      .toggleUniversalOffline();
                 });
               },
               trailing: Switch.adaptive(
-                  value: isOffline,
+                  value: Provider.of<PageProvider>(context, listen: false)
+                      .universalOffline,
                   onChanged: (newbBol) {
                     setState(() {
                       //if the get settings is false in shared preferences, disable the switch
@@ -151,7 +192,8 @@ class _DownloadPageState extends State<DownloadPage> {
                                 });
                           } else {
                             //TODO: add a check to see if the user has downloaded content
-                            isOffline = newbBol;
+                            Provider.of<PageProvider>(context, listen: false)
+                                .setUniversalOffline(newbBol);
                             SharedPreferences.getInstance().then((prefs) {
                               setState(() {
                                 UserData.toggleOfflineMode(newbBol);
@@ -238,7 +280,8 @@ class _DownloadPageState extends State<DownloadPage> {
             ),
             CupertinoButton(
               color: MyColors.primaryColor,
-              child: const Text('Downnload / Update content'),
+              child: Text(
+                  (lastSync == 'never synched') ? 'Downnload & Sync' : 'Sync'),
               onPressed: () {
                 Permissionsapi.askStoragePermission();
                 setState(() {
@@ -263,16 +306,19 @@ class _DownloadPageState extends State<DownloadPage> {
     canBeOffline = true;
     setState(() {
       UserData.setSettings('canBeOffline', true);
+      lastSync = date;
     });
 
     UserData.canGoOffline(true);
+
     _downloading = false;
+    UserData.setSettingsString('lastSync', date);
   }
 
-  Future<void> off() async {
+  /*Future<void> off() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isOffline = prefs.getBool('offline') ?? false;
-  }
+  }*/
 
   Future<void> start() async {
     setState(() {

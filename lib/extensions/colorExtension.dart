@@ -16,3 +16,13 @@ extension HexColor on Color {
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
 }
+
+extension DoubleColor on Color {
+  static Color fromDouble(double value) {
+    return Color((value * 0xFFFFFF).toInt()).withOpacity(1.0);
+  }
+
+  static double fromColor(Color value) {
+    return value.value.toDouble();
+  }
+}

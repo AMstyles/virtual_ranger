@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
@@ -34,6 +35,8 @@ class DownLoad {
 
   static Future<void> updateAlert(BuildContext context) async {
     //SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    print("Running the update alert");
     if (await UserData.getSettings('checkContent') &&
         await UserData.getOfflineMode()) {
       if (await checkNewsUpdates() ||
@@ -63,6 +66,7 @@ class DownLoad {
                 ],
               );
             });
+        print("update available");
       }
     }
   }
@@ -137,6 +141,7 @@ class DownLoad {
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("species updated");
         return true;
       }
       return false;
@@ -159,9 +164,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/categories.json');
     if (!file.existsSync()) {
+      print("categories updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("categories updated");
         return true;
       }
       return false;
@@ -184,9 +191,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/sub_categories.json');
     if (!file.existsSync()) {
+      print("subcategories updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("subcategories updated");
         return true;
       }
       return false;
@@ -209,9 +218,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/business_listings.json');
     if (!file.existsSync()) {
+      print("business listings updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("business listings updated");
         return true;
       }
       return false;
@@ -234,9 +245,11 @@ class DownLoad {
     final data = response.body;
     final file = File('${UserData.path}/faq.json');
     if (!file.existsSync()) {
+      print("faq updated");
       return true;
     } else {
       if (file.readAsStringSync() != data) {
+        print("faq updated");
         return true;
       }
       return false;
@@ -277,7 +290,34 @@ class DownLoad {
     await downloadSubCategoryImage(context);
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
-    showDialog(
+
+    Future.delayed(Duration(seconds: 1), () {
+      InAppNotification.show(
+          duration: const Duration(seconds: 3),
+          onTap: () => Provider.of<PageProvider>(context, listen: false)
+              .jumpToDownload(),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Row(
+                  children: [
+                    Expanded(child: Text('Download is almost complete')),
+                    Expanded(
+                        child: CupertinoButton(
+                            child: Text('toggle offline'),
+                            onPressed: () => Provider.of<PageProvider>(context,
+                                    listen: false)
+                                .jumpToDownload()))
+                  ],
+                ),
+              ),
+            ),
+          ),
+          context: context);
+    });
+
+    /*showDialog(
         context: context,
         builder: (context) => Platform.isAndroid
             ? AlertDialog(
@@ -322,7 +362,7 @@ class DownLoad {
                       },
                       child: Text("toggle now"))
                 ],
-              ));
+              ));*/
   }
 
   static downloadNewsImages(BuildContext context) {
@@ -419,10 +459,15 @@ class DownLoad {
     Dio dio = await Dio();
     String filePath = UserData.path + "/" + url.split('/').last;
     print(filePath);
-    try {
-      await dio.download(url, filePath);
-    } catch (e) {
-      print(e);
+    //check if the file exists
+    final file = File(filePath);
+
+    if (!file.existsSync()) {
+      try {
+        await dio.download(url, filePath);
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }

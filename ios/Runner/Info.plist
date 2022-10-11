@@ -14,8 +14,6 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>virtual_ranger</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -35,7 +33,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.734421281531-4lgf1qn576dm1g4stufvrbff917amjre</string>
+				<string>com.googleusercontent.apps.734421281531-1rcp9vk3nduue2hmdp9frn27ou1p86i0</string>
 			</array>
 		</dict>
 	</array>
@@ -47,10 +45,14 @@
 	<string>CLIENT-TOKEN</string>
 	<key>FacebookDisplayName</key>
 	<string>Virtual Ranger</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Need access to be able to detect beacons</string>
 	<key>NSCameraUsageDescription</key>
-	<string>To scan for qr codes and take profile pictures</string>
+	<string>To scan  qr codes and take profile pictures</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To scan for beacons</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -63,10 +65,12 @@
 	<string>need location to track user</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to photo library to choose a profile picture</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Need access to be able to send users a notification if a beacon is detected near them</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
-	<string>Main.storyboard</string>
+	<string>LaunchScreen.storyboard</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

@@ -1000,7 +1000,14 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.9"
+    version: "0.4.12"
+  the_apple_sign_in:
+    dependency: "direct main"
+    description:
+      name: the_apple_sign_in
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   typed_data:
     dependency: transitive
     description:
