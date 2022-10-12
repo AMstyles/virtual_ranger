@@ -30,6 +30,11 @@ void removeAndAddPage() {
   addPage();
 }
 
+/*void restartSightingsPage() {
+  mainPages.removeAt(4);
+  mainPages.insert(4, SightingslistPage());
+}*/
+
 void removePage() {
   mainPages.removeAt(9);
 }

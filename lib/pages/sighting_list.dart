@@ -47,7 +47,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
         markers;
       });
     });
-    Future.delayed(Duration(minutes: 2), (() {
+    Future.delayed(Duration(minutes: 1), (() {
       _timer.cancel();
     }));
   }
@@ -166,7 +166,6 @@ class _SightingslistPageState extends State<SightingslistPage> {
             _googleMapController.setMapStyle(
               _mapStyle,
             );
-
             putSightings();
             setTheState();
           },
@@ -204,16 +203,18 @@ class _SightingslistPageState extends State<SightingslistPage> {
         late final pinLocationIcon;
         pinLocationIcon = await MapMarker.svgToPng(
             context, getColor(element.animal_id.toString()));
-        markers.add(Marker(
-          markerId: MarkerId(element.animal_id.toString()),
-          position: LatLng(element.latitude, element.longitude),
-          icon: BitmapDescriptor.fromBytes(pinLocationIcon),
-          infoWindow: InfoWindow(
-            title: getName(element.animal_id),
-            snippet:
-                readTimeStamp(element.sighting_time), //element.sighting_time,
-          ),
-        ));
+
+        setState(() {
+          markers.add(Marker(
+            markerId: MarkerId(element.animal_id.toString()),
+            position: LatLng(element.latitude, element.longitude),
+            icon: BitmapDescriptor.fromBytes(pinLocationIcon),
+            infoWindow: InfoWindow(
+              title: getName(element.animal_id),
+              snippet: readTimeStamp(element.sighting_time),
+            ),
+          ));
+        });
       });
     });
   }

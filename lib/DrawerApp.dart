@@ -31,6 +31,7 @@ class DrawerApp extends StatefulWidget {
 
 class _DrawerAppState extends State<DrawerApp> {
   late final sharePrefs;
+
   //pages
   final List<Widget> pages = [
     ProfilePage(),
