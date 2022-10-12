@@ -47,6 +47,9 @@ class _SightingslistPageState extends State<SightingslistPage> {
         markers;
       });
     });
+    Future.delayed(Duration(seconds: 3), (() {
+      _timer.cancel();
+    }));
   }
 
   @override
