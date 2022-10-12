@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
@@ -19,7 +21,16 @@ class _SettingsPageState extends State<SettingsPage> {
   bool showNotifications = false;
   bool beacons = false;
   bool checkContent = false;
+  Color _color = Colors.transparent;
+  late Timer _timer;
   //bool isOffline = false;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timer.cancel();
+  }
 
   @override
   void initState() {
@@ -45,11 +56,32 @@ class _SettingsPageState extends State<SettingsPage> {
         isOffline = value;
       });
     });*/
+
+    _timer = Timer.periodic(Duration(milliseconds: 1600), (timer) {
+      if (!checkContent &&
+          Provider.of<PageProvider>(context).universalOffline) {
+        if (_color == Colors.green.withOpacity(0.5)) {
+          setState(() {
+            _color = Colors.transparent;
+          });
+        } else {
+          setState(() {
+            _color = Colors.green.withOpacity(0.5);
+          });
+        }
+      } else {
+        setState(() {
+          _color = Colors.transparent;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //bottomNavigationBar: (),
+
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu),
@@ -72,7 +104,23 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             title: const Text('Show notifications'),
-            onTap: () {
+            subtitle: Text('Allows the app to send you notifications '),
+            onTap: () async {
+              await Permission.notification.request;
+              //request notification permission
+              if (await Permission.notification.isGranted) {
+                //if granted
+                setState(() {
+                  showNotifications = !showNotifications;
+                });
+                UserData.setSettings('showNotification', showNotifications);
+              } else {
+                //if not granted
+                setState(() {
+                  showNotifications = false;
+                });
+                UserData.setSettings('showNotification', showNotifications);
+              }
               setState(() {
                 showNotifications = !showNotifications;
                 //set the value in the shared preferences
@@ -92,7 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const Divider(),
           ListTile(
             title: const Text('Scan for beacons near me'),
-            subtitle: const Text('Tap to manually scan for beacons'),
+            subtitle: const Text('Activate this to scan for beacons near you'),
             onTap: () {
               setState(() {
                 beacons = !beacons;
@@ -111,48 +159,53 @@ class _SettingsPageState extends State<SettingsPage> {
                 }),
           ),
           const Divider(),
-          ListTile(
-            title: const Text('Automatic updates'),
-            subtitle: Text(
-                'Automatically download & sync new content when Offline Mode is toggled ON'),
-            onTap: () {
-              setState(() {
-                if (Provider.of<PageProvider>(context).universalOffline) {
-                  checkContent = !checkContent;
-                  //set the value in the shared preferences
-                  UserData.setSettings('checkContent', checkContent);
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Error'),
-                          content:
-                              const Text('Please turn on offline mode first'),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Provider.of<PageProvider>(context)
-                                      .jumpToDownload();
-                                },
-                                child: const Text('OK'))
-                          ],
-                        );
-                      });
-                }
-              });
-            },
-            trailing: Switch.adaptive(
-                value: checkContent,
-                onChanged: (newbBol) {
-                  setState(() {
-                    checkContent = newbBol;
+          AnimatedContainer(
+            curve: Curves.easeInOutCubic,
+            duration: const Duration(milliseconds: 1400),
+            color: _color,
+            child: ListTile(
+              title: const Text('Automatic updates'),
+              subtitle: Text(
+                  'Automatically download & sync new content when Offline Mode is toggled ON'),
+              onTap: () {
+                setState(() {
+                  if (Provider.of<PageProvider>(context).universalOffline) {
+                    checkContent = !checkContent;
                     //set the value in the shared preferences
                     UserData.setSettings('checkContent', checkContent);
-                  });
-                }),
-            //trailing: Switch.adaptive(value: value, onChanged: onChanged),
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content:
+                                const Text('Please turn on offline mode first'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Provider.of<PageProvider>(context)
+                                        .jumpToDownload();
+                                  },
+                                  child: const Text('OK'))
+                            ],
+                          );
+                        });
+                  }
+                });
+              },
+              trailing: Switch.adaptive(
+                  value: checkContent,
+                  onChanged: (newbBol) {
+                    setState(() {
+                      checkContent = newbBol;
+                      //set the value in the shared preferences
+                      UserData.setSettings('checkContent', checkContent);
+                    });
+                  }),
+              //trailing: Switch.adaptive(value: value, onChanged: onChanged),
+            ),
           ),
           const Padding(
             padding: EdgeInsets.all(16),
@@ -168,6 +221,8 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text(
               'Offline Mode',
             ),
+            subtitle: Text(
+                'Use the app without an internet connection. This will download all the content to your device.'),
             onTap: () {
               setState(() {
                 Provider.of<PageProvider>(context, listen: false)

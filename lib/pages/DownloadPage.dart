@@ -60,8 +60,13 @@ class _DownloadPageState extends State<DownloadPage> {
             child: Column(
           children: [
             ListTile(
-              title: Text("Last Updated:", style: TextStyle(fontSize: 15)),
-              trailing: Text(lastSync),
+              title: Text("Last Updated:",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold)),
+              trailing:
+                  Text(lastSync, style: TextStyle(color: Colors.blueGrey)),
               /*subtitle: isOffline
                   ? Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -232,50 +237,63 @@ class _DownloadPageState extends State<DownloadPage> {
                   }),
             ),
             const Divider(),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: LinearPercentIndicator(
-                linearGradient: LinearGradient(
-                  colors: [
-                    Colors.red,
-                    Colors.amber,
-                    Colors.yellow,
-                    Colors.green,
-                  ],
-                ),
-                animation: true,
-                width: MediaQuery.of(context).size.width - 20,
-                lineHeight: 20.0,
-                percent: Provider.of<DownloadProvider>(context).percentage,
-                backgroundColor: Colors.grey.shade200,
-                //progressColor: Colors.blue,
-                center: Text(
-                  '${Provider.of<DownloadProvider>(context).imagesDownloaded}/${Provider.of<DownloadProvider>(context).imagesToDownload}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blue,
+            _downloading
+                ? Container(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: LinearPercentIndicator(
+                            linearGradient: LinearGradient(
+                              colors: [
+                                Colors.red,
+                                Colors.amber,
+                                Colors.yellow,
+                                Colors.green,
+                              ],
+                            ),
+                            animation: true,
+                            width: MediaQuery.of(context).size.width - 20,
+                            lineHeight: 20.0,
+                            percent: Provider.of<DownloadProvider>(context)
+                                .percentage,
+                            backgroundColor: Colors.grey.shade200,
+                            //progressColor: Colors.blue,
+                            center: Text(
+                              '${Provider.of<DownloadProvider>(context).imagesDownloaded}/${Provider.of<DownloadProvider>(context).imagesToDownload}',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '${Provider.of<DownloadProvider>(context).imagesDownloaded}/${Provider.of<DownloadProvider>(context).imagesToDownload}' +
+                              ' images downloaded',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(
+                    child: Text((lastSync != 'never synched')
+                        ? 'You have content synced on $lastSync \n '
+                        : 'You have never synced content, please sync content to go offline'),
                   ),
-                ),
-              ),
-            ),
-            Text(
-              '${Provider.of<DownloadProvider>(context).imagesDownloaded}/${Provider.of<DownloadProvider>(context).imagesToDownload}' +
-                  ' images downloaded',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Colors.blueGrey,
-              ),
-            ),
-
             //put some space between the two buttons
             SizedBox(
               height: 20,
             ),
             CupertinoButton(
               color: MyColors.primaryColor,
-              child: const Text('Downnload & Sync'),
+              child: Text(
+                  (lastSync == 'never synched') ? 'Downnload & Sync' : 'Sync'),
               onPressed: () {
                 Permissionsapi.askStoragePermission();
                 setState(() {
