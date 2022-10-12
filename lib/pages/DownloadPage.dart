@@ -282,6 +282,7 @@ class _DownloadPageState extends State<DownloadPage> {
                     ),
                   )
                 : Container(
+                    padding: EdgeInsets.all(8),
                     child: Text((lastSync != 'never synched')
                         ? 'You have content synced on $lastSync \n '
                         : 'You have never synced content, please sync content to go offline'),

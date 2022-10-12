@@ -9,28 +9,31 @@ import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import '../models/constants.dart';
-import '../pages/Custom/AnimeVals.dart';
 import '../services/shared_preferences.dart';
 import 'businesslistingsapi.dart';
 import 'eventapi.dart';
 
 class DownLoad {
   static Future<void> downloadAllJson() async {
-    DownloadNews();
-    print("success 1");
-    DownloadEvents();
-    print("success 2");
-    DownloadBusinessListings();
-    print("success 3");
-    DownloadFAQ();
-    print("success 4");
-    DownloadSpecies();
-    print("success 5");
-    DownloadCategories();
-    print("success 6");
-    DownloadSubCategories();
-    print("success last");
-    DownloadImages();
+    try {
+      DownloadNews();
+      print("success 1");
+      DownloadEvents();
+      print("success 2");
+      DownloadBusinessListings();
+      print("success 3");
+      DownloadFAQ();
+      print("success 4");
+      DownloadSpecies();
+      print("success 5");
+      DownloadCategories();
+      print("success 6");
+      DownloadSubCategories();
+      print("success last");
+      DownloadImages();
+    } catch (e) {
+      downloadAllJson();
+    }
   }
 
   static Future<void> updateAlert(BuildContext context) async {
