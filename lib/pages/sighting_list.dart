@@ -42,12 +42,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
     rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {
       _mapStyle = string;
     });
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
       setState(() {
         markers;
       });
     });
-    Future.delayed(Duration(seconds: 3), (() {
+    Future.delayed(Duration(minutes: 2), (() {
       _timer.cancel();
     }));
   }
