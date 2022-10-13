@@ -81,7 +81,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                       Provider.of<Anime>(context, listen: false).handleDrawer,
                 ),
               ),
-              actions: [
+              /*actions: [
                 Container(
                   margin: EdgeInsets.only(right: 5),
                   decoration: BoxDecoration(
@@ -93,7 +93,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     icon: Icon(Icons.settings),
                   ),
                 )
-              ],
+              ],*/
               title: const Text('Sightings List'),
             )
           : AppBar(
@@ -112,7 +112,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ),
               //backgroundColor: Colors.transparent,
               //title: const Text('Sightings List'),
-              actions: [
+              /*actions: [
                 Container(
                     margin: EdgeInsets.only(right: 5),
                     decoration: BoxDecoration(
@@ -121,7 +121,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     ),
                     child: IconButton(
                         onPressed: chooseMapIOS, icon: Icon(Icons.settings)))
-              ],
+              ],*/
             ),
       floatingActionButton:
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [

@@ -77,10 +77,12 @@ class PageProvider extends ChangeNotifier {
 
   void jumpToSettings() {
     switchPage(8);
+    notifyListeners();
   }
 
   void jumpToDownload() {
     switchPage(9);
+    notifyListeners();
   }
 }
 
