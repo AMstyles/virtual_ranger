@@ -179,10 +179,11 @@ class FacebookLoginProvider extends ChangeNotifier {
 class AppleLoginProvider extends ChangeNotifier {
   final _firebaseAuth = FirebaseAuth.instance;
 
-  Future<List<String>> LoginWithApple({List<Scope> scopes = const []}) async {
+  Future<List<String>> LoginWithApple() async {
     // 1. perform the sign-in request
-    final result = await TheAppleSignIn.performRequests(
-        [AppleIdRequest(requestedScopes: scopes)]);
+    final result = await TheAppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
     // 2. check the result
     switch (result.status) {
       case AuthorizationStatus.authorized:
@@ -193,27 +194,19 @@ class AppleLoginProvider extends ChangeNotifier {
           accessToken:
               String.fromCharCodes(appleIdCredential.authorizationCode!),
         );
-        final email = appleIdCredential.email;
-        print(email);
-        final name = appleIdCredential.fullName;
-        final mobile = "";
-        final authResult = await _firebaseAuth.signInWithCredential(credential);
-        return [email.toString(), name.toString()];
-        break;
 
-      /*final userCredential =
-            await _firebaseAuth.signInWithCredential(credential);
-        final firebaseUser = userCredential.user!;
-        if (scopes.contains(Scope.fullName)) {
-          final fullName = appleIdCredential.fullName;
-          if (fullName != null &&
-              fullName.givenName != null &&
-              fullName.familyName != null) {
-            final displayName = '${fullName.givenName} ${fullName.familyName}';
-            await firebaseUser.updateDisplayName(displayName);
-          }
-        }*/
-      //return firebaseUser;
+        final authResult = await _firebaseAuth.signInWithCredential(credential);
+        print(authResult);
+        print(authResult.user!.uid);
+        print(FirebaseAuth.instance.currentUser!.email);
+
+        print(authResult.user!.email.toString());
+        final email =
+            authResult.user!.email ?? '${authResult.user!.uid}@appleid.log';
+        final name = authResult.user!.displayName ?? '';
+
+        return [email.toString(), name.toString()];
+
       case AuthorizationStatus.error:
         throw PlatformException(
           code: 'ERROR_AUTHORIZATION_DENIED',

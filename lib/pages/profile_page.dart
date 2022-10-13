@@ -302,14 +302,17 @@ class _ProfilePageState extends State<ProfilePage> {
           ProfileTextField(
             controller: _currPassController,
             hint: 'Current Password',
+            obscureText: true,
           ),
           ProfileTextField(
             controller: _newPassController,
             hint: 'New Password',
+            obscureText: true,
           ),
           ProfileTextField(
             controller: _reNewPassController,
             hint: 'Re-enter New Password',
+            obscureText: true,
           ),
           _buildSignUpButton(context, 'CHANGE PASSWORD'),
         ]),
@@ -464,38 +467,39 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (finalData['success'] == true) {
       showDialog(
-          context: context,
-          builder: (context) => Platform.isAndroid
-              ? AlertDialog(
-                  title: const Text(
-                    'Success',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  content: const Text("Profile updated"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Ok'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                )
-              : CupertinoAlertDialog(
-                  title: const Text(
-                    'Success',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  content: const Text("Profile updated"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Ok'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                ));
+        context: context,
+        builder: (context) => Platform.isAndroid
+            ? AlertDialog(
+                title: const Text(
+                  'Success',
+                  style: TextStyle(color: Colors.green),
+                ),
+                content: const Text("Profile updated"),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              )
+            : CupertinoAlertDialog(
+                title: const Text(
+                  'Success',
+                  style: TextStyle(color: Colors.green),
+                ),
+                content: const Text("Profile updated"),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+      );
     } else {
       showDialog(
           context: context,

@@ -282,7 +282,8 @@ class _DownloadPageState extends State<DownloadPage> {
                     ),
                   )
                 : Container(
-                    child: Text((lastSync != 'never synched')
+                    padding: EdgeInsets.all(8),
+                    child: Text((lastSync != 'never synced')
                         ? 'You have content synced on $lastSync \n '
                         : 'You have never synced content, please sync content to go offline'),
                   ),
@@ -293,7 +294,7 @@ class _DownloadPageState extends State<DownloadPage> {
             CupertinoButton(
               color: MyColors.primaryColor,
               child: Text(
-                  (lastSync == 'never synched') ? 'Downnload & Sync' : 'Sync'),
+                  (lastSync == 'never synced') ? 'Download & Sync' : 'Sync'),
               onPressed: () {
                 Permissionsapi.askStoragePermission();
                 setState(() {

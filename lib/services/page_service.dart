@@ -30,6 +30,11 @@ void removeAndAddPage() {
   addPage();
 }
 
+/*void restartSightingsPage() {
+  mainPages.removeAt(4);
+  mainPages.insert(4, SightingslistPage());
+}*/
+
 void removePage() {
   mainPages.removeAt(9);
 }
@@ -72,10 +77,12 @@ class PageProvider extends ChangeNotifier {
 
   void jumpToSettings() {
     switchPage(8);
+    notifyListeners();
   }
 
   void jumpToDownload() {
     switchPage(9);
+    notifyListeners();
   }
 }
 

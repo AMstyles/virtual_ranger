@@ -66,6 +66,7 @@ dependencies:
   avatar_glow: ^2.0.2
   in_app_notification: ^1.1.2
   the_apple_sign_in: ^1.1.1
+  flutter_svg: ^1.1.5
 
 
 dev_dependencies:
@@ -73,7 +74,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons: ^0.10.0
-  dart_code_metrics: ^4.19.1
+
 
 flutter_icons:
   android: true
@@ -105,6 +106,7 @@ flutter:
   assets:
     - lib/assets/
     - lib/icons/
+    - lib/svg/
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

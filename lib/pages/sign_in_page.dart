@@ -168,9 +168,11 @@ class _LoginPageState extends State<LoginPage> {
             Provider.of<AppleLoginProvider>(context, listen: false);
         await provider.LoginWithApple();
         if (auth.FirebaseAuth.instance.currentUser != null) {
+          print("instance not null");
           final nice = auth.FirebaseAuth.instance.currentUser;
+          print("name is: " + nice!.email!.toString());
 
-          final vedict = await signUpAPI.signInWithGoogle(nice!.email ?? '');
+          final vedict = await signUpAPI.signInWithGoogle(nice.email ?? '');
           final finalVedict = jsonDecode(vedict);
           print(finalVedict);
 

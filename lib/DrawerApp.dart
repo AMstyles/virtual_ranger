@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_notification/in_app_notification.dart';
@@ -32,6 +31,7 @@ class DrawerApp extends StatefulWidget {
 
 class _DrawerAppState extends State<DrawerApp> {
   late final sharePrefs;
+
   //pages
   final List<Widget> pages = [
     ProfilePage(),
@@ -59,7 +59,73 @@ class _DrawerAppState extends State<DrawerApp> {
 
     getOffline().then((value) async {
       if (value) {
-        InAppNotification.show(
+        final pref = await SharedPreferences.getInstance();
+        final condition = await pref.getBool('opened1') ?? false;
+
+        !condition
+            ? showDialog(
+                context: context,
+                builder: (context) => Platform.isAndroid
+                    ? AlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("Dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened1", true);
+                                Navigator.pop(context);
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToSettings();
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      )
+                    : CupertinoAlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened1", true);
+
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToSettings();
+                                Navigator.pop(context);
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      ),
+              )
+            : () {};
+        /*InAppNotification.show(
           onTap: () => Provider.of<PageProvider>(context, listen: false)
               .jumpToSettings(),
           duration: Duration(seconds: 3),
@@ -78,7 +144,7 @@ class _DrawerAppState extends State<DrawerApp> {
             ),
           ),
           context: context,
-        );
+        );*/
       } else {
         final pref = await SharedPreferences.getInstance();
         final condition = await pref.getBool('opened') ?? false;
@@ -146,6 +212,11 @@ class _DrawerAppState extends State<DrawerApp> {
               )
             : () {};
       }
+    });
+
+    Future.delayed(Duration(seconds: 1), () {
+      mainPages.removeAt(4);
+      mainPages.insert(4, SightingslistPage());
     });
   }
 

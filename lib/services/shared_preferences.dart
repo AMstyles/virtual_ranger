@@ -102,6 +102,6 @@ class UserData {
   }
 
   static Future<String> getSettingsString(String key) async {
-    return await _userData.getString(key) ?? 'never synched';
+    return await _userData.getString(key) ?? 'never synced';
   }
 }

@@ -6,19 +6,20 @@ class AnimalSight {
   String name;
   String id;
   Color color;
+  String hexColor;
 
-  AnimalSight({
-    required this.name,
-    required this.id,
-    required this.color,
-  });
+  AnimalSight(
+      {required this.name,
+      required this.id,
+      required this.color,
+      required this.hexColor});
 
   static AnimalSight fromJson(Map<String, dynamic> json) {
     return AnimalSight(
-      name: json['english_name'],
-      id: json['id'],
-      color: HexColor.fromHex(json['pin_color']),
-    );
+        name: json['english_name'],
+        id: json['id'],
+        color: HexColor.fromHex(json['pin_color']),
+        hexColor: json['pin_color']);
   }
 }
 

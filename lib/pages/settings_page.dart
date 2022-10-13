@@ -51,15 +51,10 @@ class _SettingsPageState extends State<SettingsPage> {
         checkContent = value;
       });
     });
-    /*UserData.getSettings('offlineMode').then((value) {
-      setState(() {
-        isOffline = value;
-      });
-    });*/
 
     _timer = Timer.periodic(Duration(milliseconds: 1600), (timer) {
       if (!checkContent &&
-          Provider.of<PageProvider>(context).universalOffline) {
+          Provider.of<PageProvider>(context, listen: false).universalOffline) {
         if (_color == Colors.green.withOpacity(0.5)) {
           setState(() {
             _color = Colors.transparent;
@@ -169,7 +164,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   'Automatically download & sync new content when Offline Mode is toggled ON'),
               onTap: () {
                 setState(() {
-                  if (Provider.of<PageProvider>(context).universalOffline) {
+                  if (Provider.of<PageProvider>(context, listen: false)
+                      .universalOffline) {
                     checkContent = !checkContent;
                     //set the value in the shared preferences
                     UserData.setSettings('checkContent', checkContent);
@@ -185,7 +181,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    Provider.of<PageProvider>(context)
+                                    Provider.of<PageProvider>(context,
+                                            listen: false)
                                         .jumpToDownload();
                                   },
                                   child: const Text('OK'))
@@ -230,7 +227,8 @@ class _SettingsPageState extends State<SettingsPage> {
               });
             },
             trailing: Switch.adaptive(
-                value: Provider.of<PageProvider>(context).universalOffline,
+                value: Provider.of<PageProvider>(context, listen: false)
+                    .universalOffline,
                 onChanged: (newbBol) {
                   setState(() {
                     //if the get settings is false in shared preferences, disable the switch

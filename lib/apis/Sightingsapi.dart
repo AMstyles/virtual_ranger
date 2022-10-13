@@ -120,25 +120,31 @@ class Sightings {
 
   static Future<List<AnimalSight>> getColouredAnimal(
       BuildContext context) async {
-    final response =
-        await http.post(Uri.parse(GET_COLOURED_ANIMALS_URL), body: {
-      'secret_key':
-          Provider.of<UserProvider>(context, listen: false).user!.secret_key ??
-              " ",
-    });
+    try {
+      final response =
+          await http.post(Uri.parse(GET_COLOURED_ANIMALS_URL), body: {
+        'secret_key': Provider.of<UserProvider>(context, listen: false)
+                .user!
+                .secret_key ??
+            " ",
+      });
 
-    final pre_data = jsonDecode(response.body);
-    final data = pre_data['data'];
+      final pre_data = jsonDecode(response.body);
+      final data = pre_data['data'];
 
-    final List<dynamic> finalData = data;
-    List<AnimalSight> events = [];
-    for (var i = 0; i < finalData.length; i++) {
-      events.add(
-        AnimalSight.fromJson(
-          finalData[i],
-        ),
-      );
+      final List<dynamic> finalData = data;
+      List<AnimalSight> events = [];
+      for (var i = 0; i < finalData.length; i++) {
+        events.add(
+          AnimalSight.fromJson(
+            finalData[i],
+          ),
+        );
+      }
+      return events;
+    } catch (e) {
+      print(e);
+      return getColouredAnimal(context);
     }
-    return events;
   }
 }

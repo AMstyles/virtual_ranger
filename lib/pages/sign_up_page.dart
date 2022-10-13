@@ -13,7 +13,6 @@ import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 
-
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -32,7 +31,6 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _mobileController = TextEditingController();
 
-
   late String name;
   late String email;
   late String password;
@@ -40,7 +38,6 @@ class _SignUpPageState extends State<SignUpPage> {
   late String age_range;
   late String gender;
   late String mobile;
-
 
   @override
   void initState() {
@@ -264,29 +261,74 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildAppleSignInButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5),
-      alignment: Alignment.center,
-      height: 45,
-      width: 140,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          Icon(
-            Icons.apple,
-            color: Colors.white,
-            size: 40,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "Sign in with Apple",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () async {
+        final provider =
+            Provider.of<AppleLoginProvider>(context, listen: false);
+        await provider.LoginWithApple();
+        if (auth.FirebaseAuth.instance.currentUser != null) {
+          print("instance not null");
+          final nice = auth.FirebaseAuth.instance.currentUser;
+          print("name is: " + nice!.email!.toString());
+
+          final vedict = await signUpAPI.signInWithGoogle(nice.email ?? '');
+          final finalVedict = jsonDecode(vedict);
+          print(finalVedict);
+
+          if (finalVedict['success'] == true) {
+            final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          } else {
+            final things = await signUpAPI.signUp(
+                nice.displayName ?? "",
+                nice.email ?? '',
+                nice.phoneNumber ?? '  ',
+                'none',
+                'none',
+                '000000',
+                '000000');
+
+            await auth.FirebaseAuth.instance.signOut();
+
+            print(things);
+            final perfectThings = jsonDecode(things);
+
+            final userToBe = User.fromjson(perfectThings['data']);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+          }
+        } else {}
+        auth.FirebaseAuth.instance.signOut();
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 5),
+        alignment: Alignment.center,
+        height: 45,
+        width: 140,
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Icon(
+              Icons.apple,
+              color: Colors.white,
+              size: 40,
+            ),
+            SizedBox(width: 20),
+            Text(
+              "Sign in with Apple",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

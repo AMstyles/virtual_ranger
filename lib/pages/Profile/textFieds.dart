@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 
 class ProfileTextField extends StatelessWidget {
   const ProfileTextField(
-      {Key? key, required this.hint, required this.controller})
+      {Key? key,
+      required this.hint,
+      required this.controller,
+      this.obscureText})
       : super(key: key);
   final String hint;
   final TextEditingController controller;
+  final bool? obscureText;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,6 +18,7 @@ class ProfileTextField extends StatelessWidget {
         vertical: 8,
       ),
       child: CupertinoTextField(
+        obscureText: obscureText ?? false,
         style: TextStyle(
           color: Colors.grey.shade600,
           //fontSize: 14,

@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/extensions/colorExtension.dart';
 import 'package:virtual_ranger/models/animalforSIGHT.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,6 +27,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
   String _mapStyle = '';
   var mapType = MapType.normal;
   var markers = Set<Marker>();
+  late Timer _timer;
 
   void askLocationPermission() async {
     await Permission.location.request();
@@ -39,21 +42,21 @@ class _SightingslistPageState extends State<SightingslistPage> {
     rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {
       _mapStyle = string;
     });
-    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
-  }
-
-  Future<BitmapDescriptor> setCustomMapPin(id) {
-    return BitmapDescriptor.fromAssetImage(
-      mipmaps: true,
-      ImageConfiguration(devicePixelRatio: 2.5, size: Size(10, 10)),
-      'lib/icons/location' + id + '.png',
-    );
+    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      setState(() {
+        markers;
+      });
+    });
+    Future.delayed(Duration(minutes: 1), (() {
+      _timer.cancel();
+    }));
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     _googleMapController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -78,7 +81,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                       Provider.of<Anime>(context, listen: false).handleDrawer,
                 ),
               ),
-              actions: [
+              /*actions: [
                 Container(
                   margin: EdgeInsets.only(right: 5),
                   decoration: BoxDecoration(
@@ -90,7 +93,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     icon: Icon(Icons.settings),
                   ),
                 )
-              ],
+              ],*/
               title: const Text('Sightings List'),
             )
           : AppBar(
@@ -109,7 +112,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ),
               //backgroundColor: Colors.transparent,
               //title: const Text('Sightings List'),
-              actions: [
+              /*actions: [
                 Container(
                     margin: EdgeInsets.only(right: 5),
                     decoration: BoxDecoration(
@@ -118,7 +121,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     ),
                     child: IconButton(
                         onPressed: chooseMapIOS, icon: Icon(Icons.settings)))
-              ],
+              ],*/
             ),
       floatingActionButton:
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -163,8 +166,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
             _googleMapController.setMapStyle(
               _mapStyle,
             );
-
             putSightings();
+            setTheState();
           },
           initialCameraPosition: const CameraPosition(
             target: LatLng(-25.377812607116923, 28.315522686420948),
@@ -175,6 +178,20 @@ class _SightingslistPageState extends State<SightingslistPage> {
     );
   }
 
+  /*void addEasyMarker(LatLng latLng) async {
+    Marker marker = Marker(
+       
+        markerId: MarkerId(element.animal_id.toString()),
+          position: LatLng(element.latitude, element.longitude),
+        icon: BitmapDescriptor.fromBytes(await MapMarker.svgToPng(context, )));
+    setState(() {
+      markers.add(marker);
+    });
+    for (Marker m in markers) {
+      print(m.position);
+    }
+  }*/
+
   Future<void> putSightings() async {
     await putLegend(context);
     var fetchedSites = await Sightings.getSightings();
@@ -183,19 +200,21 @@ class _SightingslistPageState extends State<SightingslistPage> {
       fetchedSites.forEach((element) async {
         print(element.animal_id);
 
-        late BitmapDescriptor pinLocationIcon;
-        pinLocationIcon = await setCustomMapPin(element.animal_id.toString());
+        late final pinLocationIcon;
+        pinLocationIcon = await MapMarker.svgToPng(
+            context, getColor(element.animal_id.toString()));
 
-        markers.add(Marker(
-          markerId: MarkerId(element.animal_id.toString()),
-          position: LatLng(element.latitude, element.longitude),
-          icon: pinLocationIcon,
-          infoWindow: InfoWindow(
-            title: getName(element.animal_id),
-            snippet:
-                readTimeStamp(element.sighting_time), //element.sighting_time,
-          ),
-        ));
+        setState(() {
+          markers.add(Marker(
+            markerId: MarkerId(element.animal_id.toString()),
+            position: LatLng(element.latitude, element.longitude),
+            icon: BitmapDescriptor.fromBytes(pinLocationIcon),
+            infoWindow: InfoWindow(
+              title: getName(element.animal_id),
+              snippet: readTimeStamp(element.sighting_time),
+            ),
+          ));
+        });
       });
     });
   }
@@ -209,26 +228,30 @@ class _SightingslistPageState extends State<SightingslistPage> {
     return '';
   }
 
-  Color getColor(String id) {
-    for (var item in currentAnimal =
-        Provider.of<MapsData>(context, listen: false).legendItems) {
+  String getColor(String id) {
+    for (var item
+        in Provider.of<MapsData>(context, listen: false).legendItems) {
       if (item.id == id) {
-        return item.color;
+        print(item.hexColor);
+        return item.hexColor;
       }
     }
-    return Colors.black;
+    return '#FFF';
   }
 
   void addMaker_(LatLng latLng, AnimalSight sighting) async {
     Marker marker = Marker(
-        flat: true,
-        markerId: MarkerId(latLng.toString()),
-        position: latLng,
-        infoWindow: InfoWindow(
-          title: getName(sighting.id),
-          snippet: TimeOfDay.now().format(context),
-        ),
-        icon: await setCustomMapPin(sighting.id));
+      flat: true,
+      markerId: MarkerId(latLng.toString()),
+      position: latLng,
+      infoWindow: InfoWindow(
+        title: getName(sighting.id),
+        snippet: TimeOfDay.now().format(context),
+      ),
+      icon: BitmapDescriptor.fromBytes(
+          await MapMarker.svgToPng(context, sighting.hexColor)),
+      //await setCustomMapPin(sighting.id),
+    );
 
     setState(() {
       markers.add(marker);
@@ -241,6 +264,10 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   Future<void> putLegend(BuildContext context) async {
     legendItems = await Sightings.getColouredAnimal(context);
+  }
+
+  void setTheState() {
+    setState(() {});
   }
 
   void showLegend() {
