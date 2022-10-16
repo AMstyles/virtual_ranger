@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
+import 'package:virtual_ranger/pages/prePage.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
@@ -289,11 +290,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ? AlertDialog(
                                         title: Text('Alert'),
                                         content: Text(
-                                            'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                            'You have successfully changed your offline mode, this will take effect immediately'),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const PrepPage()),
+                                                    (route) => true);
                                               },
                                               child: Text('Ok'))
                                         ],
@@ -301,11 +308,18 @@ class _SettingsPageState extends State<SettingsPage> {
                                     : CupertinoAlertDialog(
                                         title: Text('Offline mode'),
                                         content: Text(
-                                            'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                            'You have successfully changed your offline mode, this will take effect immediately'),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
+                                                //navigate and remove
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const PrepPage()),
+                                                    (route) => true);
                                               },
                                               child: Text('Ok'))
                                         ],
