@@ -333,7 +333,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 }),
           ),
           ListTile(
-            subtitle: Text('Downloaded content details'),
+            subtitle: Text(
+                'Download content to be able to use this app in offline mode'),
             textColor: Colors.red,
             title: const Text(
               'Manage Downloads',

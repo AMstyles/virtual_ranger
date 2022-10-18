@@ -151,28 +151,66 @@ class _SightingslistPageState extends State<SightingslistPage> {
         ),
       ]),
       body: Container(
-        child: GoogleMap(
-          buildingsEnabled: true,
-          compassEnabled: true,
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
-          zoomGesturesEnabled: true,
-          zoomControlsEnabled: false,
-          mapType: mapType,
-          onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
-          markers: markers,
-          onMapCreated: (controller) {
-            _googleMapController = controller;
-            _googleMapController.setMapStyle(
-              _mapStyle,
-            );
-            putSightings();
-            setTheState();
-          },
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(-25.377812607116923, 28.315522686420948),
-            zoom: 15,
-          ),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            GoogleMap(
+              buildingsEnabled: true,
+              compassEnabled: true,
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: false,
+              mapType: mapType,
+              //onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
+              onLongPress:
+                  (currentAnimal != null) ? showConfirmDialog : (ar) {},
+              markers: markers,
+              onMapCreated: (controller) async {
+                _googleMapController = controller;
+                _googleMapController.setMapStyle(
+                  _mapStyle,
+                );
+
+                await putSightings();
+                setTheState();
+              },
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(-25.377812607116923, 28.315522686420948),
+                zoom: 15,
+              ),
+            ),
+            currentAnimal != null
+                ? Positioned(
+                    top: 17,
+                    child: Column(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white.withOpacity(.7)),
+                            child: Text(
+                              'where did you see the ${currentAnimal?.name}?',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            )),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.7)),
+                          child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 500),
+                              opacity: currentAnimal != null ? 1 : 0,
+                              child: Text(
+                                'Hold a Location to drop a pin',
+                                style: TextStyle(color: Colors.blueGrey),
+                              )),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+          ],
         ),
       ),
     );
@@ -240,6 +278,8 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }
 
   void addMaker_(LatLng latLng, AnimalSight sighting) async {
+    final isAdded =
+        await Sightings.uploadMarker(latLng, context, currentAnimal!);
     Marker marker = Marker(
       flat: true,
       markerId: MarkerId(latLng.toString()),
@@ -253,10 +293,15 @@ class _SightingslistPageState extends State<SightingslistPage> {
       //await setCustomMapPin(sighting.id),
     );
 
-    setState(() {
+    if (isAdded) {
+      setState(() {
+        markers.add(marker);
+      });
+    }
+    /*setState(() {
       markers.add(marker);
-    });
-    await Sightings.uploadMarker(latLng, context, currentAnimal!);
+    });*/
+    //await Sightings.uploadMarker(latLng, context, currentAnimal!);
     setState(() {
       currentAnimal = null;
     });
@@ -381,8 +426,11 @@ class _SightingslistPageState extends State<SightingslistPage> {
         builder: (BuildContext context) {
           return Platform.isAndroid
               ? AlertDialog(
-                  title: Text('Confirm'),
-                  content: Text('Are you sure you want to add this sighting?'),
+                  //title: Text('Confirm'),
+                  content: Text(
+                    'Are you sure you want to add this sighting on the selected location?',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  ),
                   actions: [
                     TextButton(
                         onPressed: () {
@@ -396,16 +444,20 @@ class _SightingslistPageState extends State<SightingslistPage> {
                           style: TextStyle(color: Colors.red),
                         )),
                     TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          addMaker_(currPos, currentAnimal!);
-                        },
-                        child: Text('Confirm')),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        addMaker_(currPos, currentAnimal!);
+                      },
+                      child: Text('Yes'),
+                    ),
                   ],
                 )
               : CupertinoAlertDialog(
-                  title: Text('Confirm'),
-                  content: Text('Are you sure you want to add this sighting?'),
+                  //title: Text('Confirm'),
+                  content: Text(
+                    'Are you sure you want to add this sighting on the selected location?',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  ),
                   actions: [
                     CupertinoDialogAction(
                         onPressed: () {
@@ -419,11 +471,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
                           style: TextStyle(color: Colors.red),
                         )),
                     CupertinoDialogAction(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          addMaker_(currPos, currentAnimal!);
-                        },
-                        child: Text('Confirm')),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        addMaker_(currPos, currentAnimal!);
+                      },
+                      child: Text('Yes'),
+                    ),
                   ],
                 );
         });
@@ -511,7 +564,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                         setState(() {
                           currentAnimal = item;
                         });
-                        showDialog(
+                        /*showDialog(
                             context: context,
                             builder: (context) {
                               return CupertinoAlertDialog(
@@ -526,7 +579,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                                       child: Text('Ok'))
                                 ],
                               );
-                            });
+                            });*/
                       },
                     )
                 ],

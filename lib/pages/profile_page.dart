@@ -103,14 +103,32 @@ class _ProfilePageState extends State<ProfilePage> {
         Provider.of<UserProvider>(context, listen: false).user!.name;
     _emailController.text =
         Provider.of<UserProvider>(context, listen: false).user!.email;
-    _countryController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.country ?? "";
+    if ((Provider.of<UserProvider>(context, listen: false).user!.country ??
+            "") ==
+        'Unknown') {
+      _countryController.text = "";
+    } else {
+      _countryController.text =
+          Provider.of<UserProvider>(context, listen: false).user!.country ?? "";
+    }
 
-    _cityController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.city ?? "";
+    if ((Provider.of<UserProvider>(context, listen: false).user!.city ?? "")
+            .toLowerCase() ==
+        'other') {
+      _cityController.text = "";
+    } else {
+      _cityController.text =
+          Provider.of<UserProvider>(context, listen: false).user!.city ?? "";
+    }
 
-    _phoneController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.mobile ?? "";
+    if ((Provider.of<UserProvider>(context, listen: false).user!.mobile ??
+            "") ==
+        'Unknown') {
+      _phoneController.text = "";
+    } else {
+      _phoneController.text =
+          Provider.of<UserProvider>(context, listen: false).user!.mobile ?? "";
+    }
 
     _ageController.text =
         Provider.of<UserProvider>(context, listen: false).user!.age_range ?? "";

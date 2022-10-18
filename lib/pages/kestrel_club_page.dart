@@ -30,13 +30,16 @@ class _Kestrel_club_pageState extends State<Kestrel_club_page> {
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: [
-          Text(
-              'Collect 12 Kestrel Club points and claim your rewards!\nPlease visit www.virtualranger.co.za for details.',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Text(
+                'Collect 12 Kestrel Club points and claim your rewards!\nPlease visit www.virtualranger.co.za for details.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                )),
+          ),
           KestrelBirds(
             count: Provider.of<UserProvider>(context).user!.kestle_points,
           ),

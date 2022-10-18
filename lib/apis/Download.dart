@@ -298,20 +298,20 @@ class DownLoad {
       InAppNotification.show(
           duration: const Duration(seconds: 3),
           onTap: () => Provider.of<PageProvider>(context, listen: false)
-              .jumpToDownload(),
+              .jumpToSettings(),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 child: Row(
                   children: [
-                    Expanded(child: Text('Download is almost complete')),
+                    Expanded(child: Text('Download complete')),
                     Expanded(
                         child: CupertinoButton(
                             child: Text('toggle offline'),
                             onPressed: () => Provider.of<PageProvider>(context,
                                     listen: false)
-                                .jumpToDownload()))
+                                .jumpToSettings()))
                   ],
                 ),
               ),
@@ -470,6 +470,7 @@ class DownLoad {
         await dio.download(url, filePath);
       } catch (e) {
         print(e);
+        await dio.download(url, filePath);
       }
     }
   }

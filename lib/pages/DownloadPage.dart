@@ -122,7 +122,7 @@ class _DownloadPageState extends State<DownloadPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Please do not exit the app while downloading, this may take a while depending on your internet connection, you will be notified when the download is complete. Stay within the App to ensure the download is successful.',
+                            'Please do not exit the app while downloading, this may take a while depending on your internet connection, you will be notified when the download is complete. Stay within the App to ensure the download completes successful.',
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
@@ -308,14 +308,16 @@ class _DownloadPageState extends State<DownloadPage> {
               color: MyColors.primaryColor,
               child: Text(
                   (lastSync == 'never synced') ? 'Download & Sync' : 'Sync'),
-              onPressed: () {
+              onPressed: () async {
                 Permissionsapi.askStoragePermission();
-                setState(() {
-                  _downloading = true;
-                  getMetaData();
-                });
-                setState(() {
-                  getMetaData();
+                await DownLoad.downloadAllJson().then((value) {
+                  setState(() {
+                    _downloading = true;
+                    getMetaData();
+                  });
+                 /* setState(() {
+                    getMetaData();
+                  });*/
                 });
               },
             ),
