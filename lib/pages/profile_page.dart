@@ -103,14 +103,32 @@ class _ProfilePageState extends State<ProfilePage> {
         Provider.of<UserProvider>(context, listen: false).user!.name;
     _emailController.text =
         Provider.of<UserProvider>(context, listen: false).user!.email;
-    _countryController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.country ?? "";
+    if ((Provider.of<UserProvider>(context, listen: false).user!.country ??
+            "") ==
+        'unknown') {
+      _countryController.text = "";
+    } else {
+      _countryController.text =
+          Provider.of<UserProvider>(context, listen: false).user!.country ?? "";
+    }
 
-    _cityController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.city ?? "";
+    if ((Provider.of<UserProvider>(context, listen: false).user!.city ?? "")
+            .toLowerCase() ==
+        'other') {
+      _cityController.text = "";
+    } else {
+      _cityController.text =
+          Provider.of<UserProvider>(context, listen: false).user!.city ?? "";
+    }
 
-    _phoneController.text =
-        Provider.of<UserProvider>(context, listen: false).user!.mobile ?? "";
+    if ((Provider.of<UserProvider>(context, listen: false).user!.mobile ??
+            "") ==
+        'unknown') {
+      _phoneController.text = "";
+    } else {
+      _phoneController.text =
+          Provider.of<UserProvider>(context, listen: false).user!.mobile ?? "";
+    }
 
     _ageController.text =
         Provider.of<UserProvider>(context, listen: false).user!.age_range ?? "";
@@ -302,14 +320,17 @@ class _ProfilePageState extends State<ProfilePage> {
           ProfileTextField(
             controller: _currPassController,
             hint: 'Current Password',
+            obscureText: true,
           ),
           ProfileTextField(
             controller: _newPassController,
             hint: 'New Password',
+            obscureText: true,
           ),
           ProfileTextField(
             controller: _reNewPassController,
             hint: 'Re-enter New Password',
+            obscureText: true,
           ),
           _buildSignUpButton(context, 'CHANGE PASSWORD'),
         ]),
@@ -464,38 +485,39 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (finalData['success'] == true) {
       showDialog(
-          context: context,
-          builder: (context) => Platform.isAndroid
-              ? AlertDialog(
-                  title: const Text(
-                    'Success',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  content: const Text("Profile updated"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Ok'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                )
-              : CupertinoAlertDialog(
-                  title: const Text(
-                    'Success',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  content: const Text("Profile updated"),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Ok'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                ));
+        context: context,
+        builder: (context) => Platform.isAndroid
+            ? AlertDialog(
+                title: const Text(
+                  'Success',
+                  style: TextStyle(color: Colors.green),
+                ),
+                content: const Text("Profile updated"),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              )
+            : CupertinoAlertDialog(
+                title: const Text(
+                  'Success',
+                  style: TextStyle(color: Colors.green),
+                ),
+                content: const Text("Profile updated"),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Ok'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+      );
     } else {
       showDialog(
           context: context,

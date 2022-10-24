@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:virtual_ranger/pages/DownloadPage.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/user.dart';
@@ -30,6 +31,11 @@ void removeAndAddPage() {
   addPage();
 }
 
+/*void restartSightingsPage() {
+  mainPages.removeAt(4);
+  mainPages.insert(4, SightingslistPage());
+}*/
+
 void removePage() {
   mainPages.removeAt(9);
 }
@@ -42,6 +48,7 @@ class PageProvider extends ChangeNotifier {
   var currentPage;
   late int currentPageNum;
   late bool universalOffline;
+  late bool hasConnection;
 
   PageProvider() {
     currentPageNum = 1;
@@ -72,10 +79,19 @@ class PageProvider extends ChangeNotifier {
 
   void jumpToSettings() {
     switchPage(8);
+    notifyListeners();
   }
 
   void jumpToDownload() {
     switchPage(9);
+    notifyListeners();
+  }
+
+  //constructor
+  void setConnection() async {
+    hasConnection = await InternetConnectionChecker().hasConnection;
+
+    notifyListeners();
   }
 }
 

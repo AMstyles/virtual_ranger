@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Home/deals_tab.dart';
 import 'package:virtual_ranger/pages/Home/news_tab.dart';
 import 'package:virtual_ranger/services/getRequests.dart';
+import '../services/page_service.dart';
 import 'Custom/AnimeVals.dart';
 
 class NewsAndDealsPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getNews();
   }
 
@@ -25,6 +27,12 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        /*floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Provider.of<PageProvider>(context, listen: false).jumpToSettings();
+          },
+          child: Icon(Icons.add),
+        ),*/
         appBar: AppBar(
           bottom: TabBar(
               unselectedLabelColor: Colors.green,

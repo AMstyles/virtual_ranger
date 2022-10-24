@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
@@ -121,7 +122,7 @@ class _DownloadPageState extends State<DownloadPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Please do not exit the app while downloading, this may take a while depending on your internet connection, you will be notified when the download is complete. Stay within the App to ensure the download is successful.',
+                            'Please do not exit the app while downloading, this may take a while depending on your internet connection, you will be notified when the download is complete. Stay within the App to ensure the download completes successful.',
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
@@ -201,17 +202,24 @@ class _DownloadPageState extends State<DownloadPage> {
                               });
                             });
                             showDialog(
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (context) {
                                   return Platform.isAndroid
                                       ? AlertDialog(
                                           title: Text('Alert'),
                                           content: Text(
-                                              'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                              'You have successfully changed your offline mode, this will take effect immediately'),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
+                                                  //Navigator.pop(context);
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              DrawerApp()));
                                                 },
                                                 child: Text('Ok'))
                                           ],
@@ -219,11 +227,17 @@ class _DownloadPageState extends State<DownloadPage> {
                                       : CupertinoAlertDialog(
                                           title: Text('Offline mode'),
                                           content: Text(
-                                              'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                              'You have successfully changed your offline mode, this will take effect immediately'),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
+                                                  //Navigator.pop(context);
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              DrawerApp()));
                                                 },
                                                 child: Text('Ok'))
                                           ],
@@ -282,7 +296,8 @@ class _DownloadPageState extends State<DownloadPage> {
                     ),
                   )
                 : Container(
-                    child: Text((lastSync != 'never synched')
+                    padding: EdgeInsets.all(8),
+                    child: Text((lastSync != 'never synced')
                         ? 'You have content synced on $lastSync \n '
                         : 'You have never synced content, please sync content to go offline'),
                   ),
@@ -293,15 +308,17 @@ class _DownloadPageState extends State<DownloadPage> {
             CupertinoButton(
               color: MyColors.primaryColor,
               child: Text(
-                  (lastSync == 'never synched') ? 'Downnload & Sync' : 'Sync'),
-              onPressed: () {
+                  (lastSync == 'never synced') ? 'Download & Sync' : 'Sync'),
+              onPressed: () async {
                 Permissionsapi.askStoragePermission();
-                setState(() {
-                  _downloading = true;
-                  getMetaData();
-                });
-                setState(() {
-                  getMetaData();
+                await DownLoad.downloadAllJson().then((value) {
+                  setState(() {
+                    _downloading = true;
+                    getMetaData();
+                  });
+                  /* setState(() {
+                    getMetaData();
+                  });*/
                 });
               },
             ),

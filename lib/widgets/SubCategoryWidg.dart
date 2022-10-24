@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,12 +33,12 @@ class _SubCategoryWidgState extends State<SubCategoryWidg> {
         }));
       },
       child: Padding(
-        padding: const EdgeInsets.all(0),
+        padding: const EdgeInsets.all(8),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 110,
           decoration: BoxDecoration(
-            //borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
                 image: Provider.of<UserProvider>(context).isOffLine ?? false
                     ? FileImage(File(
@@ -47,7 +46,7 @@ class _SubCategoryWidgState extends State<SubCategoryWidg> {
                         as ImageProvider
                     : CachedNetworkImageProvider(SUBCATEGORY_IMAGE_URL +
                         widget.subCategory.BackgroundImage),
-                fit: BoxFit.fill),
+                fit: BoxFit.cover),
           ),
           child: Center(
               child: Text(

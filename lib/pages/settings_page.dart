@@ -6,7 +6,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
+import 'package:virtual_ranger/pages/prePage.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import '../DrawerApp.dart';
 import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 
@@ -51,15 +53,10 @@ class _SettingsPageState extends State<SettingsPage> {
         checkContent = value;
       });
     });
-    /*UserData.getSettings('offlineMode').then((value) {
-      setState(() {
-        isOffline = value;
-      });
-    });*/
 
     _timer = Timer.periodic(Duration(milliseconds: 1600), (timer) {
       if (!checkContent &&
-          Provider.of<PageProvider>(context).universalOffline) {
+          Provider.of<PageProvider>(context, listen: false).universalOffline) {
         if (_color == Colors.green.withOpacity(0.5)) {
           setState(() {
             _color = Colors.transparent;
@@ -169,7 +166,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   'Automatically download & sync new content when Offline Mode is toggled ON'),
               onTap: () {
                 setState(() {
-                  if (Provider.of<PageProvider>(context).universalOffline) {
+                  if (Provider.of<PageProvider>(context, listen: false)
+                      .universalOffline) {
                     checkContent = !checkContent;
                     //set the value in the shared preferences
                     UserData.setSettings('checkContent', checkContent);
@@ -185,7 +183,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    Provider.of<PageProvider>(context)
+                                    Provider.of<PageProvider>(context,
+                                            listen: false)
                                         .jumpToDownload();
                                   },
                                   child: const Text('OK'))
@@ -230,7 +229,8 @@ class _SettingsPageState extends State<SettingsPage> {
               });
             },
             trailing: Switch.adaptive(
-                value: Provider.of<PageProvider>(context).universalOffline,
+                value: Provider.of<PageProvider>(context, listen: false)
+                    .universalOffline,
                 onChanged: (newbBol) {
                   setState(() {
                     //if the get settings is false in shared preferences, disable the switch
@@ -291,11 +291,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ? AlertDialog(
                                         title: Text('Alert'),
                                         content: Text(
-                                            'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                            'You have successfully changed your offline mode, this will take effect immediately'),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const PrepPage()),
+                                                    (route) => true);
                                               },
                                               child: Text('Ok'))
                                         ],
@@ -303,11 +309,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                     : CupertinoAlertDialog(
                                         title: Text('Offline mode'),
                                         content: Text(
-                                            'You have successfully changed your offline mode, this will take effect the next time you open the app'),
+                                            'You have successfully changed your offline mode, this will take effect immediately'),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
+                                                //Navigator.pop(context);
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DrawerApp()));
                                               },
                                               child: Text('Ok'))
                                         ],
@@ -321,7 +333,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 }),
           ),
           ListTile(
-            subtitle: Text('Downloaded content details'),
+            subtitle: Text(
+                'Download content to be able to use this app in offline mode'),
             textColor: Colors.red,
             title: const Text(
               'Manage Downloads',

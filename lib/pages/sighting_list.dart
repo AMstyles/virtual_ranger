@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_ranger/extensions/colorExtension.dart';
 import 'package:virtual_ranger/models/animalforSIGHT.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,6 +27,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
   String _mapStyle = '';
   var mapType = MapType.normal;
   var markers = Set<Marker>();
+  late Timer _timer;
 
   void askLocationPermission() async {
     await Permission.location.request();
@@ -39,21 +42,21 @@ class _SightingslistPageState extends State<SightingslistPage> {
     rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {
       _mapStyle = string;
     });
-    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet);
-  }
-
-  Future<BitmapDescriptor> setCustomMapPin(id) {
-    return BitmapDescriptor.fromAssetImage(
-      mipmaps: true,
-      ImageConfiguration(devicePixelRatio: 2.5, size: Size(10, 10)),
-      'lib/icons/location' + id + '.png',
-    );
+    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      setState(() {
+        markers;
+      });
+    });
+    Future.delayed(Duration(minutes: 1), (() {
+      _timer.cancel();
+    }));
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     _googleMapController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -78,7 +81,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                       Provider.of<Anime>(context, listen: false).handleDrawer,
                 ),
               ),
-              actions: [
+              /*actions: [
                 Container(
                   margin: EdgeInsets.only(right: 5),
                   decoration: BoxDecoration(
@@ -90,7 +93,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     icon: Icon(Icons.settings),
                   ),
                 )
-              ],
+              ],*/
               title: const Text('Sightings List'),
             )
           : AppBar(
@@ -109,7 +112,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
               ),
               //backgroundColor: Colors.transparent,
               //title: const Text('Sightings List'),
-              actions: [
+              /*actions: [
                 Container(
                     margin: EdgeInsets.only(right: 5),
                     decoration: BoxDecoration(
@@ -118,7 +121,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                     ),
                     child: IconButton(
                         onPressed: chooseMapIOS, icon: Icon(Icons.settings)))
-              ],
+              ],*/
             ),
       floatingActionButton:
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -148,32 +151,84 @@ class _SightingslistPageState extends State<SightingslistPage> {
         ),
       ]),
       body: Container(
-        child: GoogleMap(
-          buildingsEnabled: true,
-          compassEnabled: true,
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
-          zoomGesturesEnabled: true,
-          zoomControlsEnabled: false,
-          mapType: mapType,
-          onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
-          markers: markers,
-          onMapCreated: (controller) {
-            _googleMapController = controller;
-            _googleMapController.setMapStyle(
-              _mapStyle,
-            );
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            GoogleMap(
+              buildingsEnabled: true,
+              compassEnabled: true,
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: false,
+              mapType: mapType,
+              //onTap: (currentAnimal != null) ? showConfirmDialog : (ar) {},
+              onLongPress:
+                  (currentAnimal != null) ? showConfirmDialog : (ar) {},
+              markers: markers,
+              onMapCreated: (controller) async {
+                _googleMapController = controller;
+                _googleMapController.setMapStyle(
+                  _mapStyle,
+                );
 
-            putSightings();
-          },
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(-25.377812607116923, 28.315522686420948),
-            zoom: 15,
-          ),
+                await putSightings();
+                setTheState();
+              },
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(-25.377812607116923, 28.315522686420948),
+                zoom: 15,
+              ),
+            ),
+            currentAnimal != null
+                ? Positioned(
+                    top: 17,
+                    child: Column(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white.withOpacity(.7)),
+                            child: Text(
+                              'where did you see the ${currentAnimal?.name}?',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            )),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.7)),
+                          child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 500),
+                              opacity: currentAnimal != null ? 1 : 0,
+                              child: Text(
+                                'Hold a Location to drop a pin',
+                                style: TextStyle(color: Colors.blueGrey),
+                              )),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox(),
+          ],
         ),
       ),
     );
   }
+
+  /*void addEasyMarker(LatLng latLng) async {
+    Marker marker = Marker(
+       
+        markerId: MarkerId(element.animal_id.toString()),
+          position: LatLng(element.latitude, element.longitude),
+        icon: BitmapDescriptor.fromBytes(await MapMarker.svgToPng(context, )));
+    setState(() {
+      markers.add(marker);
+    });
+    for (Marker m in markers) {
+      print(m.position);
+    }
+  }*/
 
   Future<void> putSightings() async {
     await putLegend(context);
@@ -183,19 +238,21 @@ class _SightingslistPageState extends State<SightingslistPage> {
       fetchedSites.forEach((element) async {
         print(element.animal_id);
 
-        late BitmapDescriptor pinLocationIcon;
-        pinLocationIcon = await setCustomMapPin(element.animal_id.toString());
+        late final pinLocationIcon;
+        pinLocationIcon = await MapMarker.svgToPng(
+            context, getColor(element.animal_id.toString()));
 
-        markers.add(Marker(
-          markerId: MarkerId(element.animal_id.toString()),
-          position: LatLng(element.latitude, element.longitude),
-          icon: pinLocationIcon,
-          infoWindow: InfoWindow(
-            title: getName(element.animal_id),
-            snippet:
-                readTimeStamp(element.sighting_time), //element.sighting_time,
-          ),
-        ));
+        setState(() {
+          markers.add(Marker(
+            markerId: MarkerId(element.animal_id.toString()),
+            position: LatLng(element.latitude, element.longitude),
+            icon: BitmapDescriptor.fromBytes(pinLocationIcon),
+            infoWindow: InfoWindow(
+              title: getName(element.animal_id),
+              snippet: readTimeStamp(element.sighting_time),
+            ),
+          ));
+        });
       });
     });
   }
@@ -209,31 +266,42 @@ class _SightingslistPageState extends State<SightingslistPage> {
     return '';
   }
 
-  Color getColor(String id) {
-    for (var item in currentAnimal =
-        Provider.of<MapsData>(context, listen: false).legendItems) {
+  String getColor(String id) {
+    for (var item
+        in Provider.of<MapsData>(context, listen: false).legendItems) {
       if (item.id == id) {
-        return item.color;
+        print(item.hexColor);
+        return item.hexColor;
       }
     }
-    return Colors.black;
+    return '#FFF';
   }
 
   void addMaker_(LatLng latLng, AnimalSight sighting) async {
+    final isAdded =
+        await Sightings.uploadMarker(latLng, context, currentAnimal!);
     Marker marker = Marker(
-        flat: true,
-        markerId: MarkerId(latLng.toString()),
-        position: latLng,
-        infoWindow: InfoWindow(
-          title: getName(sighting.id),
-          snippet: TimeOfDay.now().format(context),
-        ),
-        icon: await setCustomMapPin(sighting.id));
+      flat: true,
+      markerId: MarkerId(latLng.toString()),
+      position: latLng,
+      infoWindow: InfoWindow(
+        title: getName(sighting.id),
+        snippet: TimeOfDay.now().format(context),
+      ),
+      icon: BitmapDescriptor.fromBytes(
+          await MapMarker.svgToPng(context, sighting.hexColor)),
+      //await setCustomMapPin(sighting.id),
+    );
 
-    setState(() {
+    if (isAdded) {
+      setState(() {
+        markers.add(marker);
+      });
+    }
+    /*setState(() {
       markers.add(marker);
-    });
-    await Sightings.uploadMarker(latLng, context, currentAnimal!);
+    });*/
+    //await Sightings.uploadMarker(latLng, context, currentAnimal!);
     setState(() {
       currentAnimal = null;
     });
@@ -241,6 +309,10 @@ class _SightingslistPageState extends State<SightingslistPage> {
 
   Future<void> putLegend(BuildContext context) async {
     legendItems = await Sightings.getColouredAnimal(context);
+  }
+
+  void setTheState() {
+    setState(() {});
   }
 
   void showLegend() {
@@ -354,8 +426,11 @@ class _SightingslistPageState extends State<SightingslistPage> {
         builder: (BuildContext context) {
           return Platform.isAndroid
               ? AlertDialog(
-                  title: Text('Confirm'),
-                  content: Text('Are you sure you want to add this sighting?'),
+                  //title: Text('Confirm'),
+                  content: Text(
+                    'Are you sure you want to add this sighting on the selected location?',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  ),
                   actions: [
                     TextButton(
                         onPressed: () {
@@ -369,16 +444,20 @@ class _SightingslistPageState extends State<SightingslistPage> {
                           style: TextStyle(color: Colors.red),
                         )),
                     TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          addMaker_(currPos, currentAnimal!);
-                        },
-                        child: Text('Confirm')),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        addMaker_(currPos, currentAnimal!);
+                      },
+                      child: Text('Yes'),
+                    ),
                   ],
                 )
               : CupertinoAlertDialog(
-                  title: Text('Confirm'),
-                  content: Text('Are you sure you want to add this sighting?'),
+                  //title: Text('Confirm'),
+                  content: Text(
+                    'Are you sure you want to add this sighting on the selected location?',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  ),
                   actions: [
                     CupertinoDialogAction(
                         onPressed: () {
@@ -392,11 +471,12 @@ class _SightingslistPageState extends State<SightingslistPage> {
                           style: TextStyle(color: Colors.red),
                         )),
                     CupertinoDialogAction(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          addMaker_(currPos, currentAnimal!);
-                        },
-                        child: Text('Confirm')),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        addMaker_(currPos, currentAnimal!);
+                      },
+                      child: Text('Yes'),
+                    ),
                   ],
                 );
         });
@@ -484,7 +564,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                         setState(() {
                           currentAnimal = item;
                         });
-                        showDialog(
+                        /*showDialog(
                             context: context,
                             builder: (context) {
                               return CupertinoAlertDialog(
@@ -499,7 +579,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                                       child: Text('Ok'))
                                 ],
                               );
-                            });
+                            });*/
                       },
                     )
                 ],

@@ -97,10 +97,8 @@ class BusinessListingWidg extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 (businessListing.bookLink != null)
-                                    ? CupertinoButton(
-                                        color: CupertinoColors.activeGreen,
-                                        child: const Text('book now'),
-                                        onPressed: () async {
+                                    ? GestureDetector(
+                                        onTap: () async {
                                           final url = Uri.parse(
                                               businessListing.bookLink!);
                                           if (await canLaunchUrl(url)) {
@@ -116,12 +114,50 @@ class BusinessListingWidg extends StatelessWidget {
                                             throw 'Could not launch $url';
                                           }
                                         },
+                                        child: Container(
+                                          padding: EdgeInsets.all(20),
+                                          decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          child: Center(
+                                            child: const Text(
+                                              'book now',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
                                       )
                                     : const SizedBox(),
-                                CupertinoButton(
-                                  color: CupertinoColors.destructiveRed,
-                                  child: const Text('Close'),
-                                  onPressed: () => Navigator.pop(context),
+                                GestureDetector(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    child: Center(
+                                      child: const Text(
+                                        'Close',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ), /*CupertinoButton(
+                                      color: CupertinoColors.destructiveRed,
+                                      child: const Text('Close'),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),*/
+                                  ),
                                 ),
                               ],
                             )

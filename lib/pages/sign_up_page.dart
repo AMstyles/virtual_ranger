@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/In.dart';
 import 'package:virtual_ranger/services/LoginProviders.dart';
@@ -12,7 +13,6 @@ import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
-
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -24,6 +24,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   late String data;
   late User user;
+  late final sharePrefs;
   Map userObj = {};
 
   TextEditingController _nameController = TextEditingController();
@@ -31,7 +32,6 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _mobileController = TextEditingController();
-
 
   late String name;
   late String email;
@@ -41,11 +41,11 @@ class _SignUpPageState extends State<SignUpPage> {
   late String gender;
   late String mobile;
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    sharePrefs = SharedPreferences.getInstance();
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
@@ -208,6 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+            showDialogs();
           } else {
             final things = await signUpAPI.signUpG(
                 nice.displayName ?? "",
@@ -229,6 +230,7 @@ class _SignUpPageState extends State<SignUpPage> {
             Navigator.pop(context);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+            showDialogs();
           }
         } else {}
         auth.FirebaseAuth.instance.signOut();
@@ -264,29 +266,76 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildAppleSignInButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 5),
-      alignment: Alignment.center,
-      height: 45,
-      width: 140,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          Icon(
-            Icons.apple,
-            color: Colors.white,
-            size: 40,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "Sign in with Apple",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () async {
+        final provider =
+            Provider.of<AppleLoginProvider>(context, listen: false);
+        await provider.LoginWithApple();
+        if (auth.FirebaseAuth.instance.currentUser != null) {
+          print("instance not null");
+          final nice = auth.FirebaseAuth.instance.currentUser;
+          print("name is: " + nice!.email!.toString());
+
+          final vedict = await signUpAPI.signInWithGoogle(nice.email ?? '');
+          final finalVedict = jsonDecode(vedict);
+          print(finalVedict);
+
+          if (finalVedict['success'] == true) {
+            final userToBe = User.fromjson((finalVedict['data']));
+            UserData.setUser(userToBe);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+            showDialogs();
+          } else {
+            final things = await signUpAPI.signUp(
+                nice.displayName ?? "",
+                nice.email ?? '',
+                nice.phoneNumber ?? '  ',
+                'none',
+                'none',
+                '000000',
+                '000000');
+
+            await auth.FirebaseAuth.instance.signOut();
+
+            print(things);
+            final perfectThings = jsonDecode(things);
+
+            final userToBe = User.fromjson(perfectThings['data']);
+            Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+            showDialogs();
+          }
+        } else {}
+        auth.FirebaseAuth.instance.signOut();
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 5),
+        alignment: Alignment.center,
+        height: 45,
+        width: 140,
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Icon(
+              Icons.apple,
+              color: Colors.white,
+              size: 40,
+            ),
+            SizedBox(width: 20),
+            Text(
+              "Sign in with Apple",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -325,6 +374,7 @@ class _SignUpPageState extends State<SignUpPage> {
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
+            showDialogs();
           } else {
             final things = await signUpAPI.signUpG(
                 nice.displayName ?? "",
@@ -348,6 +398,7 @@ class _SignUpPageState extends State<SignUpPage> {
             Navigator.of(context).push(MaterialPageRoute(
               builder: ((context) => DrawerApp()),
             ));
+            showDialogs();
           }
         }
       },
@@ -490,6 +541,7 @@ class _SignUpPageState extends State<SignUpPage> {
       Provider.of<UserProvider>(context, listen: false).setUser(user);
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => DrawerApp()));
+      showDialogs();
     } else {
       showDialog(
         context: context,
@@ -521,5 +573,149 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     }
     //print(finalData['success']);
+  }
+
+  void showDialogs() async {
+    getOffline().then((value) async {
+      if (value) {
+        final pref = await SharedPreferences.getInstance();
+        final condition = await pref.getBool('opened1') ?? false;
+
+        !condition
+            ? showDialog(
+                context: context,
+                builder: (context) => Platform.isAndroid
+                    ? AlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("Dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened1", true);
+                                Navigator.pop(context);
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToSettings();
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      )
+                    : CupertinoAlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened1", true);
+
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToSettings();
+                                Navigator.pop(context);
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      ),
+              )
+            : () {};
+      } else {
+        final pref = await SharedPreferences.getInstance();
+        final condition = await pref.getBool('opened') ?? false;
+
+        !condition
+            ? showDialog(
+                context: context,
+                builder: (context) => Platform.isAndroid
+                    ? AlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "To use this app in areas without signal please go to settings, download content and toggle on offline mode"),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("Dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened", true);
+                                Navigator.pop(context);
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToDownload();
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      )
+                    : CupertinoAlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "To use this app in areas without signal please go to settings, download content and toggle on offline mode"),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened", true);
+                                Navigator.pop(context);
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToDownload();
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      ),
+              )
+            : () {};
+      }
+    });
+  }
+
+  Future<bool> getOffline() async {
+    SharedPreferences prefs = await sharePrefs;
+    return await prefs.getBool('offlineMode') ?? false;
   }
 }

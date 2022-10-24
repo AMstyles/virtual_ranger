@@ -1,8 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_notification/in_app_notification.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
@@ -32,6 +31,7 @@ class DrawerApp extends StatefulWidget {
 
 class _DrawerAppState extends State<DrawerApp> {
   late final sharePrefs;
+
   //pages
   final List<Widget> pages = [
     ProfilePage(),
@@ -45,9 +45,17 @@ class _DrawerAppState extends State<DrawerApp> {
     SettingsPage(),
   ];
 
+  Future<bool> getConnection() async {
+    return await InternetConnectionChecker().hasConnection;
+  }
+
   @override
   void initState() {
     super.initState();
+    getConnection().then((value) {
+      Provider.of<PageProvider>(context, listen: false).setConnection();
+    });
+
     Permissionsapi.askLocationPermission();
     sharePrefs = SharedPreferences.getInstance();
     UserData.getOfflineMode().then((value) => setState(() {
@@ -57,28 +65,74 @@ class _DrawerAppState extends State<DrawerApp> {
     Provider.of<MapsData>(context, listen: false).getEm();
     Provider.of<MapsData>(context, listen: false).putLegend(context);
 
-    getOffline().then((value) async {
+    /*getOffline().then((value) async {
       if (value) {
-        InAppNotification.show(
-          onTap: () => Provider.of<PageProvider>(context, listen: false)
-              .jumpToSettings(),
-          duration: Duration(seconds: 3),
-          child: Card(
-            borderOnForeground: true,
-            shadowColor: Colors.blue,
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "You are currently in offline mode. Toggle it off to use all features \n Tap here to go to settings",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-          context: context,
-        );
+        final pref = await SharedPreferences.getInstance();
+        final condition = await pref.getBool('opened1') ?? false;
+
+        !condition
+            ? showDialog(
+                context: context,
+                builder: (context) => Platform.isAndroid
+                    ? AlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("Dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened1", true);
+                                Navigator.pop(context);
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToSettings();
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      )
+                    : CupertinoAlertDialog(
+                        title: Text(
+                          "Welcome to Virtual Ranger",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                        content: Text(
+                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("dismiss",
+                                  style: TextStyle(color: Colors.red))),
+                          TextButton(
+                              onPressed: () async {
+                                final useful =
+                                    await SharedPreferences.getInstance();
+                                useful.setBool("opened1", true);
+
+                                Provider.of<PageProvider>(context,
+                                        listen: false)
+                                    .jumpToSettings();
+                                Navigator.pop(context);
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      ),
+              )
+            : () {};
       } else {
         final pref = await SharedPreferences.getInstance();
         final condition = await pref.getBool('opened') ?? false;
@@ -146,6 +200,11 @@ class _DrawerAppState extends State<DrawerApp> {
               )
             : () {};
       }
+    });*/
+
+    Future.delayed(Duration(seconds: 1), () {
+      mainPages.removeAt(4);
+      mainPages.insert(4, SightingslistPage());
     });
   }
 

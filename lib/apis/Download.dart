@@ -9,28 +9,31 @@ import 'package:virtual_ranger/apis/Animal&Plants_apis.dart';
 import 'package:virtual_ranger/apis/newsapi.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import '../models/constants.dart';
-import '../pages/Custom/AnimeVals.dart';
 import '../services/shared_preferences.dart';
 import 'businesslistingsapi.dart';
 import 'eventapi.dart';
 
 class DownLoad {
   static Future<void> downloadAllJson() async {
-    DownloadNews();
-    print("success 1");
-    DownloadEvents();
-    print("success 2");
-    DownloadBusinessListings();
-    print("success 3");
-    DownloadFAQ();
-    print("success 4");
-    DownloadSpecies();
-    print("success 5");
-    DownloadCategories();
-    print("success 6");
-    DownloadSubCategories();
-    print("success last");
-    DownloadImages();
+    try {
+      DownloadNews();
+      print("success 1");
+      DownloadEvents();
+      print("success 2");
+      DownloadBusinessListings();
+      print("success 3");
+      DownloadFAQ();
+      print("success 4");
+      DownloadSpecies();
+      print("success 5");
+      DownloadCategories();
+      print("success 6");
+      DownloadSubCategories();
+      print("success last");
+      DownloadImages();
+    } catch (e) {
+      downloadAllJson();
+    }
   }
 
   static Future<void> updateAlert(BuildContext context) async {
@@ -290,25 +293,24 @@ class DownLoad {
     await downloadSubCategoryImage(context);
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
-
     Future.delayed(Duration(seconds: 1), () {
       InAppNotification.show(
           duration: const Duration(seconds: 3),
           onTap: () => Provider.of<PageProvider>(context, listen: false)
-              .jumpToDownload(),
+              .jumpToSettings(),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 child: Row(
                   children: [
-                    Expanded(child: Text('Download is almost complete')),
+                    Expanded(child: Text('Download complete')),
                     Expanded(
                         child: CupertinoButton(
                             child: Text('toggle offline'),
                             onPressed: () => Provider.of<PageProvider>(context,
                                     listen: false)
-                                .jumpToDownload()))
+                                .jumpToSettings()))
                   ],
                 ),
               ),
@@ -394,7 +396,7 @@ class DownLoad {
     });
   }
 
-  static downloadBusinessListingsImages(context) {
+  static downloadBusinessListingsImages(BuildContext context) {
     BusinessListingsapi.getBusinessListingsFromLocal().then((BL) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(BL.length);
@@ -414,7 +416,7 @@ class DownLoad {
     });
   }
 
-  static downloadCategoryImage(context) {
+  static downloadCategoryImage(BuildContext context) {
     Categoryapi.getCategoriesFromLocal().then((Category) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(Category.length);
@@ -428,7 +430,7 @@ class DownLoad {
     });
   }
 
-  static downloadSubCategoryImage(context) {
+  static downloadSubCategoryImage(BuildContext context) {
     SubCategoryapi.getSubCategoriesFromLocal().then((SubCategory) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(SubCategory.length);
@@ -443,7 +445,7 @@ class DownLoad {
     });
   }
 
-  static downloadSpeciesImage(context) async {
+  static downloadSpeciesImage(BuildContext context) async {
     await Imageapi.getImagesForDownload().then((Species) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(Species.length);
@@ -457,16 +459,17 @@ class DownLoad {
 
   static Future<void> getIm(String url) async {
     Dio dio = await Dio();
-    String filePath = UserData.path + "/" + url.split('/').last;
+    String filePath = await UserData.path + "/" + url.split('/').last;
     print(filePath);
     //check if the file exists
-    final file = File(filePath);
+    final file = await File(filePath);
 
     if (!file.existsSync()) {
       try {
         await dio.download(url, filePath);
       } catch (e) {
         print(e);
+        //await dio.download(url, filePath);
       }
     }
   }

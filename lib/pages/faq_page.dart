@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/widgets/FAQwidg.dart';
-
 import '../models/faq.dart';
 import '../services/faqapi.dart';
 import '../services/page_service.dart';

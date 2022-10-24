@@ -31,7 +31,6 @@ class _NewsTabState extends State<NewsTab>
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
-            cacheExtent: 10,
             addAutomaticKeepAlives: true,
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {

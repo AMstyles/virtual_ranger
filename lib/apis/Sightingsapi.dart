@@ -12,7 +12,7 @@ import '../models/constants.dart';
 import '../services/page_service.dart';
 
 class Sightings {
-  static Future<void> uploadMarker(
+  static Future<bool> uploadMarker(
       LatLng position, BuildContext context, AnimalSight currentAnimal) async {
     print("uploading marker" + position.toString());
     final response = await http
@@ -46,10 +46,12 @@ class Sightings {
                           "Error",
                           style: TextStyle(color: Colors.red),
                         ),
-                  content: Text(data['data'].toString()),
+                  content: Text(data['success']
+                      ? 'Thank you for your entry.\nYour sighting will be visible for the next 8 hours'
+                      : data['data'].toString()),
                   actions: <Widget>[
                     TextButton(
-                      child: Text('Close'),
+                      child: Text('Ok'),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -58,18 +60,25 @@ class Sightings {
                 )
               : CupertinoAlertDialog(
                   title: data['success']
-                      ? Text(
+                      ? /*Text(
                           "Success",
                           style: TextStyle(color: Colors.green),
-                        )
+                        )*/
+                      SizedBox()
                       : Text(
                           "Error",
                           style: TextStyle(color: Colors.red),
                         ),
-                  content: Text(data['data'].toString()),
+                  // content: Text(data['data'].toString()),
+                  content: Text(
+                    data['success']
+                        ? 'Thank you for your entry.\nYour sighting will be visible for the next 8 hours'
+                        : data['data'].toString(),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  ),
                   actions: <Widget>[
                     TextButton(
-                      child: Text('Close'),
+                      child: Text('Ok'),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -77,6 +86,8 @@ class Sightings {
                   ],
                 );
         });
+
+    return data['success'];
   }
 
   static Future<List<Sighting>> getSightings() async {
@@ -120,25 +131,31 @@ class Sightings {
 
   static Future<List<AnimalSight>> getColouredAnimal(
       BuildContext context) async {
-    final response =
-        await http.post(Uri.parse(GET_COLOURED_ANIMALS_URL), body: {
-      'secret_key':
-          Provider.of<UserProvider>(context, listen: false).user!.secret_key ??
-              " ",
-    });
+    try {
+      final response =
+          await http.post(Uri.parse(GET_COLOURED_ANIMALS_URL), body: {
+        'secret_key': Provider.of<UserProvider>(context, listen: false)
+                .user!
+                .secret_key ??
+            " ",
+      });
 
-    final pre_data = jsonDecode(response.body);
-    final data = pre_data['data'];
+      final pre_data = jsonDecode(response.body);
+      final data = pre_data['data'];
 
-    final List<dynamic> finalData = data;
-    List<AnimalSight> events = [];
-    for (var i = 0; i < finalData.length; i++) {
-      events.add(
-        AnimalSight.fromJson(
-          finalData[i],
-        ),
-      );
+      final List<dynamic> finalData = data;
+      List<AnimalSight> events = [];
+      for (var i = 0; i < finalData.length; i++) {
+        events.add(
+          AnimalSight.fromJson(
+            finalData[i],
+          ),
+        );
+      }
+      return events;
+    } catch (e) {
+      print(e);
+      return getColouredAnimal(context);
     }
-    return events;
   }
 }
