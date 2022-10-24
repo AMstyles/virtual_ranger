@@ -18,6 +18,7 @@ class _NewsAndDealsPageState extends State<NewsAndDealsPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getNews();
   }
 

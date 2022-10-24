@@ -105,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Provider.of<UserProvider>(context, listen: false).user!.email;
     if ((Provider.of<UserProvider>(context, listen: false).user!.country ??
             "") ==
-        'Unknown') {
+        'unknown') {
       _countryController.text = "";
     } else {
       _countryController.text =
@@ -123,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if ((Provider.of<UserProvider>(context, listen: false).user!.mobile ??
             "") ==
-        'Unknown') {
+        'unknown') {
       _phoneController.text = "";
     } else {
       _phoneController.text =

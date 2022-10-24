@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
@@ -44,9 +45,17 @@ class _DrawerAppState extends State<DrawerApp> {
     SettingsPage(),
   ];
 
+  Future<bool> getConnection() async {
+    return await InternetConnectionChecker().hasConnection;
+  }
+
   @override
   void initState() {
     super.initState();
+    getConnection().then((value) {
+      Provider.of<PageProvider>(context, listen: false).setConnection();
+    });
+
     Permissionsapi.askLocationPermission();
     sharePrefs = SharedPreferences.getInstance();
     UserData.getOfflineMode().then((value) => setState(() {
@@ -56,7 +65,7 @@ class _DrawerAppState extends State<DrawerApp> {
     Provider.of<MapsData>(context, listen: false).getEm();
     Provider.of<MapsData>(context, listen: false).putLegend(context);
 
-    getOffline().then((value) async {
+    /*getOffline().then((value) async {
       if (value) {
         final pref = await SharedPreferences.getInstance();
         final condition = await pref.getBool('opened1') ?? false;
@@ -124,26 +133,6 @@ class _DrawerAppState extends State<DrawerApp> {
                       ),
               )
             : () {};
-        /*InAppNotification.show(
-          onTap: () => Provider.of<PageProvider>(context, listen: false)
-              .jumpToSettings(),
-          duration: Duration(seconds: 3),
-          child: Card(
-            borderOnForeground: true,
-            shadowColor: Colors.blue,
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "You are currently in offline mode. Toggle it off to use all features \n Tap here to go to settings",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-          context: context,
-        );*/
       } else {
         final pref = await SharedPreferences.getInstance();
         final condition = await pref.getBool('opened') ?? false;
@@ -211,7 +200,7 @@ class _DrawerAppState extends State<DrawerApp> {
               )
             : () {};
       }
-    });
+    });*/
 
     Future.delayed(Duration(seconds: 1), () {
       mainPages.removeAt(4);

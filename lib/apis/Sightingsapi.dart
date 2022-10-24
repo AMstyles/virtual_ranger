@@ -47,7 +47,7 @@ class Sightings {
                           style: TextStyle(color: Colors.red),
                         ),
                   content: Text(data['success']
-                      ? 'Thank you for your entry.\nYour sighting will br visible for the next 8 hours'
+                      ? 'Thank you for your entry.\nYour sighting will be visible for the next 8 hours'
                       : data['data'].toString()),
                   actions: <Widget>[
                     TextButton(
@@ -72,7 +72,7 @@ class Sightings {
                   // content: Text(data['data'].toString()),
                   content: Text(
                     data['success']
-                        ? 'Thank you for your entry.\nYour sighting will br visible for the next 8 hours'
+                        ? 'Thank you for your entry.\nYour sighting will be visible for the next 8 hours'
                         : data['data'].toString(),
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),

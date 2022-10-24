@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_ranger/pages/BridgePage.dart';
 import 'package:virtual_ranger/pages/prePage.dart';
 import 'package:virtual_ranger/services/page_service.dart';
+import '../DrawerApp.dart';
 import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 
@@ -313,13 +314,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                //navigate and remove
-                                                Navigator.pushAndRemoveUntil(
+                                                //Navigator.pop(context);
+                                                Navigator.pushReplacement(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            const PrepPage()),
-                                                    (route) => true);
+                                                            DrawerApp()));
                                               },
                                               child: Text('Ok'))
                                         ],

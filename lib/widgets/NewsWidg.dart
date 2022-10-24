@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/Home/stroy_page.dart';
 import '../models/constants.dart';
@@ -18,11 +19,15 @@ class NewsWidg extends StatefulWidget {
 }
 
 class _NewsWidgState extends State<NewsWidg> {
+  late bool connection = false;
+
   File? imageFile;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    Provider.of<PageProvider>(context, listen: false).setConnection();
+    //isInternet();
   }
 
   @override
@@ -49,11 +54,18 @@ class _NewsWidgState extends State<NewsWidg> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: Provider.of<UserProvider>(context).isOffLine ??
-                                  false
-                              ? FileImage(File(
-                                      '${UserData.path}/images/${widget.story.news_image}'))
-                                  as ImageProvider
+                          image: (Provider.of<UserProvider>(context)
+                                      .isOffLine ??
+                                  false)
+                              ? !Provider.of<PageProvider>(context)
+                                      .hasConnection
+                                  ? FileImage(
+                                      File(
+                                          '${UserData.path}/images/${widget.story.news_image}'),
+                                    ) as ImageProvider
+                                  : CachedNetworkImageProvider(
+                                      NEWS_IMAGE_URL + widget.story.news_image,
+                                    )
                               : CachedNetworkImageProvider(
                                   NEWS_IMAGE_URL + widget.story.news_image,
                                 ),

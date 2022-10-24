@@ -293,7 +293,6 @@ class DownLoad {
     await downloadSubCategoryImage(context);
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
-
     Future.delayed(Duration(seconds: 1), () {
       InAppNotification.show(
           duration: const Duration(seconds: 3),
@@ -397,7 +396,7 @@ class DownLoad {
     });
   }
 
-  static downloadBusinessListingsImages(context) {
+  static downloadBusinessListingsImages(BuildContext context) {
     BusinessListingsapi.getBusinessListingsFromLocal().then((BL) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(BL.length);
@@ -417,7 +416,7 @@ class DownLoad {
     });
   }
 
-  static downloadCategoryImage(context) {
+  static downloadCategoryImage(BuildContext context) {
     Categoryapi.getCategoriesFromLocal().then((Category) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(Category.length);
@@ -431,7 +430,7 @@ class DownLoad {
     });
   }
 
-  static downloadSubCategoryImage(context) {
+  static downloadSubCategoryImage(BuildContext context) {
     SubCategoryapi.getSubCategoriesFromLocal().then((SubCategory) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(SubCategory.length);
@@ -446,7 +445,7 @@ class DownLoad {
     });
   }
 
-  static downloadSpeciesImage(context) async {
+  static downloadSpeciesImage(BuildContext context) async {
     await Imageapi.getImagesForDownload().then((Species) async {
       Provider.of<DownloadProvider>(context, listen: false)
           .setImagesToDownload(Species.length);
@@ -460,17 +459,17 @@ class DownLoad {
 
   static Future<void> getIm(String url) async {
     Dio dio = await Dio();
-    String filePath = UserData.path + "/" + url.split('/').last;
+    String filePath = await UserData.path + "/" + url.split('/').last;
     print(filePath);
     //check if the file exists
-    final file = File(filePath);
+    final file = await File(filePath);
 
     if (!file.existsSync()) {
       try {
         await dio.download(url, filePath);
       } catch (e) {
         print(e);
-        await dio.download(url, filePath);
+        //await dio.download(url, filePath);
       }
     }
   }

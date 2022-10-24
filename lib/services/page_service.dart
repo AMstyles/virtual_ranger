@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:virtual_ranger/pages/DownloadPage.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/user.dart';
@@ -47,6 +48,7 @@ class PageProvider extends ChangeNotifier {
   var currentPage;
   late int currentPageNum;
   late bool universalOffline;
+  late bool hasConnection;
 
   PageProvider() {
     currentPageNum = 1;
@@ -82,6 +84,13 @@ class PageProvider extends ChangeNotifier {
 
   void jumpToDownload() {
     switchPage(9);
+    notifyListeners();
+  }
+
+  //constructor
+  void setConnection() async {
+    hasConnection = await InternetConnectionChecker().hasConnection;
+
     notifyListeners();
   }
 }

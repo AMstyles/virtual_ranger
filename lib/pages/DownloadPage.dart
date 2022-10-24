@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtual_ranger/DrawerApp.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/models/constants.dart';
-import 'package:virtual_ranger/pages/prePage.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../apis/Download.dart';
 import '../services/page_service.dart';
@@ -202,6 +202,7 @@ class _DownloadPageState extends State<DownloadPage> {
                               });
                             });
                             showDialog(
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (context) {
                                   return Platform.isAndroid
@@ -213,12 +214,12 @@ class _DownloadPageState extends State<DownloadPage> {
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  Navigator.pushAndRemoveUntil(
+                                                  //Navigator.pop(context);
+                                                  Navigator.pushReplacement(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              const PrepPage()),
-                                                      (route) => true);
+                                                              DrawerApp()));
                                                 },
                                                 child: Text('Ok'))
                                           ],
@@ -231,12 +232,12 @@ class _DownloadPageState extends State<DownloadPage> {
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  Navigator.pushAndRemoveUntil(
+                                                  //Navigator.pop(context);
+                                                  Navigator.pushReplacement(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              const PrepPage()),
-                                                      (route) => true);
+                                                              DrawerApp()));
                                                 },
                                                 child: Text('Ok'))
                                           ],
@@ -315,7 +316,7 @@ class _DownloadPageState extends State<DownloadPage> {
                     _downloading = true;
                     getMetaData();
                   });
-                 /* setState(() {
+                  /* setState(() {
                     getMetaData();
                   });*/
                 });
