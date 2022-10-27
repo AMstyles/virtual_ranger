@@ -22,32 +22,35 @@ class _Kestrel_club_pageState extends State<Kestrel_club_page> {
           icon: const Icon(Icons.menu),
           onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
         ),
-        title: Image.asset(
-          'lib/assets/kestrel_club_logo.png',
-          height: 50,
-        ),
+        title: const Text('Kestrel Club'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(8),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Text(
-                'Collect 12 Kestrel Club points and claim your rewards!\nPlease visit www.virtualranger.co.za for details.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                )),
-          ),
-          KestrelBirds(
-            count: Provider.of<UserProvider>(context).user!.kestle_points,
-          ),
-          _buildSignUpButton(
-            context,
-            "SCAN QR CODE",
-          ),
-        ],
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(8),
+          children: [
+            Image.asset(
+              'lib/assets/kestrel_club_logo.png',
+              height: MediaQuery.of(context).size.height * 0.1,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                  'Collect 12 Kestrel Club points and claim your rewards!\nPlease visit www.virtualranger.co.za for details.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  )),
+            ),
+            KestrelBirds(
+              count: Provider.of<UserProvider>(context).user!.kestle_points,
+            ),
+            _buildSignUpButton(
+              context,
+              "SCAN QR CODE",
+            ),
+          ],
+        ),
       ),
     );
   }

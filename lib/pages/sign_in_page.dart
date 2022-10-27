@@ -55,70 +55,79 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text('SIGN IN'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(children: [
-          Image.asset(
-            'lib/assets/mainLogo.png',
-            color: Colors.grey.shade600,
-            fit: BoxFit.cover,
-          ),
-          Platform.isIOS ? _buildAppleSignInButton(context) : const SizedBox(),
-          const SizedBox(height: 12),
-          _buildFacebookSignInButton(context),
-          const SizedBox(height: 12),
-          _buildGoogleSignInButton(context),
-          const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                textAlign: TextAlign.center,
-                'OR',
-                style: TextStyle(fontSize: 30, color: Colors.blueGrey),
-              )),
-          const SizedBox(height: 10),
-          TextField(
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.emailAddress,
-            controller: _emailController,
-            decoration: const InputDecoration(
-              hintText: 'Email',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+      body: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ListView(children: [
+            Image.asset(
+              'lib/assets/mainLogo.png',
+              color: Colors.grey.shade600,
+              fit: BoxFit.cover,
             ),
-          ),
-          const SizedBox(height: 20),
+            Platform.isIOS
+                ? _buildAppleSignInButton(context)
+                : const SizedBox(),
+            const SizedBox(height: 12),
+            _buildFacebookSignInButton(context),
+            const SizedBox(height: 12),
 
-          TextField(
-            keyboardType: TextInputType.visiblePassword,
-            controller: _passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              hintText: 'Password',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-            ),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ForgortPage()));
-            },
-            child: Text(
-              textAlign: TextAlign.center,
-              'Forgot Password?',
-              style: TextStyle(
-                fontSize: 15,
+            _buildGoogleSignInButton(context),
+
+            const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'OR',
+                  style: TextStyle(fontSize: 30, color: Colors.blueGrey),
+                )),
+            const SizedBox(height: 5),
+            TextField(
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
+              controller: _emailController,
+              decoration: const InputDecoration(
+                hintText: 'Email',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          _buildSignInButton(context),
-          const SizedBox(height: 20),
-          _buildSignUpButton(context),
-          const SizedBox(height: 20),
-          //_buildRow(context),
-        ]),
+            const SizedBox(height: 10),
+
+            TextField(
+              keyboardType: TextInputType.visiblePassword,
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                hintText: 'Password',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ForgortPage()));
+              },
+              child: Text(
+                textAlign: TextAlign.center,
+                'Forgot Password?',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            _buildSignInButton(context),
+            const SizedBox(height: 15),
+            _buildSignUpButton(context),
+            const SizedBox(height: 20),
+            //_buildRow(context),
+          ]),
+        ),
       ),
     );
   }

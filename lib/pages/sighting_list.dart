@@ -336,7 +336,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'Legend',
+                          'Animal Sighting chart',
                           style: TextStyle(
                               fontSize: 20,
                               color: Colors.blueGrey,
@@ -385,7 +385,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
             context: context,
             builder: (context) {
               return CupertinoActionSheet(
-                title: Text('Legend'),
+                title: Text('Animal Sighting chart'),
                 actions: [
                   for (var item in legendItems)
                     CupertinoActionSheetAction(

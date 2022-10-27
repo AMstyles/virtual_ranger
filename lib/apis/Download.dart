@@ -294,7 +294,7 @@ class DownLoad {
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
     Future.delayed(Duration(seconds: 1), () {
-      InAppNotification.show(
+      /*InAppNotification.show(
           duration: const Duration(seconds: 3),
           onTap: () => Provider.of<PageProvider>(context, listen: false)
               .jumpToSettings(),
@@ -316,55 +316,9 @@ class DownLoad {
               ),
             ),
           ),
-          context: context);
+          context: context);*/
+      Provider.of<PageProvider>(context, listen: false).jumpToDownload();
     });
-
-    /*showDialog(
-        context: context,
-        builder: (context) => Platform.isAndroid
-            ? AlertDialog(
-                title: Text("Download Complete"),
-                content: Text(
-                    "All images have been downloaded, you can toggle the offline mode in the settings page"),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("Ok")),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Provider.of<PageProvider>(context, listen: false)
-                            .jumpToDownload();
-                        if (Provider.of<Anime>(context).isOpen) {
-                          Provider.of<Anime>(context, listen: false)
-                              .closeDrawer();
-                        }
-                      },
-                      child: Text("toggle now"))
-                ],
-              )
-            : CupertinoAlertDialog(
-                title: Text("Download Complete"),
-                content: Text(
-                    "All images have been downloaded, you can toggle the offline mode in the settings page"),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("Ok")),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Provider.of<PageProvider>(context, listen: false)
-                            .jumpToDownload();
-                        if (Provider.of<Anime>(context).isOpen) {
-                          Provider.of<Anime>(context, listen: false)
-                              .closeDrawer();
-                        }
-                      },
-                      child: Text("toggle now"))
-                ],
-              ));*/
   }
 
   static downloadNewsImages(BuildContext context) {
