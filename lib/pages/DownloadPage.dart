@@ -47,6 +47,8 @@ class _DownloadPageState extends State<DownloadPage> {
   late bool canBeOffline;
   bool _downloading = false;
   late String lastSync;
+  bool isDOwnloadComplete = false;
+  int count = 0;
 
   String date =
       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
@@ -136,6 +138,16 @@ class _DownloadPageState extends State<DownloadPage> {
                                 child: CircularProgressIndicator.adaptive())),
                       ),
                     ],
+                  )
+                : SizedBox(),
+            isDOwnloadComplete
+                ? Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 100,
+                    ),
                   )
                 : SizedBox(),
             ListTile(
@@ -307,19 +319,24 @@ class _DownloadPageState extends State<DownloadPage> {
             ),
             CupertinoButton(
               color: MyColors.primaryColor,
-              child: Text(
-                  (lastSync == 'never synced') ? 'Download & Sync' : 'Sync'),
+              child: Text((lastSync == 'never synced')
+                  ? 'Download & Sync'
+                  : 'Check for updates'),
               onPressed: () async {
                 Permissionsapi.askStoragePermission();
-                await DownLoad.downloadAllJson().then((value) {
-                  setState(() {
-                    _downloading = true;
-                    getMetaData();
-                  });
-                  /* setState(() {
+                (count <= 2)
+                    ? await DownLoad.downloadAllJson().then(
+                        (value) {
+                          setState(() {
+                            _downloading = true;
+                            getMetaData();
+                          });
+                          /* setState(() {
                     getMetaData();
                   });*/
-                });
+                        },
+                      )
+                    : () {};
               },
             ),
           ],
@@ -329,6 +346,8 @@ class _DownloadPageState extends State<DownloadPage> {
   }
 
   Future<void> getMetaData() async {
+    count++;
+    Provider.of<DownloadProvider>(context, listen: false).reset();
     _downloading = true;
     await DownLoad.downloadAllImages(context);
 
@@ -341,6 +360,12 @@ class _DownloadPageState extends State<DownloadPage> {
     UserData.canGoOffline(true);
 
     _downloading = false;
+
+    setState(() {
+      isDOwnloadComplete = true;
+      count = 0;
+    });
+
     UserData.setSettingsString('lastSync', date);
   }
 
