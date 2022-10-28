@@ -32,9 +32,15 @@ class NewsPage extends StatelessWidget {
                         File('${UserData.path}/images/${story.news_image}'),
                       )
                     : CachedNetworkImage(
+                        progressIndicatorBuilder: (_, __, ___) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
                         imageUrl: NEWS_IMAGE_URL + story.news_image,
                       )
                 : CachedNetworkImage(
+                    progressIndicatorBuilder: (_, __, ___) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                     imageUrl: NEWS_IMAGE_URL + story.news_image,
                   ),
           ),
