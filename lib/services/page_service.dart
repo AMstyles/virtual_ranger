@@ -132,7 +132,11 @@ class DownloadProvider extends ChangeNotifier {
   }
 
   void incrementImagesDownloaded() {
-    imagesDownloaded++;
+    if (imagesDownloaded > imagesDownloaded) {
+      imagesDownloaded = imagesToDownload;
+    } else {
+      imagesDownloaded++;
+    }
     getPercentage();
     notifyListeners();
   }

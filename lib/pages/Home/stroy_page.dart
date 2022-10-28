@@ -26,12 +26,16 @@ class NewsPage extends StatelessWidget {
         children: [
           Hero(
             tag: story.title,
-            child: Provider.of<UserProvider>(context).isOffLine ?? false
-                ? Image.file(
-                    File('${UserData.path}/images/${story.news_image}'))
+            child: (Provider.of<UserProvider>(context).isOffLine ?? false)
+                ? !Provider.of<PageProvider>(context).hasConnection
+                    ? Image.file(
+                        File('${UserData.path}/images/${story.news_image}'),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: NEWS_IMAGE_URL + story.news_image,
+                      )
                 : CachedNetworkImage(
                     imageUrl: NEWS_IMAGE_URL + story.news_image,
-                    fit: BoxFit.cover,
                   ),
           ),
           Padding(

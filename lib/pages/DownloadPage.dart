@@ -53,6 +53,10 @@ class _DownloadPageState extends State<DownloadPage> {
   String date =
       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
 
+  String getDateString() {
+    return '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -354,7 +358,7 @@ class _DownloadPageState extends State<DownloadPage> {
     canBeOffline = true;
     setState(() {
       UserData.setSettings('canBeOffline', true);
-      lastSync = date;
+      lastSync = getDateString();
     });
 
     UserData.canGoOffline(true);
@@ -366,7 +370,7 @@ class _DownloadPageState extends State<DownloadPage> {
       count = 0;
     });
 
-    UserData.setSettingsString('lastSync', date);
+    UserData.setSettingsString('lastSync', getDateString());
   }
 
   /*Future<void> off() async {
