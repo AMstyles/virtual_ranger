@@ -1,15 +1,27 @@
 import 'dart:io';
+
 import 'apis/Download.dart';
+
 import 'firebase_options.dart';
+
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
+
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:virtual_ranger/pages/prePage.dart';
+
 import 'package:virtual_ranger/services/readyData.dart';
+
 import 'package:virtual_ranger/services/page_service.dart';
+
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
+
 import 'package:virtual_ranger/services/LoginProviders.dart';
+
 import 'package:in_app_notification/in_app_notification.dart';
+
 import 'package:virtual_ranger/services/shared_preferences.dart';
 
 Future main() async {
@@ -18,8 +30,12 @@ Future main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  } else {
+  } 
+  else 
+  {
+
     await Firebase.initializeApp();
+
   }
   await UserData.init();
   try {
