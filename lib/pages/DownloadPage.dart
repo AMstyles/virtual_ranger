@@ -128,7 +128,7 @@ class _DownloadPageState extends State<DownloadPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Please do not exit the app while downloading, this may take a while depending on your internet connection, you will be notified when the download is complete. Stay within the App to ensure the download completes successful.',
+                            'Please do not exit the app while downloading. This may take a while depending on your internet connection. You will be return to this page when the download is complete. Stay within the App to ensure the download completes successful.',
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
@@ -328,7 +328,11 @@ class _DownloadPageState extends State<DownloadPage> {
                   : 'Check for updates'),
               onPressed: () async {
                 Permissionsapi.askStoragePermission();
-                (count <= 2)
+                (Provider.of<DownloadProvider>(context).imagesDownloaded == 0 ||
+                        Provider.of<DownloadProvider>(context)
+                                .imagesToDownload ==
+                            Provider.of<DownloadProvider>(context)
+                                .imagesDownloaded)
                     ? await DownLoad.downloadAllJson().then(
                         (value) {
                           setState(() {

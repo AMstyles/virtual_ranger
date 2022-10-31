@@ -25,7 +25,6 @@ class _SignUpPageState extends State<SignUpPage> {
   late String data;
   late User user;
   late final sharePrefs;
-  Map userObj = {};
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
