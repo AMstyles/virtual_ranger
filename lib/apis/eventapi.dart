@@ -20,8 +20,18 @@ class Eventapi {
 
   static Future<List<Event>> getEventsFromLocal() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/events.json');
-    final data = file.readAsStringSync();
+    final file = await File('${dir.path}/events.json');
+    final data = await file.readAsStringSync();
+    try {
+      final List<dynamic> finalData = jsonDecode(data);
+      List<Event> events = [];
+      for (var i = 0; i < finalData.length; i++) {
+        events.add(Event.fromJson(finalData[i]));
+      }
+      return events;
+    } catch (e) {
+      print('The error is $e');
+    }
     final pre_data = jsonDecode(data);
     final List<dynamic> finalData = pre_data['data'];
     List<Event> events = [];

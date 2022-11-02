@@ -22,6 +22,8 @@ class _DownloadPageState extends State<DownloadPage> {
   @override
   void initState() {
     super.initState();
+    Permissionsapi.askStoragePermission();
+    getMetaData();
 
     /*UserData.getOfflineMode().then((value) => setState(() {
           isOffline = value;
@@ -133,14 +135,14 @@ class _DownloadPageState extends State<DownloadPage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Container(
-                            height: 100,
-                            width: 100,
-                            child: Center(
-                                child: CircularProgressIndicator.adaptive())),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(12),
+                      //   child: Container(
+                      //       height: 100,
+                      //       width: 100,
+                      //       child: Center(
+                      //           child: CircularProgressIndicator.adaptive())),
+                      // ),
                     ],
                   )
                 : SizedBox(),
@@ -225,7 +227,8 @@ class _DownloadPageState extends State<DownloadPage> {
                                       ? AlertDialog(
                                           title: Text('Alert'),
                                           content: Text(
-                                              'You have successfully changed your offline mode, this will take effect immediately'),
+                                            'You have successfully changed to ${!(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                          ),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
@@ -243,7 +246,7 @@ class _DownloadPageState extends State<DownloadPage> {
                                       : CupertinoAlertDialog(
                                           title: Text('Alert'),
                                           content: Text(
-                                            'You have successfully changed to ${(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                            'You have successfully changed to ${!(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
                                           ),
                                           actions: [
                                             TextButton(
@@ -328,7 +331,6 @@ class _DownloadPageState extends State<DownloadPage> {
                   ? 'Download & Sync'
                   : 'Check for updates'),
               onPressed: () async {
-                Permissionsapi.askStoragePermission();
                 (Provider.of<DownloadProvider>(context, listen: false)
                                 .imagesDownloaded ==
                             0 ||
@@ -358,31 +360,33 @@ class _DownloadPageState extends State<DownloadPage> {
   }
 
   Future<void> getMetaData() async {
-    count++;
-    Provider.of<DownloadProvider>(context, listen: false).reset();
-    _downloading = true;
-    await DownLoad.downloadAllImages(context);
+    DownLoad.downloadAllJson().then((value) async {
+      count++;
+      Provider.of<DownloadProvider>(context, listen: false).reset();
+      _downloading = true;
+      await DownLoad.downloadAllImages(context);
 
-    canBeOffline = true;
-    setState(() {
-      UserData.setSettings('canBeOffline', true);
-      lastSync = getDateString();
+      canBeOffline = true;
+      setState(() {
+        UserData.setSettings('canBeOffline', true);
+        lastSync = getDateString();
+      });
+
+      UserData.canGoOffline(true);
+
+      _downloading = false;
+
+      setState(() {
+        isDOwnloadComplete = true;
+        count = 0;
+      });
+
+      UserData.setSettingsString('lastSync', getDateString());
+
+      if (Provider.of<DownloadProvider>(context).imagesToDownload == 0) {
+        getMetaData();
+      }
     });
-
-    UserData.canGoOffline(true);
-
-    _downloading = false;
-
-    setState(() {
-      isDOwnloadComplete = true;
-      count = 0;
-    });
-
-    UserData.setSettingsString('lastSync', getDateString());
-
-    if (Provider.of<DownloadProvider>(context).imagesToDownload == 0) {
-      getMetaData();
-    }
   }
 
   Future<void> start() async {

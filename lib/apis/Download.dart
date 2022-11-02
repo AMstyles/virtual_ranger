@@ -290,7 +290,11 @@ class DownLoad {
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
     Future.delayed(Duration(seconds: 1), () {
-      Provider.of<PageProvider>(context, listen: false).jumpToDownload();
+      UserData.getSettingsString('lastSync').then((value) {
+        if (value == 'never synced') {
+          Provider.of<PageProvider>(context, listen: false).jumpToDownload();
+        } else {}
+      });
     });
   }
 
