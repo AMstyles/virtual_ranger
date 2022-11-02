@@ -22,6 +22,13 @@ class _DealsTabState extends State<DealsTab>
       Provider.of<UserProvider>(context).isOffLine ?? false
           ? Eventapi.getEventsFromLocal()
           : Eventapi.getEvents();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LiquidPullToRefresh(
@@ -32,7 +39,9 @@ class _DealsTabState extends State<DealsTab>
       onRefresh: () {
         return Future.delayed(Duration(milliseconds: 500), () {
           setState(() {
-            _future = Eventapi.getEvents();
+            _future = Provider.of<UserProvider>(context).isOffLine ?? false
+                ? Eventapi.getEventsFromLocal()
+                : Eventapi.getEvents();
           });
         });
       },
@@ -96,4 +105,12 @@ class _DealsTabState extends State<DealsTab>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  void setTheFuture() {
+    setState(() {
+      _future = Provider.of<UserProvider>(context).isOffLine ?? false
+          ? Eventapi.getEventsFromLocal()
+          : Eventapi.getEvents();
+    });
+  }
 }

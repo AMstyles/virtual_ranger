@@ -18,8 +18,8 @@ class BusinessListingsPage extends StatefulWidget {
 class _BusinessListingsPageState extends State<BusinessListingsPage> {
   late Future<List<BusinessListing>> _future =
       Provider.of<UserProvider>(context).isOffLine ?? false
-          ? BusinessListingsapi.getBusinessListingsFromLocal()
-          : BusinessListingsapi.getBusinessListings();
+          ? BusinessListingsapi.getBusinessListings()
+          : BusinessListingsapi.getBusinessListingsFromLocal();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +64,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                           }
                         });
                   } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                    //return Text("${snapshot.error}");
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());
@@ -94,7 +94,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                           }
                         });
                   } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                    //return Text("${snapshot.error}");
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());
@@ -124,7 +124,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                           }
                         });
                   } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                    //return Text("${snapshot.error}");
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());
@@ -154,7 +154,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                           }
                         });
                   } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                    //return Text("${snapshot.error}");
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());
@@ -183,7 +183,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                           }
                         });
                   } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
+                    //return Text("${snapshot.error}");
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());

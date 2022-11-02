@@ -20,8 +20,8 @@ class _NewsTabState extends State<NewsTab>
     with AutomaticKeepAliveClientMixin<NewsTab> {
   late Future<List<News>> _future =
       Provider.of<UserProvider>(context).isOffLine ?? false
-          ? Newsapi.getNewsFromLocal()
-          : Newsapi.getNews();
+          ? Newsapi.getNews()
+          : Newsapi.getNewsFromLocal();
   @override
   void initState() {
     super.initState();
@@ -37,7 +37,9 @@ class _NewsTabState extends State<NewsTab>
       onRefresh: () {
         return Future.delayed(Duration(milliseconds: 500), () {
           setState(() {
-            _future = Newsapi.getNews();
+            _future = Provider.of<UserProvider>(context).isOffLine ?? false
+                ? Newsapi.getNewsFromLocal()
+                : Newsapi.getNews();
           });
         });
       },

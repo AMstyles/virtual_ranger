@@ -20,8 +20,14 @@ class GuidePage extends StatefulWidget {
 class _GuidePageState extends State<GuidePage> {
   late Future<List<Category_>> _future =
       Provider.of<UserProvider>(context).isOffLine ?? false
-          ? Categoryapi.getCategoriesFromLocal()
-          : Categoryapi.getCategories();
+          ? Categoryapi.getCategories()
+          : Categoryapi.getCategoriesFromLocal();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
