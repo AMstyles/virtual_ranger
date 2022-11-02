@@ -283,6 +283,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           });
                           removeAndAddPage();
                           showDialog(
+                              barrierDismissible: false,
                               context: context,
                               builder: (context) {
                                 return Platform.isAndroid

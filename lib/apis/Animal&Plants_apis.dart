@@ -24,6 +24,17 @@ class Categoryapi {
   static Future<List<Category_>> getCategoriesFromLocal() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/categories.json');
+    try {
+      final data = await file.readAsStringSync();
+      final List<dynamic> finalData = jsonDecode(data);
+      List<Category_> categories = [];
+      for (var i = 0; i < finalData.length; i++) {
+        categories.add(Category_.fromJson(finalData[i]));
+      }
+      return categories;
+    } catch (e) {
+      print('The error is $e');
+    }
     final data = jsonDecode(await file.readAsString());
     print(await file.readAsString());
     final data2 = data['data'];
@@ -53,6 +64,18 @@ class SubCategoryapi {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/sub_categories.json');
     final something = await file.readAsString();
+    try {
+      final data = jsonDecode(something);
+      final data2 = data['data'];
+      final List<dynamic> finalData = data2;
+      List<SubCategory> subCategories = [];
+      for (var i = 0; i < finalData.length; i++) {
+        subCategories.add(SubCategory.fromJson(finalData[i]));
+      }
+      return subCategories;
+    } catch (e) {
+      print('The error is $e');
+    }
     final data = jsonDecode(something);
     final data2 = data['data'];
     final List<dynamic> finalData = data2;
@@ -108,8 +131,20 @@ class Imageapi {
 
   static Future<List<SpecyImage>> getImagesForDownload() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/images.json');
+    final file = await File('${dir.path}/images.json');
     final something = await file.readAsString();
+    try {
+      final data = jsonDecode(something);
+      final data2 = data['data'];
+      final List<dynamic> finalData = data2;
+      List<SpecyImage> species = [];
+      for (var i = 0; i < finalData.length; i++) {
+        species.add(SpecyImage.fromJson(finalData[i]));
+      }
+      return species;
+    } catch (e) {
+      print('the error is $e');
+    }
     final data = jsonDecode(something);
     final data2 = data['data'];
     final List<dynamic> finalData = data2;
@@ -122,8 +157,22 @@ class Imageapi {
 
   static Future<List<SpecyImage>> getImagesFromLocal(Specy specy) async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/images.json');
+    final file = await File('${dir.path}/images.json');
     final something = await file.readAsString();
+    try {
+      final data = jsonDecode(something);
+      final data2 = data['data'];
+      final List<dynamic> finalData = data2;
+      List<SpecyImage> species = [];
+      for (var i = 0; i < finalData.length; i++) {
+        if (SpecyImage.fromJson(finalData[i]).animal_id == specy.id) {
+          species.add(SpecyImage.fromJson(finalData[i]));
+        }
+      }
+      return species;
+    } catch (e) {
+      print('the error is $e');
+    }
     final data = jsonDecode(something);
     final data2 = data['data'];
     final List<dynamic> finalData = data2;

@@ -20,8 +20,19 @@ class Newsapi {
 
   static Future<List<News>> getNewsFromLocal() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/news.json');
-    String data = file.readAsStringSync();
+    final file = await File('${dir.path}/news.json');
+    String data = await file.readAsStringSync();
+    try {
+      final pre_data = jsonDecode(data);
+      final List<dynamic> finalData = pre_data['data'];
+      List<News> news = [];
+      for (var i = 0; i < finalData.length; i++) {
+        news.add(News.fromJson(finalData[i]));
+      }
+      return news;
+    } catch (e) {
+      print('The error is $e');
+    }
     final pre_data = jsonDecode(data);
     final List<dynamic> finalData = pre_data['data'];
     List<News> news = [];
