@@ -162,8 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
             color: _color,
             child: ListTile(
               title: const Text('Automatic updates'),
-              subtitle: Text(
-                  'Automatically download & sync new content when Offline Mode is toggled ON'),
+              subtitle: Text('Automatically download & sync new content '),
               onTap: () {
                 setState(() {
                   if (Provider.of<PageProvider>(context, listen: false)
@@ -218,10 +217,9 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             title: const Text(
-              'Offline Mode',
+              'Online/Offline Mode',
             ),
-            subtitle: Text(
-                'Use the app without an internet connection. This will download all the content to your device.'),
+            subtitle: Text('Use the app without an internet connection.'),
             onTap: () {
               setState(() {
                 Provider.of<PageProvider>(context, listen: false)
@@ -291,7 +289,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ? AlertDialog(
                                         title: Text('Alert'),
                                         content: Text(
-                                            'You have successfully changed your offline mode, this will take effect immediately'),
+                                          'You have successfully changed to ${(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                        ),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
@@ -307,9 +306,10 @@ class _SettingsPageState extends State<SettingsPage> {
                                         ],
                                       )
                                     : CupertinoAlertDialog(
-                                        title: Text('Offline mode'),
+                                        title: Text('Alert'),
                                         content: Text(
-                                            'You have successfully changed your offline mode, this will take effect immediately'),
+                                          'You have successfully changed to ${(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                        ),
                                         actions: [
                                           TextButton(
                                               onPressed: () {

@@ -257,8 +257,6 @@ class DownLoad {
     }
   }
 
-  void DownloadSightings() async {}
-
   static Future<void> DownloadImages() async {
     final response = await http.get(Uri.parse(SPECIES_IMAGE_URL));
     final data = response.body;
@@ -292,29 +290,6 @@ class DownLoad {
     await downloadSpeciesImage(context);
     await downloadBusinessListingsImages(context);
     Future.delayed(Duration(seconds: 1), () {
-      /*InAppNotification.show(
-          duration: const Duration(seconds: 3),
-          onTap: () => Provider.of<PageProvider>(context, listen: false)
-              .jumpToSettings(),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: Row(
-                  children: [
-                    Expanded(child: Text('Download complete')),
-                    Expanded(
-                        child: CupertinoButton(
-                            child: Text('toggle offline'),
-                            onPressed: () => Provider.of<PageProvider>(context,
-                                    listen: false)
-                                .jumpToSettings()))
-                  ],
-                ),
-              ),
-            ),
-          ),
-          context: context);*/
       Provider.of<PageProvider>(context, listen: false).jumpToDownload();
     });
   }
