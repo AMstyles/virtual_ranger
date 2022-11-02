@@ -290,7 +290,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ? AlertDialog(
                                         title: Text('Alert'),
                                         content: Text(
-                                          'You have successfully changed to ${(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                          'You have successfully changed to ${!(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
                                         ),
                                         actions: [
                                           TextButton(
@@ -309,7 +309,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     : CupertinoAlertDialog(
                                         title: Text('Alert'),
                                         content: Text(
-                                          'You have successfully changed to ${(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                          'You have successfully changed to ${!(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
                                         ),
                                         actions: [
                                           TextButton(

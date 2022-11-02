@@ -227,7 +227,8 @@ class _DownloadPageState extends State<DownloadPage> {
                                       ? AlertDialog(
                                           title: Text('Alert'),
                                           content: Text(
-                                              'You have successfully changed your offline mode, this will take effect immediately'),
+                                            'You have successfully changed to ${!(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                          ),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
@@ -245,7 +246,7 @@ class _DownloadPageState extends State<DownloadPage> {
                                       : CupertinoAlertDialog(
                                           title: Text('Alert'),
                                           content: Text(
-                                            'You have successfully changed to ${(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                            'You have successfully changed to ${!(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
                                           ),
                                           actions: [
                                             TextButton(

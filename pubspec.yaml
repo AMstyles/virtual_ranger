@@ -68,6 +68,7 @@ dependencies:
   the_apple_sign_in: ^1.1.1
   flutter_svg: ^1.1.5
   internet_connection_checker: ^1.0.0+1
+  liquid_pull_to_refresh: ^3.0.1
 
 
 dev_dependencies:
