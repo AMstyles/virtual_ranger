@@ -3,7 +3,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/event.dart';
-
+import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../../apis/eventapi.dart';
 import '../../models/constants.dart';
 import '../../services/page_service.dart';
@@ -18,6 +18,10 @@ class DealsTab extends StatefulWidget {
 
 class _DealsTabState extends State<DealsTab>
     with AutomaticKeepAliveClientMixin<DealsTab> {
+  Future<bool> getOffline() async {
+    return await UserData.getOfflineMode();
+  }
+
   late Future<List<Event>> _future =
       Provider.of<UserProvider>(context).isOffLine ?? false
           ? Eventapi.getEventsFromLocal()
@@ -39,9 +43,11 @@ class _DealsTabState extends State<DealsTab>
       onRefresh: () {
         return Future.delayed(Duration(milliseconds: 500), () {
           setState(() {
-            _future = Provider.of<UserProvider>(context).isOffLine ?? false
-                ? Eventapi.getEventsFromLocal()
-                : Eventapi.getEvents();
+            _future =
+                Provider.of<UserProvider>(context, listen: false).isOffLine ??
+                        false
+                    ? Eventapi.getEventsFromLocal()
+                    : Eventapi.getEvents();
           });
         });
       },

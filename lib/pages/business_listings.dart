@@ -3,6 +3,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
+import 'package:virtual_ranger/services/shared_preferences.dart';
 import 'package:virtual_ranger/widgets/BLWidg.dart';
 import '../apis/businesslistingsapi.dart';
 import '../models/BL.dart';
@@ -16,10 +17,25 @@ class BusinessListingsPage extends StatefulWidget {
 }
 
 class _BusinessListingsPageState extends State<BusinessListingsPage> {
-  late Future<List<BusinessListing>> _future =
-      Provider.of<UserProvider>(context).isOffLine ?? false
-          ? BusinessListingsapi.getBusinessListings()
-          : BusinessListingsapi.getBusinessListingsFromLocal();
+  late Future<List<BusinessListing>> _future;
+
+  Future<bool> getOffline() async {
+    return await UserData.getOfflineMode();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getOffline().then((value) {
+      setState(() {
+        _future = value
+            ? BusinessListingsapi.getBusinessListingsFromLocal()
+            : BusinessListingsapi.getBusinessListings();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +55,10 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
           return Future.delayed(Duration(milliseconds: 500), () {
             setState(() {
               _future = BusinessListingsapi.getBusinessListings();
+              Provider.of<UserProvider>(context, listen: false).isOffLine ??
+                      false
+                  ? BusinessListingsapi.getBusinessListingsFromLocal()
+                  : BusinessListingsapi.getBusinessListings();
             });
           });
         },
@@ -65,6 +85,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                         });
                   } else if (snapshot.hasError) {
                     //return Text("${snapshot.error}");
+                    return Container();
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());
@@ -95,6 +116,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                         });
                   } else if (snapshot.hasError) {
                     //return Text("${snapshot.error}");
+                    return Container();
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());
@@ -124,6 +146,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                           }
                         });
                   } else if (snapshot.hasError) {
+                    return Container();
                     //return Text("${snapshot.error}");
                   }
                   return const Center(
@@ -155,6 +178,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                         });
                   } else if (snapshot.hasError) {
                     //return Text("${snapshot.error}");
+                    return Container();
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());
@@ -184,6 +208,7 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
                         });
                   } else if (snapshot.hasError) {
                     //return Text("${snapshot.error}");
+                    return Container();
                   }
                   return const Center(
                       child: CircularProgressIndicator.adaptive());

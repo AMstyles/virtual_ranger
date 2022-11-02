@@ -8,6 +8,7 @@ import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/widgets/NewsWidg.dart';
 
 import '../../apis/newsapi.dart';
+import '../../services/shared_preferences.dart';
 
 class NewsTab extends StatefulWidget {
   NewsTab({Key? key}) : super(key: key);
@@ -20,11 +21,21 @@ class _NewsTabState extends State<NewsTab>
     with AutomaticKeepAliveClientMixin<NewsTab> {
   late Future<List<News>> _future =
       Provider.of<UserProvider>(context).isOffLine ?? false
-          ? Newsapi.getNews()
-          : Newsapi.getNewsFromLocal();
+          ? Newsapi.getNewsFromLocal()
+          : Newsapi.getNews();
+
+  Future<bool> getOffline() async {
+    return await UserData.getOfflineMode();
+  }
+
   @override
   void initState() {
     super.initState();
+    getOffline().then((value) {
+      value
+          ? _future = Newsapi.getNewsFromLocal()
+          : _future = Newsapi.getNews();
+    });
   }
 
   @override
@@ -37,9 +48,11 @@ class _NewsTabState extends State<NewsTab>
       onRefresh: () {
         return Future.delayed(Duration(milliseconds: 500), () {
           setState(() {
-            _future = Provider.of<UserProvider>(context).isOffLine ?? false
-                ? Newsapi.getNewsFromLocal()
-                : Newsapi.getNews();
+            _future =
+                Provider.of<UserProvider>(context, listen: false).isOffLine ??
+                        false
+                    ? Newsapi.getNewsFromLocal()
+                    : Newsapi.getNews();
           });
         });
       },

@@ -8,6 +8,7 @@ import 'package:virtual_ranger/widgets/CategoryWidg.dart';
 
 import '../apis/Animal&Plants_apis.dart';
 import '../services/page_service.dart';
+import '../services/shared_preferences.dart';
 import 'Custom/AnimeVals.dart';
 
 class GuidePage extends StatefulWidget {
@@ -18,15 +19,23 @@ class GuidePage extends StatefulWidget {
 }
 
 class _GuidePageState extends State<GuidePage> {
-  late Future<List<Category_>> _future =
-      Provider.of<UserProvider>(context).isOffLine ?? false
-          ? Categoryapi.getCategories()
-          : Categoryapi.getCategoriesFromLocal();
+  Future<bool> getOffline() async {
+    return await UserData.getOfflineMode();
+  }
+
+  late Future<List<Category_>> _future;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getOffline().then((value) {
+      setState(() {
+        _future = value
+            ? Categoryapi.getCategoriesFromLocal()
+            : Categoryapi.getCategories();
+      });
+    });
   }
 
   @override
@@ -60,7 +69,11 @@ class _GuidePageState extends State<GuidePage> {
         onRefresh: () {
           return Future.delayed(Duration(milliseconds: 500), () {
             setState(() {
-              _future = Categoryapi.getCategories();
+              _future =
+                  Provider.of<UserProvider>(context, listen: false).isOffLine ??
+                          false
+                      ? Categoryapi.getCategoriesFromLocal()
+                      : Categoryapi.getCategories();
             });
           });
         },
@@ -89,7 +102,11 @@ class _GuidePageState extends State<GuidePage> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          _future = Categoryapi.getCategories();
+                          _future =
+                              Provider.of<UserProvider>(context).isOffLine ??
+                                      false
+                                  ? Categoryapi.getCategoriesFromLocal()
+                                  : Categoryapi.getCategories();
                         });
                       },
                       child: Container(
