@@ -241,9 +241,10 @@ class _DownloadPageState extends State<DownloadPage> {
                                           ],
                                         )
                                       : CupertinoAlertDialog(
-                                          title: Text('Offline mode'),
+                                          title: Text('Alert'),
                                           content: Text(
-                                              'You have successfully changed your offline mode, this will take effect immediately'),
+                                            'You have successfully changed to ${(Provider.of<PageProvider>(context).universalOffline) ? 'Online Mode' : 'Offline Mode'}!',
+                                          ),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
@@ -328,10 +329,13 @@ class _DownloadPageState extends State<DownloadPage> {
                   : 'Check for updates'),
               onPressed: () async {
                 Permissionsapi.askStoragePermission();
-                (Provider.of<DownloadProvider>(context).imagesDownloaded == 0 ||
-                        Provider.of<DownloadProvider>(context)
+                (Provider.of<DownloadProvider>(context, listen: false)
+                                .imagesDownloaded ==
+                            0 ||
+                        Provider.of<DownloadProvider>(context, listen: false)
                                 .imagesToDownload ==
-                            Provider.of<DownloadProvider>(context)
+                            Provider.of<DownloadProvider>(context,
+                                    listen: false)
                                 .imagesDownloaded)
                     ? await DownLoad.downloadAllJson().then(
                         (value) {
@@ -375,12 +379,11 @@ class _DownloadPageState extends State<DownloadPage> {
     });
 
     UserData.setSettingsString('lastSync', getDateString());
-  }
 
-  /*Future<void> off() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    isOffline = prefs.getBool('offline') ?? false;
-  }*/
+    if (Provider.of<DownloadProvider>(context).imagesToDownload == 0) {
+      getMetaData();
+    }
+  }
 
   Future<void> start() async {
     setState(() {
