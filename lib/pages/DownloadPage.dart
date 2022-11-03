@@ -52,11 +52,40 @@ class _DownloadPageState extends State<DownloadPage> {
   bool isDOwnloadComplete = false;
   int count = 0;
 
-  String date =
-      '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
+  String makeHour() {
+    String hour = DateTime.now().hour.toString();
+    if (hour.length == 1) {
+      hour = "0" + hour;
+    }
+    return hour;
+  }
+
+  String makeMinute() {
+    String minute = DateTime.now().minute.toString();
+    if (minute.length == 1) {
+      minute = "0" + minute;
+    }
+    return minute;
+  }
+
+  String makeMonth() {
+    String month = DateTime.now().month.toString();
+    if (month.length == 1) {
+      month = "0" + month;
+    }
+    return month;
+  }
+
+  String makeDay() {
+    String day = DateTime.now().day.toString();
+    if (day.length == 1) {
+      day = "0" + day;
+    }
+    return day;
+  }
 
   String getDateString() {
-    return '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} @ ${DateTime.now().hour}:${DateTime.now().minute}';
+    return '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')} @ ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
   }
 
   @override
