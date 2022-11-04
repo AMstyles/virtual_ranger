@@ -735,7 +735,11 @@ class _SightingslistPageState extends State<SightingslistPage> {
   String readTimeStamp(String timeStamp) {
     final DateTime dateTime =
         DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp) * 1000);
-    String time = '${dateTime.hour}:${dateTime.minute}';
+    final hour = dateTime.hour;
+    final minute = dateTime.minute;
+    String time =
+        '${hour.toString().padLeft(2, '0') + ':' + minute.toString().padLeft(2, '0')}';
+
     return time;
   }
 }

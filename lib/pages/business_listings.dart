@@ -54,11 +54,11 @@ class _BusinessListingsPageState extends State<BusinessListingsPage> {
         onRefresh: () {
           return Future.delayed(Duration(milliseconds: 500), () {
             setState(() {
-              _future = BusinessListingsapi.getBusinessListings();
-              Provider.of<UserProvider>(context, listen: false).isOffLine ??
-                      false
-                  ? BusinessListingsapi.getBusinessListingsFromLocal()
-                  : BusinessListingsapi.getBusinessListings();
+              _future =
+                  Provider.of<UserProvider>(context, listen: false).isOffLine ??
+                          false
+                      ? BusinessListingsapi.getBusinessListingsFromLocal()
+                      : BusinessListingsapi.getBusinessListings();
             });
           });
         },
