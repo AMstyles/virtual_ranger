@@ -190,4 +190,15 @@ class signUpAPI {
         }));
     //print(response.body);
   }
+
+  static Future<String> deleteAccount(String id, String secretKey) async {
+    final response = await http
+        .post(Uri.parse('https://dinokengapp.co.za/delete_account'), body: {
+      'id': id,
+      'secret_key': secretKey,
+    });
+    final data = response.body;
+    //final finalData = jsonDecode(data);
+    return data;
+  }
 }
