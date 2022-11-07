@@ -64,7 +64,7 @@
 	<key>NSLocationUsageDescription</key>
 	<string>To assist you when adding sightings of animals in the park and see your relative location to animals' sightings.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>need location to track user</string>
+	<string>To assist you when adding sightings of animals in the park and see your relative location to animals' sightings.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to photo library to choose a profile picture</string>
 	<key>NSUserNotificationsUsageDescription</key>

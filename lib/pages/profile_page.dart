@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/pages/Profile/textFieds.dart';
+import 'package:virtual_ranger/pages/prePage.dart';
 import 'package:virtual_ranger/pages/splash_screen.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
@@ -341,35 +342,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void areYousure(BuildContext context) {
-    Platform.isAndroid
-        ? {}
-        : showCupertinoModalPopup(
-            context: context,
-            builder: (context) {
-              return CupertinoActionSheet(
-                title:
-                    const Text('Are you sure you want to delete your account?'),
-                actions: [
-                  CupertinoActionSheetAction(
-                    child: const Text('Yes'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      //Provider.of<UserProvider>(context, listen: false).deleteUser();
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
-                  ),
-                  CupertinoActionSheetAction(
-                    child: const Text('No'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              );
-            });
-  }
-
 //! widgets
   Widget _buildSignUpButton(
     BuildContext context,
@@ -405,7 +377,7 @@ class _ProfilePageState extends State<ProfilePage> {
           showDialog(
               context: context,
               builder: (context) {
-                return Platform.isIOS
+                return Platform.isAndroid
                     ? AlertDialog(
                         title: const Text('Delete Account'),
                         content: const Text(
@@ -436,25 +408,63 @@ class _ProfilePageState extends State<ProfilePage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            //header
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Delete Account',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.grey.shade200,
+                                                  ),
+                                                  child: IconButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                      icon: Icon(Icons.close)),
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
                                             const Text(
                                               textAlign: TextAlign.start,
                                               '~This action cannot be undone.',
-                                              style: TextStyle(fontSize: 15),
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
                                             ),
                                             const Text(
                                               textAlign: TextAlign.start,
                                               '~All your data will be deleted.',
-                                              style: TextStyle(fontSize: 15),
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
                                             ),
                                             const Text(
                                               textAlign: TextAlign.start,
-                                              '~Sightings have added will remain untill they time out, since they are not linked to your account.',
-                                              style: TextStyle(fontSize: 15),
+                                              '~Sightings you have added will remain untill they time out, since they are not linked to your account.',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
                                             ),
                                             const Text(
                                               textAlign: TextAlign.start,
                                               '~You will be logged out.',
-                                              style: TextStyle(fontSize: 15),
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
                                             ),
                                             SizedBox(
                                               height: 10,
@@ -475,11 +485,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ),
                                                 onSubmit: () {
                                                   //TODO: Implement a method to delete the user
+                                                  final userProvider =
+                                                      Provider.of<UserProvider>(
+                                                          context,
+                                                          listen: false);
 
                                                   signUpAPI
                                                       .deleteAccount(
-                                                          UserData.user.name,
-                                                          UserData.user.name)
+                                                          UserData.user.id,
+                                                          userProvider.user!
+                                                                  .secret_key ??
+                                                              '')
                                                       .then(
                                                     (value) {
                                                       final data =
@@ -495,19 +511,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                 MaterialPageRoute(
                                                                   builder:
                                                                       (context) {
-                                                                    return const SplashScreen();
+                                                                    return const PrepPage();
                                                                   },
                                                                 ),
                                                               )
                                                             }
-                                                          : showAboutDialog(
+                                                          : showDialog(
                                                               context: context,
-                                                              applicationName:
-                                                                  'Error',
-                                                              applicationVersion:
-                                                                  data[
-                                                                      'message'],
-                                                            );
+                                                              builder: (context) =>
+                                                                  CupertinoAlertDialog(
+                                                                    title: Text(
+                                                                        'Error'),
+                                                                    content: Text(
+                                                                        'Something went wrong, please try again later'),
+                                                                    actions: [
+                                                                      TextButton(
+                                                                          onPressed: () => Navigator.pop(
+                                                                              context),
+                                                                          child:
+                                                                              Text('Ok'))
+                                                                    ],
+                                                                  ));
                                                     },
                                                   );
                                                 },
@@ -566,13 +590,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ),
                                               const Text(
                                                 textAlign: TextAlign.start,
-                                                '~Sightings have added will remain untill they time out, since they are not linked to your account.',
+                                                '~Sightings you have added will remain untill they time out, since they are not linked to your account.',
                                                 style: TextStyle(fontSize: 15),
                                               ),
                                               const Text(
                                                 textAlign: TextAlign.start,
                                                 '~You will be logged out.',
-                                                style: TextStyle(fontSize: 15),
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                ),
                                               ),
                                               SizedBox(
                                                 height: 10,
@@ -592,12 +618,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         color: Colors.white),
                                                   ),
                                                   onSubmit: () {
-                                                    //TODO: Implement a method to delete the user
-                                                    //* Afuture that will return a bool
+                                                    final userProvider =
+                                                        Provider.of<
+                                                                UserProvider>(
+                                                            context,
+                                                            listen: false);
                                                     signUpAPI
                                                         .deleteAccount(
-                                                            UserData.user.name,
-                                                            UserData.user.name)
+                                                            UserData.user.id,
+                                                            UserData.user
+                                                                    .secret_key ??
+                                                                '')
                                                         .then((value) {
                                                       final data =
                                                           jsonDecode(value);
@@ -612,18 +643,35 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                 MaterialPageRoute(
                                                                   builder:
                                                                       (context) {
-                                                                    return const SplashScreen();
+                                                                    return const PrepPage();
                                                                   },
                                                                 ),
                                                               )
                                                             }
-                                                          : showAboutDialog(
+                                                          : showDialog(
                                                               context: context,
-                                                              applicationName:
-                                                                  'Error',
-                                                              applicationVersion:
-                                                                  data[
-                                                                      'message']);
+                                                              builder: (context) =>
+                                                                  CupertinoAlertDialog(
+                                                                    title: const Text(
+                                                                        'Error',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.red)),
+                                                                    content:
+                                                                        Text(
+                                                                      data[
+                                                                          'data'],
+                                                                    ),
+                                                                    actions: [
+                                                                      CupertinoDialogAction(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child:
+                                                                              const Text('Ok'))
+                                                                    ],
+                                                                  ));
                                                     });
                                                   },
                                                 ),

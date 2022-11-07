@@ -198,6 +198,7 @@ class signUpAPI {
       'secret_key': secretKey,
     });
     final data = response.body;
+    print(data);
     //final finalData = jsonDecode(data);
     return data;
   }
