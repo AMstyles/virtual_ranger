@@ -492,7 +492,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                                                   signUpAPI
                                                       .deleteAccount(
-                                                          UserData.user.id,
+                                                          userProvider.user!.id,
                                                           userProvider.user!
                                                                   .secret_key ??
                                                               '')
@@ -617,19 +617,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     style: TextStyle(
                                                         color: Colors.white),
                                                   ),
-                                                  onSubmit: () {
+                                                  onSubmit: () async {
                                                     final userProvider =
-                                                        Provider.of<
+                                                        await Provider.of<
                                                                 UserProvider>(
                                                             context,
                                                             listen: false);
                                                     signUpAPI
                                                         .deleteAccount(
-                                                            UserData.user.id,
-                                                            UserData.user
+                                                            userProvider
+                                                                .user!.id,
+                                                            userProvider.user!
                                                                     .secret_key ??
                                                                 '')
-                                                        .then((value) {
+                                                        .then((value) async {
                                                       final data =
                                                           jsonDecode(value);
                                                       data['success']
@@ -638,6 +639,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   context),
                                                               Navigator.pop(
                                                                   context),
+                                                              await UserData
+                                                                  .clear(),
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
