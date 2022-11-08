@@ -7,8 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:slide_to_act/slide_to_act.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/pages/Profile/textFieds.dart';
+import 'package:virtual_ranger/pages/prePage.dart';
+import 'package:virtual_ranger/pages/splash_screen.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 import '../services/page_service.dart';
@@ -234,6 +237,14 @@ class _ProfilePageState extends State<ProfilePage> {
             placeholder: 'Age Range',
           ),
           show ? buildAgeRange(context) : SizedBox(),
+          ProfileTextField(
+            controller: _countryController,
+            hint: 'Country',
+          ),
+          ProfileTextField(
+            controller: _cityController,
+            hint: 'City',
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -301,14 +312,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          ProfileTextField(
-            controller: _countryController,
-            hint: 'Country',
-          ),
-          ProfileTextField(
-            controller: _cityController,
-            hint: 'City',
-          ),
           _buildSignUpButton(context, 'UPDATE PROFILE'),
           const Padding(
             padding: EdgeInsets.only(top: 5),
@@ -333,6 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
             obscureText: true,
           ),
           _buildSignUpButton(context, 'CHANGE PASSWORD'),
+          deleteAccount(context),
         ]),
       ),
     );
@@ -344,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
     String text,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 25),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
       child: GestureDetector(
         onTap: (text == 'UPDATE PROFILE')
             ? () => onUpdateProfile(context)
@@ -354,10 +358,358 @@ class _ProfilePageState extends State<ProfilePage> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: MyColors.primaryColor,
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             text,
             style: const TextStyle(fontSize: 15, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget deleteAccount(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return Platform.isAndroid
+                    ? AlertDialog(
+                        title: const Text('Delete Account'),
+                        content: const Text(
+                            'Are you sure you want to delete your account?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                showModalBottomSheet(
+                                  clipBehavior: Clip.hardEdge,
+                                  context: context,
+                                  builder: ((context) => Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20),
+                                          ),
+                                        ),
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            //header
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Delete Account',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.grey.shade200,
+                                                  ),
+                                                  child: IconButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                      icon: Icon(Icons.close)),
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            const Text(
+                                              textAlign: TextAlign.start,
+                                              '~This action cannot be undone.',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
+                                            ),
+                                            const Text(
+                                              textAlign: TextAlign.start,
+                                              '~All your data will be deleted.',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
+                                            ),
+                                            const Text(
+                                              textAlign: TextAlign.start,
+                                              '~Sightings you have added will remain untill they time out, since they are not linked to your account.',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
+                                            ),
+                                            const Text(
+                                              textAlign: TextAlign.start,
+                                              '~You will be logged out.',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.blueGrey),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: SlideAction(
+                                                outerColor: CupertinoColors
+                                                    .destructiveRed,
+                                                sliderButtonIcon:
+                                                    Icon(CupertinoIcons.delete),
+                                                elevation: 0,
+                                                child: const Text(
+                                                  'Slide to Delete',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onSubmit: () {
+                                                  //TODO: Implement a method to delete the user
+                                                  final userProvider =
+                                                      Provider.of<UserProvider>(
+                                                          context,
+                                                          listen: false);
+
+                                                  signUpAPI
+                                                      .deleteAccount(
+                                                          userProvider.user!.id,
+                                                          userProvider.user!
+                                                                  .secret_key ??
+                                                              '')
+                                                      .then(
+                                                    (value) {
+                                                      final data =
+                                                          jsonDecode(value);
+                                                      data['success']
+                                                          ? {
+                                                              Navigator.pop(
+                                                                  context),
+                                                              Navigator.pop(
+                                                                  context),
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return const PrepPage();
+                                                                  },
+                                                                ),
+                                                              )
+                                                            }
+                                                          : showDialog(
+                                                              context: context,
+                                                              builder: (context) =>
+                                                                  CupertinoAlertDialog(
+                                                                    title: Text(
+                                                                        'Error'),
+                                                                    content: Text(
+                                                                        'Something went wrong, please try again later'),
+                                                                    actions: [
+                                                                      TextButton(
+                                                                          onPressed: () => Navigator.pop(
+                                                                              context),
+                                                                          child:
+                                                                              Text('Ok'))
+                                                                    ],
+                                                                  ));
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                );
+                              },
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red),
+                              )),
+                        ],
+                      )
+                    : CupertinoAlertDialog(
+                        title: const Text('Delete Account'),
+                        content: const Text(
+                            'Are you sure you want to delete your account?'),
+                        actions: [
+                          CupertinoDialogAction(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel')),
+                          CupertinoDialogAction(
+                              onPressed: () {
+                                // Provider.of<UserProvider>(context, listen: false)
+                                //     .deleteUser();
+                                //areYousure(context);
+
+                                Navigator.pop(context);
+                                showCupertinoModalPopup(
+                                    barrierColor: Colors.black.withOpacity(.3),
+                                    context: context,
+                                    builder: (context) {
+                                      return CupertinoActionSheet(
+                                        title: const Text(
+                                          'Final confirmation',
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        message: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                textAlign: TextAlign.start,
+                                                '~This action cannot be undone.',
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                              const Text(
+                                                textAlign: TextAlign.start,
+                                                '~All your data will be deleted.',
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                              const Text(
+                                                textAlign: TextAlign.start,
+                                                '~Sightings you have added will remain untill they time out, since they are not linked to your account.',
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                              const Text(
+                                                textAlign: TextAlign.start,
+                                                '~You will be logged out.',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SlideAction(
+                                                  outerColor: CupertinoColors
+                                                      .destructiveRed,
+                                                  sliderButtonIcon: Icon(
+                                                      CupertinoIcons.delete),
+                                                  elevation: 0,
+                                                  child: const Text(
+                                                    'Slide to Delete',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  onSubmit: () async {
+                                                    final userProvider =
+                                                        await Provider.of<
+                                                                UserProvider>(
+                                                            context,
+                                                            listen: false);
+                                                    signUpAPI
+                                                        .deleteAccount(
+                                                            userProvider
+                                                                .user!.id,
+                                                            userProvider.user!
+                                                                    .secret_key ??
+                                                                '')
+                                                        .then((value) async {
+                                                      final data =
+                                                          jsonDecode(value);
+                                                      data['success']
+                                                          ? {
+                                                              Navigator.pop(
+                                                                  context),
+                                                              Navigator.pop(
+                                                                  context),
+                                                              await UserData
+                                                                  .clear(),
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return const PrepPage();
+                                                                  },
+                                                                ),
+                                                              )
+                                                            }
+                                                          : showDialog(
+                                                              context: context,
+                                                              builder: (context) =>
+                                                                  CupertinoAlertDialog(
+                                                                    title: const Text(
+                                                                        'Error',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.red)),
+                                                                    content:
+                                                                        Text(
+                                                                      data[
+                                                                          'data'],
+                                                                    ),
+                                                                    actions: [
+                                                                      CupertinoDialogAction(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child:
+                                                                              const Text('Ok'))
+                                                                    ],
+                                                                  ));
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ]),
+                                        actions: [
+                                          CupertinoActionSheetAction(
+                                            child: const Text('Cancel'),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red),
+                              )),
+                        ],
+                      );
+                ;
+              });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.red,
+          ),
+          child: const Text(
+            'DELETE MY ACCOUNT',
+            style: TextStyle(fontSize: 15, color: Colors.white),
           ),
         ),
       ),

@@ -108,6 +108,11 @@ class signUpAPI {
     String city,
     String secretKey,
   ) async {
+    print('id: $id');
+    print('name: $name');
+    print('email: $email');
+    print('phone: $phone');
+    print('secretKey: $secretKey');
     final response = await http
         .post(Uri.parse('http://dinokengapp.co.za/edit_profile'), body: {
       'id': id,
@@ -189,5 +194,19 @@ class signUpAPI {
                 );
         }));
     //print(response.body);
+  }
+
+  static Future<String> deleteAccount(String id, String secretKey) async {
+    print('Screate key: $secretKey');
+    print('id: $id');
+    final response = await http
+        .post(Uri.parse('https://dinokengapp.co.za/delete_account'), body: {
+      'id': id,
+      'secret_key': secretKey,
+    });
+    final data = response.body;
+    print(data);
+    //final finalData = jsonDecode(data);
+    return data;
   }
 }

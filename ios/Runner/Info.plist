@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>7.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -46,7 +46,7 @@
 	<key>FacebookDisplayName</key>
 	<string>Virtual Ranger</string>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string>public.app-category.education</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
@@ -62,9 +62,9 @@
 	<key>NSLocationDefaultAccuracyReduced</key>
 	<false/>
 	<key>NSLocationUsageDescription</key>
-	<string>need location to track user's location</string>
+	<string>To assist you when adding sightings of animals in the park and see your relative location to animals' sightings.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>need location to track user</string>
+	<string>To assist you when adding sightings of animals in the park and see your relative location to animals' sightings.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to photo library to choose a profile picture</string>
 	<key>NSUserNotificationsUsageDescription</key>
@@ -75,6 +75,8 @@
 	<string>LaunchScreen.storyboard</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

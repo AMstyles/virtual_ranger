@@ -104,4 +104,8 @@ class UserData {
   static Future<String> getSettingsString(String key) async {
     return await _userData.getString(key) ?? 'never synced';
   }
+
+  static Future<void> clear() async {
+    await _userData.clear();
+  }
 }
