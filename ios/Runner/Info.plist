@@ -46,7 +46,7 @@
 	<key>FacebookDisplayName</key>
 	<string>Virtual Ranger</string>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string>public.app-category.education</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
