@@ -72,11 +72,11 @@ class _SignUpPageState extends State<SignUpPage> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             children: [
-              Image.asset(
-                'lib/assets/mainLogo.png',
-                color: Colors.grey.shade600,
-                fit: BoxFit.cover,
-              ),
+              // Image.asset(
+              //   'lib/assets/mainLogo.png',
+              //   color: Colors.grey.shade600,
+              //   fit: BoxFit.cover,
+              // ),
               Platform.isIOS
                   ? _buildAppleSignInButton(context)
                   : const SizedBox(),
@@ -264,6 +264,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+//!fancy
   Widget _buildAppleSignInButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
@@ -271,6 +272,18 @@ class _SignUpPageState extends State<SignUpPage> {
             Provider.of<AppleLoginProvider>(context, listen: false);
         await provider.LoginWithApple();
         if (auth.FirebaseAuth.instance.currentUser != null) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return Center(
+                  child: LoadingBouncingGrid.circle(
+                    backgroundColor: Colors.lightGreen,
+                    duration: Duration(milliseconds: 500),
+                    inverted: true,
+                  ),
+                );
+              });
+
           print("instance not null");
           final nice = auth.FirebaseAuth.instance.currentUser;
           print("name is: " + nice!.email!.toString());
@@ -283,6 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
             final userToBe = User.fromjson((finalVedict['data']));
             UserData.setUser(userToBe);
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
             showDialogs();
@@ -307,6 +321,7 @@ class _SignUpPageState extends State<SignUpPage> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
             showDialogs();
+            Navigator.pop(context);
           }
         } else {}
         auth.FirebaseAuth.instance.signOut();

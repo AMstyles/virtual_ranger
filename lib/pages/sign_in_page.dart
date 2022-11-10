@@ -173,6 +173,44 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 //!fancy
+  // Widget _buildSignInButton(BuildContext context) {
+  //   return GestureDetector(
+  //     onTap: () => handleSubmit2(),
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(vertical: 15),
+  //       alignment: Alignment.center,
+  //       decoration: BoxDecoration(
+  //         color: MyColors.primaryColor,
+  //       ),
+  //       child: const Text(
+  //         'SIGN IN',
+  //         style: TextStyle(fontSize: 15, color: Colors.white),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // Widget _buildSignUpButton(BuildContext context) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.of(context)
+  //           .push(MaterialPageRoute(builder: (context) => const SignUpPage()));
+  //     },
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(vertical: 15),
+  //       alignment: Alignment.center,
+  //       decoration: BoxDecoration(
+  //         color: MyColors.secondaryColor,
+  //       ),
+  //       child: const Text(
+  //         'SIGN UP/REGISTER',
+  //         style: TextStyle(fontSize: 15, color: Colors.white),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+//!fancy
   Widget _buildAppleSignInButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
@@ -180,6 +218,18 @@ class _LoginPageState extends State<LoginPage> {
             Provider.of<AppleLoginProvider>(context, listen: false);
         await provider.LoginWithApple();
         if (auth.FirebaseAuth.instance.currentUser != null) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return Center(
+                  child: LoadingBouncingGrid.circle(
+                    backgroundColor: Colors.lightGreen,
+                    duration: Duration(milliseconds: 500),
+                    inverted: true,
+                  ),
+                );
+              });
+
           print("instance not null");
           final nice = auth.FirebaseAuth.instance.currentUser;
           print("name is: " + nice!.email!.toString());
@@ -192,6 +242,7 @@ class _LoginPageState extends State<LoginPage> {
             final userToBe = User.fromjson((finalVedict['data']));
             UserData.setUser(userToBe);
             Provider.of<UserProvider>(context, listen: false).setUser(userToBe);
+            Navigator.pop(context);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
             showDialogs();
@@ -216,6 +267,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: ((context) => DrawerApp())));
             showDialogs();
+            Navigator.pop(context);
           }
         } else {}
         auth.FirebaseAuth.instance.signOut();

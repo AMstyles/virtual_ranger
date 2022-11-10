@@ -40,19 +40,20 @@ android {
     }
 
     sourceSets {
+
         main.java.srcDirs += 'src/main/kotlin'
+
     }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.virtual_ranger"
+        applicationId "za.co.dinokengreserve.androidapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 32
         multiDexEnabled true
-
-        versionCode flutterVersionCode.toInteger()
+        versionCode 62
         versionName flutterVersionName
     }
 

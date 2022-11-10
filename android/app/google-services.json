@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:734421281531:android:8d33a2d09b628e6cf55e5e",
         "android_client_info": {
-          "package_name": "com.example.virtual_ranger"
+          "package_name": "za.co.dinokengreserve.androidapp"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "734421281531-2dd6amf1sbmug7lhra7rn7gcjv2gjqin.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.virtual_ranger",
+            "package_name": "za.co.dinokengreserve.androidapp",
             "certificate_hash": "bc6cf5b7f8cc7c7ab83d61f000224927b9496362"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "734421281531-ovp2vjqa82npkjemmbnq3v4q3ukdka90.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.virtual_ranger",
+            "package_name": "za.co.dinokengreserve.androidapp",
             "certificate_hash": "413460e22a72e029bbeba4a1b3bf4d21ebaaf593"
           }
         },
