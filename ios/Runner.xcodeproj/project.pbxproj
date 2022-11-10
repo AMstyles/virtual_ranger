@@ -392,7 +392,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.0.0;
+				MARKETING_VERSION = 7.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = za.co.dinokengreserve;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -533,7 +533,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.0.0;
+				MARKETING_VERSION = 7.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = za.co.dinokengreserve;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -566,7 +566,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.0.0;
+				MARKETING_VERSION = 7.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = za.co.dinokengreserve;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
