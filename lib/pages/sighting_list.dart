@@ -104,10 +104,13 @@ class _SightingslistPageState extends State<SightingslistPage> {
                       )
                     : IconButton(
                         onPressed: () async {
-                          await () =>
-                              Provider.of<MapsData>(context, listen: false)
-                                  .refresh();
+                          SnackBar mySnackBar = await Provider.of<MapsData>(
+                                  context,
+                                  listen: false)
+                              .refreshSites();
                           await putSightings();
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(mySnackBar);
                         },
                         icon: Icon(Icons.refresh, color: Colors.green))
               ],

@@ -154,7 +154,8 @@ class Sightings {
       return events;
     } catch (e) {
       print(e);
-      return getColouredAnimal(context);
+      //return getColouredAnimal(context);
+      return [];
     }
   }
 
