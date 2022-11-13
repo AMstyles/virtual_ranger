@@ -101,32 +101,31 @@ class Sightings {
     final data = pre_data['data'];
     //print(data);
     final List<dynamic> finalData = data;
-    List<Sighting> events = [];
+    List<Sighting> sightings = [];
     for (var i = 0; i < finalData.length; i++) {
-      events.add(
+      sightings.add(
         Sighting.fromJson(
           finalData[i],
         ),
       );
     }
-    return events;
+    return sightings;
   }
 
   static Future<List<Sighting>> getSightingsFromLocal() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/business_listings.json');
+    final file = File('${dir.path}/sightings.json');
     final data = jsonDecode(await file.readAsString());
-    final data2 = data['data'];
-    final List<dynamic> finalData = data2;
-    List<Sighting> events = [];
+    final List<dynamic> finalData = data;
+    List<Sighting> sightings = [];
     for (var i = 0; i < finalData.length; i++) {
-      events.add(
+      sightings.add(
         Sighting.fromJson(
           finalData[i],
         ),
       );
     }
-    return events;
+    return sightings;
   }
 
   static Future<List<AnimalSight>> getColouredAnimal(
@@ -157,5 +156,21 @@ class Sightings {
       print(e);
       return getColouredAnimal(context);
     }
+  }
+
+  static Future<List<AnimalSight>> getColouredAnimalFromLocal() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/coloured_animals.json');
+    final data = jsonDecode(await file.readAsString());
+    final List<dynamic> finalData = data;
+    List<AnimalSight> events = [];
+    for (var i = 0; i < finalData.length; i++) {
+      events.add(
+        AnimalSight.fromJson(
+          finalData[i],
+        ),
+      );
+    }
+    return events;
   }
 }

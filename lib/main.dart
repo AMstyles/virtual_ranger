@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'apis/Download.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -22,16 +23,32 @@ Future main() async {
     await Firebase.initializeApp();
   }
   await UserData.init();
-  try {
-    await DownLoad.downloadAllJson();
-  } catch (e) {
-    print(e);
-  }
+
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    beginApp();
+  }
+
+  void beginApp() async {
+    try {
+      await DownLoad.downloadAllJson();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

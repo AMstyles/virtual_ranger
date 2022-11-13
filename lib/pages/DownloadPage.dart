@@ -23,7 +23,7 @@ class _DownloadPageState extends State<DownloadPage> {
   void initState() {
     super.initState();
     Permissionsapi.askStoragePermission();
-    getMetaData();
+    //getMetaData();
 
     /*UserData.getOfflineMode().then((value) => setState(() {
           isOffline = value;

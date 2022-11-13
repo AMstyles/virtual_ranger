@@ -21,8 +21,7 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
-  late final legendItems;
-
+  late var legendItems;
   AnimalSight? currentAnimal = null;
   String _mapStyle = '';
   var mapType = MapType.normal;
@@ -97,6 +96,21 @@ class _SightingslistPageState extends State<SightingslistPage> {
               title: const Text('Sightings List'),
             )
           : AppBar(
+              actions: [
+                Provider.of<MapsData>(context, listen: false).isFetching
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator.adaptive(),
+                      )
+                    : IconButton(
+                        onPressed: () async {
+                          await () =>
+                              Provider.of<MapsData>(context, listen: false)
+                                  .refresh();
+                          await putSightings();
+                        },
+                        icon: Icon(Icons.refresh, color: Colors.green))
+              ],
               title: Text('Sightings List'),
               leading: Container(
                 margin: const EdgeInsets.only(left: 5),
