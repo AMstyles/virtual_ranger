@@ -91,25 +91,29 @@ class Sightings {
   }
 
   static Future<List<Sighting>> getSightings() async {
-    final response = await http.post(Uri.parse(GET_SIGHTINGS_URL), body: {
-      'user_id': UserData.user.id,
-      'secret_key': UserData.user.secret_key,
-      'user_role': 'Attendee'
-    });
-    //print(response.body);
-    final pre_data = jsonDecode(response.body);
-    final data = pre_data['data'];
-    //print(data);
-    final List<dynamic> finalData = data;
-    List<Sighting> sightings = [];
-    for (var i = 0; i < finalData.length; i++) {
-      sightings.add(
-        Sighting.fromJson(
-          finalData[i],
-        ),
-      );
+    try {
+      final response = await http.post(Uri.parse(GET_SIGHTINGS_URL), body: {
+        'user_id': UserData.user.id,
+        'secret_key': UserData.user.secret_key,
+        'user_role': 'Attendee'
+      });
+      //print('the body is: ${response.body}');
+      final pre_data = jsonDecode(response.body);
+      final data = pre_data['data'];
+      //print(data);
+      final List<dynamic> finalData = data;
+      List<Sighting> sightings = [];
+      for (var i = 0; i < finalData.length; i++) {
+        sightings.add(
+          Sighting.fromJson(
+            finalData[i],
+          ),
+        );
+      }
+      return sightings;
+    } catch (e) {
+      throw e;
     }
-    return sightings;
   }
 
   static Future<List<Sighting>> getSightingsFromLocal() async {
