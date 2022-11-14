@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../apis/Sightingsapi.dart';
 import '../models/animalforSIGHT.dart';
@@ -6,13 +8,23 @@ class MapsData extends ChangeNotifier {
   late var legendItems;
   late List<Sighting> fetchedSites;
   bool isFetching = false;
+  int count = 0;
 
   Future<List<Sighting>> getEm() async {
     isFetching = true;
-    this.fetchedSites = await Sightings.getSightings();
-    isFetching = false;
-    notifyListeners();
-    return fetchedSites;
+
+    try {
+      this.fetchedSites = await Sightings.getSightings();
+      isFetching = false;
+      notifyListeners();
+      return fetchedSites;
+    } catch (e) {
+      notifyListeners();
+      isFetching = false;
+
+      isFetching = false;
+      throw e;
+    }
   }
 
   void putLegend(BuildContext context) async {
@@ -25,10 +37,13 @@ class MapsData extends ChangeNotifier {
   }
 
   Future<SnackBar> refreshSites() async {
+    SnackBar? mySnackBar;
+
     try {
       await getEm();
       notifyListeners();
-      return SnackBar(
+      mySnackBar = SnackBar(
+        duration: const Duration(seconds: 2),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -43,24 +58,25 @@ class MapsData extends ChangeNotifier {
           ],
         ),
       );
+
+      return mySnackBar;
     } catch (e) {
-      print(e);
-      SnackBar snackBar = SnackBar(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Text("Error"),
-          ],
-        ),
-      );
-      return snackBar;
+      return SnackBar(
+          content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Wrap(children: [
+            const Text("Internet connection error."),
+          ]),
+        ],
+      ));
     }
   }
 }

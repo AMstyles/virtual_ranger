@@ -19,6 +19,7 @@ class DrawerProfile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Provider.of<UserProvider>(context).user!.isImageNull()
                   ? const CircleAvatar(

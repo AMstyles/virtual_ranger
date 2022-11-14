@@ -14,12 +14,12 @@ class AnimalSight {
       required this.color,
       required this.hexColor});
 
-  static AnimalSight fromJson(Map<String, dynamic> json) {
+  static AnimalSight fromJson(Map<String, String?> json) {
     return AnimalSight(
-        name: json['english_name'],
-        id: json['id'],
-        color: HexColor.fromHex(json['pin_color']),
-        hexColor: json['pin_color']);
+        name: json['english_name'] ?? 'Unknown',
+        id: json['id'] ?? '0',
+        color: HexColor.fromHex(json['pin_color'] ?? '#000000'),
+        hexColor: json['pin_color'] ?? '#000000');
   }
 }
 
