@@ -6,13 +6,11 @@ import 'package:virtual_ranger/models/constants.dart';
 import 'package:virtual_ranger/models/news.dart';
 import 'package:virtual_ranger/services/page_service.dart';
 import 'package:virtual_ranger/widgets/NewsWidg.dart';
-
 import '../../apis/newsapi.dart';
 import '../../services/shared_preferences.dart';
 
 class NewsTab extends StatefulWidget {
   NewsTab({Key? key}) : super(key: key);
-
   @override
   State<NewsTab> createState() => _NewsTabState();
 }

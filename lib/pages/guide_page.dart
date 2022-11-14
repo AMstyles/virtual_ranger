@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:virtual_ranger/models/category.dart';
 import 'package:virtual_ranger/services/animal_search.dart';
 import 'package:virtual_ranger/widgets/CategoryWidg.dart';
-
 import '../apis/Animal&Plants_apis.dart';
 import '../services/page_service.dart';
 import '../services/shared_preferences.dart';

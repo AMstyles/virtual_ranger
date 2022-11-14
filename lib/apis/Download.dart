@@ -28,9 +28,11 @@ class DownLoad {
       print("success 6");
       DownloadSubCategories();
       print("success last");
+      //DownloadColoredAnimals(context);
+      //DownloadSightings();
       DownloadImages();
     } catch (e) {
-      downloadAllJson();
+      //downloadAllJson();
     }
   }
 
@@ -72,6 +74,7 @@ class DownLoad {
     }
   }
 
+//Todo: add download Colored animals and sightings to download all json
   static Future<void> DownloadNews() async {
     final response = await http.get(Uri.parse(NEWS_URL));
     final data = response.body;
@@ -83,6 +86,35 @@ class DownLoad {
       file.writeAsStringSync(data);
     }
   }
+
+  // static Future<void> DownloadSightings() async {
+  //   final response = await http.get(Uri.parse(GET_SIGHTINGS_URL));
+  //   final data = response.body;
+  //   final file = File('${UserData.path}/sightings.json');
+  //   if (!file.existsSync()) {
+  //     file.createSync(recursive: true); // create file if not exists
+
+  //   } else {
+  //     file.writeAsStringSync(data);
+  //   }
+  // }
+
+  // static Future<void> DownloadColoredAnimals(BuildContext context) async {
+  //   final response =
+  //       await http.post(Uri.parse(GET_COLOURED_ANIMALS_URL), body: {
+  //     'secret_key':
+  //         Provider.of<UserProvider>(context, listen: false).user!.secret_key ??
+  //             " ",
+  //   });
+  //   final data = response.body;
+  //   final file = File('${UserData.path}/colored_animals.json');
+  //   if (!file.existsSync()) {
+  //     file.createSync(recursive: true); // create file if not exists
+
+  //   } else {
+  //     file.writeAsStringSync(data);
+  //   }
+  // }
 
   static Future<bool> checkNewsUpdates() async {
     final response = await http.get(Uri.parse(NEWS_URL));

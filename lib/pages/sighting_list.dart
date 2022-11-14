@@ -21,8 +21,7 @@ class SightingslistPage extends StatefulWidget {
 }
 
 class _SightingslistPageState extends State<SightingslistPage> {
-  late final legendItems;
-
+  late var legendItems;
   AnimalSight? currentAnimal = null;
   String _mapStyle = '';
   var mapType = MapType.normal;
@@ -67,62 +66,36 @@ class _SightingslistPageState extends State<SightingslistPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
       // extendBodyBehindAppBar: true,
-      appBar: (Platform.isAndroid)
-          ? AppBar(
-              leading: Container(
-                margin: const EdgeInsets.only(left: 5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed:
-                      Provider.of<Anime>(context, listen: false).handleDrawer,
-                ),
-              ),
-              /*actions: [
-                Container(
-                  margin: EdgeInsets.only(right: 5),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0),
-                  ),
-                  child: IconButton(
-                    onPressed: chooseMapType,
-                    icon: Icon(Icons.settings),
-                  ),
+      appBar: AppBar(
+        actions: [
+          Provider.of<MapsData>(context, listen: false).isFetching
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator.adaptive(),
                 )
-              ],*/
-              title: const Text('Sightings List'),
-            )
-          : AppBar(
-              title: Text('Sightings List'),
-              leading: Container(
-                margin: const EdgeInsets.only(left: 5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(.3),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed:
-                      Provider.of<Anime>(context, listen: false).handleDrawer,
-                ),
-              ),
-              //backgroundColor: Colors.transparent,
-              //title: const Text('Sightings List'),
-              /*actions: [
-                Container(
-                    margin: EdgeInsets.only(right: 5),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(.3),
-                    ),
-                    child: IconButton(
-                        onPressed: chooseMapIOS, icon: Icon(Icons.settings)))
-              ],*/
-            ),
+              : IconButton(
+                  onPressed: () async {
+                    SnackBar mySnackBar =
+                        await Provider.of<MapsData>(context, listen: false)
+                            .refreshSites();
+                    await putSightings();
+                    ScaffoldMessenger.of(context).showSnackBar(mySnackBar);
+                  },
+                  icon: Icon(Icons.refresh, color: Colors.green))
+        ],
+        title: Text('Sightings List'),
+        leading: Container(
+          margin: const EdgeInsets.only(left: 5),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white.withOpacity(.3),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: Provider.of<Anime>(context, listen: false).handleDrawer,
+          ),
+        ),
+      ),
       floatingActionButton:
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Padding(
@@ -231,30 +204,47 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }*/
 
   Future<void> putSightings() async {
-    await putLegend(context);
-    var fetchedSites = await Sightings.getSightings();
+    try {
+      await putLegend(context);
+      var fetchedSites = await Sightings.getSightings();
 
-    setState(() {
-      fetchedSites.forEach((element) async {
-        print(element.animal_id);
+      setState(() {
+        fetchedSites.forEach((element) async {
+          print(element.animal_id);
 
-        late final pinLocationIcon;
-        pinLocationIcon = await MapMarker.svgToPng(
-            context, getColor(element.animal_id.toString()));
+          late final pinLocationIcon;
+          pinLocationIcon = await MapMarker.svgToPng(
+              context, getColor(element.animal_id.toString()));
 
-        setState(() {
-          markers.add(Marker(
-            markerId: MarkerId(element.animal_id.toString()),
-            position: LatLng(element.latitude, element.longitude),
-            icon: BitmapDescriptor.fromBytes(pinLocationIcon),
-            infoWindow: InfoWindow(
-              title: getName(element.animal_id),
-              snippet: readTimeStamp(element.sighting_time),
-            ),
-          ));
+          setState(() {
+            markers.add(Marker(
+              markerId: MarkerId(element.animal_id.toString()),
+              position: LatLng(element.latitude, element.longitude),
+              icon: BitmapDescriptor.fromBytes(pinLocationIcon),
+              infoWindow: InfoWindow(
+                title: getName(element.animal_id),
+                snippet: readTimeStamp(element.sighting_time),
+              ),
+            ));
+          });
         });
       });
-    });
+    } catch (e) {
+      print('error occured: $e');
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //     content: Row(
+      //   children: [
+      //     Icon(
+      //       Icons.error,
+      //       color: Colors.red,
+      //     ),
+      //     SizedBox(
+      //       width: 10,
+      //     ),
+      //     Text('Error occured, please try again later')
+      //   ],
+      // )));
+    }
   }
 
   String getName(String id) {
