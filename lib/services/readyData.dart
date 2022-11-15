@@ -5,7 +5,7 @@ import '../models/animalforSIGHT.dart';
 
 class MapsData extends ChangeNotifier {
   late var legendItems;
-  late Future<List<Sighting>> fetchedSites;
+  late List<Sighting> fetchedSites;
   bool isFetching = false;
   int count = 0;
 
@@ -14,14 +14,13 @@ class MapsData extends ChangeNotifier {
     notifyListeners();
 
     try {
-      this.fetchedSites = Sightings.getSightings(context);
+      this.fetchedSites = await Sightings.getSightings(context);
       isFetching = false;
       notifyListeners();
       return fetchedSites;
     } catch (e) {
-      notifyListeners();
       isFetching = false;
-
+      notifyListeners();
       isFetching = false;
       throw e;
     }

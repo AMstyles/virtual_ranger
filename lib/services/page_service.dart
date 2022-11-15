@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:provider/provider.dart';
 import 'package:virtual_ranger/pages/DownloadPage.dart';
 import 'package:virtual_ranger/services/shared_preferences.dart';
 import '../models/user.dart';
@@ -94,6 +95,32 @@ class PageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> canDoOnline(context) async {
+    bool ans = await InternetConnectionChecker().hasConnection;
+    if (ans) {
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.wifi_off, color: Colors.white),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'No Internet Connection',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        duration: Duration(seconds: 2),
+      ));
+      return false;
+    }
+  }
+
   void ConnectionStream(context) {
     //stream to check for connection
     InternetConnectionChecker().onStatusChange.listen((status) {
@@ -119,7 +146,7 @@ class PageProvider extends ChangeNotifier {
                 ),
               ],
             ),
-            duration: Duration(seconds: 3),
+            duration: Duration(seconds: 5),
           ));
           notifyListeners();
           break;
@@ -127,6 +154,16 @@ class PageProvider extends ChangeNotifier {
           hasConnection = false;
           //show snack bar
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            action: !(Provider.of<UserProvider>(context).isOffLine)!
+                ? SnackBarAction(
+                    textColor: Colors.white,
+                    label: 'Go Offline',
+                    onPressed: () {
+                      Provider.of<PageProvider>(context, listen: false)
+                          .jumpToDownload();
+                    },
+                  )
+                : null,
             backgroundColor: Colors.red,
             content: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -144,7 +181,7 @@ class PageProvider extends ChangeNotifier {
                 ),
               ],
             ),
-            duration: Duration(seconds: 10),
+            duration: Duration(seconds: 15),
           ));
           notifyListeners();
           break;

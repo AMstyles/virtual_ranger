@@ -68,7 +68,7 @@ class _PrepPageState extends State<PrepPage> {
     if (await UserData.getSettings('checkContent') &&
         await UserData.getOfflineMode()) {
       await DownLoad.downloadAllJson();
-      await DownLoad.downloadAllImages(context);
+      //await DownLoad.downloadAllImages(context);
       UserData.setSettingsString('lastSync', date);
     }
     print(await UserData.isLoggedIn());

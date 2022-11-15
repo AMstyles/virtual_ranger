@@ -8,6 +8,7 @@ import 'package:virtual_ranger/extensions/colorExtension.dart';
 import 'package:virtual_ranger/models/animalforSIGHT.dart';
 import 'package:virtual_ranger/pages/Custom/AnimeVals.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:virtual_ranger/services/page_service.dart';
 import '../apis/Sightingsapi.dart';
 import '../services/readyData.dart';
 import '../widgets/MapLegend_widg.dart';
@@ -257,32 +258,38 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }
 
   void addMaker_(LatLng latLng, AnimalSight sighting) async {
-    final isAdded =
-        await Sightings.uploadMarker(latLng, context, currentAnimal!);
-    Marker marker = Marker(
-      flat: true,
-      markerId: MarkerId(latLng.toString()),
-      position: latLng,
-      infoWindow: InfoWindow(
-        title: getName(sighting.id),
-        snippet: TimeOfDay.now().format(context),
-      ),
-      icon: BitmapDescriptor.fromBytes(
-          await MapMarker.svgToPng(context, sighting.hexColor)),
-      //await setCustomMapPin(sighting.id),
-    );
+    await Provider.of<PageProvider>(context)
+        .canDoOnline(context)
+        .then((value) async {
+      if (value) {
+        final isAdded =
+            await Sightings.uploadMarker(latLng, context, currentAnimal!);
+        Marker marker = Marker(
+          flat: true,
+          markerId: MarkerId(latLng.toString()),
+          position: latLng,
+          infoWindow: InfoWindow(
+            title: getName(sighting.id),
+            snippet: TimeOfDay.now().format(context),
+          ),
+          icon: BitmapDescriptor.fromBytes(
+              await MapMarker.svgToPng(context, sighting.hexColor)),
+          //await setCustomMapPin(sighting.id),
+        );
 
-    if (isAdded) {
-      setState(() {
-        markers.add(marker);
-      });
-    }
-    /*setState(() {
+        if (isAdded) {
+          setState(() {
+            markers.add(marker);
+          });
+        }
+        /*setState(() {
       markers.add(marker);
     });*/
-    //await Sightings.uploadMarker(latLng, context, currentAnimal!);
-    setState(() {
-      currentAnimal = null;
+        //await Sightings.uploadMarker(latLng, context, currentAnimal!);
+        setState(() {
+          currentAnimal = null;
+        });
+      }
     });
   }
 
