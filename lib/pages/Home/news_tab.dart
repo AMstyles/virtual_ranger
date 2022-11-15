@@ -57,55 +57,92 @@ class _NewsTabState extends State<NewsTab>
       child: FutureBuilder<List<News>>(
         future: _future,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              addAutomaticKeepAlives: true,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return NewsWidg(story: snapshot.data![index]);
-              },
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: LoadingBouncingGrid.square(
+                backgroundColor: Colors.green,
+                inverted: true,
+                size: 50,
+              ),
             );
-          } else if (snapshot.hasError) {
-            return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-              child: ListView(
-                children: [
-                  Center(
-                    child: Text(
-                      "${snapshot.error}",
-                      style: TextStyle(color: Colors.red, fontSize: 19),
+          } else {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                addAutomaticKeepAlives: true,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return NewsWidg(story: snapshot.data![index]);
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                child: ListView(
+                  children: [
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(
+                            width: 8.0,
+                          ),
+                          snapshot.error
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains("dinokeng")
+                              ? const Text(
+                                  "No Internet Connection",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 19),
+                                )
+                              : const Text(
+                                  "Error",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 19),
+                                ),
+                        ],
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _future = Newsapi.getNews();
-                      });
-                    },
-                    child: Container(
-                        margin: EdgeInsets.all(10),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.green,
-                              width: 1,
-                            )),
-                        child: Text("Retry")),
-                  )
-                ],
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _future =
+                              Provider.of<UserProvider>(context, listen: false)
+                                          .isOffLine ??
+                                      false
+                                  ? Newsapi.getNewsFromLocal()
+                                  : Newsapi.getNews();
+                        });
+                      },
+                      child: Container(
+                          margin: EdgeInsets.all(10),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.green,
+                                width: 1,
+                              )),
+                          child: Text("Retry")),
+                    )
+                  ],
+                ),
+              );
+            }
+            return Center(
+              child: LoadingBouncingGrid.square(
+                backgroundColor: MyColors.primaryColor,
+                duration: Duration(milliseconds: 500),
+                inverted: true,
               ),
             );
           }
-          return Center(
-            child: LoadingBouncingGrid.square(
-              backgroundColor: MyColors.primaryColor,
-              duration: Duration(milliseconds: 500),
-              inverted: true,
-            ),
-          );
         },
       ),
     );
