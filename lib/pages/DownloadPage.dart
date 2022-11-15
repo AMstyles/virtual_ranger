@@ -105,18 +105,6 @@ class _DownloadPageState extends State<DownloadPage> {
                       fontWeight: FontWeight.bold)),
               trailing:
                   Text(lastSync, style: TextStyle(color: Colors.blueGrey)),
-              /*subtitle: isOffline
-                  ? Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text("update available"),
-                        CircleAvatar(
-                          radius: 5,
-                          backgroundColor: Colors.red,
-                        )
-                      ],
-                    )
-                  : SizedBox(),*/
             )
           ],
         )),
@@ -164,14 +152,6 @@ class _DownloadPageState extends State<DownloadPage> {
                           ),
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(12),
-                      //   child: Container(
-                      //       height: 100,
-                      //       width: 100,
-                      //       child: Center(
-                      //           child: CircularProgressIndicator.adaptive())),
-                      // ),
                     ],
                   )
                 : SizedBox(),
@@ -360,26 +340,32 @@ class _DownloadPageState extends State<DownloadPage> {
                   ? 'Download & Sync'
                   : 'Check for updates'),
               onPressed: () async {
-                (Provider.of<DownloadProvider>(context, listen: false)
-                                .imagesDownloaded ==
-                            0 ||
-                        Provider.of<DownloadProvider>(context, listen: false)
-                                .imagesToDownload ==
-                            Provider.of<DownloadProvider>(context,
-                                    listen: false)
-                                .imagesDownloaded)
-                    ? await DownLoad.downloadAllJson().then(
-                        (value) {
-                          setState(() {
-                            _downloading = true;
-                            getMetaData();
-                          });
-                          /* setState(() {
-                    getMetaData();
-                  });*/
-                        },
-                      )
-                    : () {};
+                await Provider.of<PageProvider>(context)
+                    .canDoOnline(context)
+                    .then(
+                  (value) async {
+                    if (value == true) {
+                      (Provider.of<DownloadProvider>(context, listen: false)
+                                      .imagesDownloaded ==
+                                  0 ||
+                              Provider.of<DownloadProvider>(context,
+                                          listen: false)
+                                      .imagesToDownload ==
+                                  Provider.of<DownloadProvider>(context,
+                                          listen: false)
+                                      .imagesDownloaded)
+                          ? await DownLoad.downloadAllJson().then(
+                              (value) {
+                                setState(() {
+                                  _downloading = true;
+                                  getMetaData();
+                                });
+                              },
+                            )
+                          : () {};
+                    }
+                  },
+                );
               },
             ),
           ],

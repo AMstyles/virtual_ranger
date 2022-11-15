@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import '../extensions/colorExtension.dart';
@@ -14,7 +16,7 @@ class AnimalSight {
       required this.color,
       required this.hexColor});
 
-  static AnimalSight fromJson(Map<String, String?> json) {
+  static AnimalSight fromJson(Map<String, dynamic> json) {
     return AnimalSight(
         name: json['english_name'] ?? 'Unknown',
         id: json['id'] ?? '0',

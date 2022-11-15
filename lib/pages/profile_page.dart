@@ -350,9 +350,18 @@ class _ProfilePageState extends State<ProfilePage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
       child: GestureDetector(
-        onTap: (text == 'UPDATE PROFILE')
-            ? () => onUpdateProfile(context)
-            : () => onChangePassword(context),
+        onTap: () async {
+          await Provider.of<PageProvider>(context)
+              .canDoOnline(context)
+              .then((value) {
+            print('value: $value');
+            if (value) {
+              (text == 'UPDATE PROFILE')
+                  ? onUpdateProfile(context)
+                  : onChangePassword(context);
+            }
+          });
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15),
           alignment: Alignment.center,
