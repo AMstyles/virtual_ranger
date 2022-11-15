@@ -37,6 +37,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
   @override
   void initState() {
     super.initState();
+    putSightings();
     askLocationPermission();
     rootBundle.loadString('lib/assets/mapStyle.txt').then((string) {
       _mapStyle = string;
@@ -77,7 +78,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                   onPressed: () async {
                     SnackBar mySnackBar =
                         await Provider.of<MapsData>(context, listen: false)
-                            .refreshSites();
+                            .refreshSites(context);
                     await putSightings();
                     ScaffoldMessenger.of(context).showSnackBar(mySnackBar);
                   },
@@ -146,6 +147,7 @@ class _SightingslistPageState extends State<SightingslistPage> {
                 );
 
                 await putSightings();
+
                 setTheState();
               },
               initialCameraPosition: const CameraPosition(
@@ -189,24 +191,11 @@ class _SightingslistPageState extends State<SightingslistPage> {
     );
   }
 
-  /*void addEasyMarker(LatLng latLng) async {
-    Marker marker = Marker(
-       
-        markerId: MarkerId(element.animal_id.toString()),
-          position: LatLng(element.latitude, element.longitude),
-        icon: BitmapDescriptor.fromBytes(await MapMarker.svgToPng(context, )));
-    setState(() {
-      markers.add(marker);
-    });
-    for (Marker m in markers) {
-      print(m.position);
-    }
-  }*/
-
   Future<void> putSightings() async {
     try {
       await putLegend(context);
-      var fetchedSites = await Sightings.getSightings();
+      var fetchedSites = await Sightings.getSightings(context);
+      print('fetched sites: $fetchedSites');
 
       setState(() {
         fetchedSites.forEach((element) async {

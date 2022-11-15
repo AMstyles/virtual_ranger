@@ -60,150 +60,15 @@ class _DrawerAppState extends State<DrawerApp> {
           Provider.of<UserProvider>(context, listen: false).setOffline(value);
           print(value);
         }));
-    Provider.of<MapsData>(context, listen: false).getEm();
+
     Provider.of<MapsData>(context, listen: false).putLegend(context);
 
-    /*getOffline().then((value) async {
-      if (value) {
-        final pref = await SharedPreferences.getInstance();
-        final condition = await pref.getBool('opened1') ?? false;
+    Provider.of<PageProvider>(context, listen: false).ConnectionStream(context);
 
-        !condition
-            ? showDialog(
-                context: context,
-                builder: (context) => Platform.isAndroid
-                    ? AlertDialog(
-                        title: Text(
-                          "Welcome to Virtual Ranger",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                        ),
-                        content: Text(
-                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Dismiss",
-                                  style: TextStyle(color: Colors.red))),
-                          TextButton(
-                              onPressed: () async {
-                                final useful =
-                                    await SharedPreferences.getInstance();
-                                useful.setBool("opened1", true);
-                                Navigator.pop(context);
-                                Provider.of<PageProvider>(context,
-                                        listen: false)
-                                    .jumpToSettings();
-                              },
-                              child: Text("Go to settings"))
-                        ],
-                      )
-                    : CupertinoAlertDialog(
-                        title: Text(
-                          "Welcome to Virtual Ranger",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                        ),
-                        content: Text(
-                            "You're in offline mode. You can still use the app but you won't be able to see any new sightings or news in real time. You can turn on online mode in the settings."),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("dismiss",
-                                  style: TextStyle(color: Colors.red))),
-                          TextButton(
-                              onPressed: () async {
-                                final useful =
-                                    await SharedPreferences.getInstance();
-                                useful.setBool("opened1", true);
-
-                                Provider.of<PageProvider>(context,
-                                        listen: false)
-                                    .jumpToSettings();
-                                Navigator.pop(context);
-                              },
-                              child: Text("Go to settings"))
-                        ],
-                      ),
-              )
-            : () {};
-      } else {
-        final pref = await SharedPreferences.getInstance();
-        final condition = await pref.getBool('opened') ?? false;
-
-        !condition
-            ? showDialog(
-                context: context,
-                builder: (context) => Platform.isAndroid
-                    ? AlertDialog(
-                        title: Text(
-                          "Welcome to Virtual Ranger",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                        ),
-                        content: Text(
-                            "To use this app in areas without signal please go to settings, download content and toggle on offline mode"),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Dismiss",
-                                  style: TextStyle(color: Colors.red))),
-                          TextButton(
-                              onPressed: () async {
-                                final useful =
-                                    await SharedPreferences.getInstance();
-                                useful.setBool("opened", true);
-                                Navigator.pop(context);
-                                Provider.of<PageProvider>(context,
-                                        listen: false)
-                                    .jumpToDownload();
-                              },
-                              child: Text("Go to settings"))
-                        ],
-                      )
-                    : CupertinoAlertDialog(
-                        title: Text(
-                          "Welcome to Virtual Ranger",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                        ),
-                        content: Text(
-                            "To use this app in areas without signal please go to settings, download content and toggle on offline mode"),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("dismiss",
-                                  style: TextStyle(color: Colors.red))),
-                          TextButton(
-                              onPressed: () async {
-                                final useful =
-                                    await SharedPreferences.getInstance();
-                                useful.setBool("opened", true);
-                                Navigator.pop(context);
-                                Provider.of<PageProvider>(context,
-                                        listen: false)
-                                    .jumpToDownload();
-                              },
-                              child: Text("Go to settings"))
-                        ],
-                      ),
-              )
-            : () {};
-      }
-    });*/
-
-    Future.delayed(Duration(seconds: 1), () {
-      mainPages.removeAt(4);
-      mainPages.insert(4, SightingslistPage());
-    });
+    // Future.delayed(Duration(seconds: 1), () {
+    //   mainPages.removeAt(4);
+    //   mainPages.insert(4, SightingslistPage());
+    // });
   }
 
   @override

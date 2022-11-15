@@ -1,20 +1,20 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import '../apis/Sightingsapi.dart';
 import '../models/animalforSIGHT.dart';
 
 class MapsData extends ChangeNotifier {
   late var legendItems;
-  late List<Sighting> fetchedSites;
+  late Future<List<Sighting>> fetchedSites;
   bool isFetching = false;
   int count = 0;
 
-  Future<List<Sighting>> getEm() async {
+  Future<List<Sighting>> getEm(BuildContext context) async {
     isFetching = true;
+    notifyListeners();
 
     try {
-      this.fetchedSites = await Sightings.getSightings();
+      this.fetchedSites = Sightings.getSightings(context);
       isFetching = false;
       notifyListeners();
       return fetchedSites;
@@ -31,16 +31,16 @@ class MapsData extends ChangeNotifier {
     legendItems = await Sightings.getColouredAnimal(context);
   }
 
-  void refresh() async {
-    await getEm();
+  void refresh(context) async {
+    await getEm(context);
     notifyListeners();
   }
 
-  Future<SnackBar> refreshSites() async {
+  Future<SnackBar> refreshSites(context) async {
     SnackBar? mySnackBar;
 
     try {
-      await getEm();
+      await getEm(context);
       notifyListeners();
       mySnackBar = SnackBar(
         duration: const Duration(seconds: 2),

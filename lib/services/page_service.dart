@@ -93,6 +93,64 @@ class PageProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void ConnectionStream(context) {
+    //stream to check for connection
+    InternetConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case InternetConnectionStatus.connected:
+          hasConnection = true;
+          //show snack bar
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.green,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.wifi,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'Connected',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+            duration: Duration(seconds: 3),
+          ));
+          notifyListeners();
+          break;
+        case InternetConnectionStatus.disconnected:
+          hasConnection = false;
+          //show snack bar
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.wifi_off,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'No Connection',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+            duration: Duration(seconds: 10),
+          ));
+          notifyListeners();
+          break;
+      }
+    });
+  }
 }
 
 class UserProvider extends ChangeNotifier {

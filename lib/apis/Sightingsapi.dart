@@ -90,17 +90,23 @@ class Sightings {
     return data['success'];
   }
 
-  static Future<List<Sighting>> getSightings() async {
+  static Future<List<Sighting>> getSightings(BuildContext context) async {
     try {
       final response = await http.post(Uri.parse(GET_SIGHTINGS_URL), body: {
-        'user_id': UserData.user.id,
-        'secret_key': UserData.user.secret_key,
+        'user_id': Provider.of<UserProvider>(context, listen: false)
+            .user!
+            .id
+            .toString(),
+        'secret_key': Provider.of<UserProvider>(context, listen: false)
+            .user!
+            .secret_key
+            .toString(),
         'user_role': 'Attendee'
       });
-      //print('the body is: ${response.body}');
+      print('the body is: ${response.body}');
       final pre_data = jsonDecode(response.body);
       final data = pre_data['data'];
-      //print(data);
+      print(data);
       final List<dynamic> finalData = data;
       List<Sighting> sightings = [];
       for (var i = 0; i < finalData.length; i++) {
