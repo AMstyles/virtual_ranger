@@ -74,8 +74,8 @@ class _FAQPageState extends State<FAQPage> {
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 19),
                                 )
-                              : const Text(
-                                  "Error",
+                              : Text(
+                                  "${snapshot.error}",
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 19),
                                 ),

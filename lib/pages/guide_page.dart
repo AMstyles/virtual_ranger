@@ -117,8 +117,8 @@ class _GuidePageState extends State<GuidePage> {
                                     style: TextStyle(
                                         color: Colors.red, fontSize: 19),
                                   )
-                                : const Text(
-                                    "Error",
+                                : Text(
+                                    "${snapshot.error}",
                                     style: TextStyle(
                                         color: Colors.red, fontSize: 19),
                                   ),

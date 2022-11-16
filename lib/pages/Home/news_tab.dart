@@ -100,8 +100,8 @@ class _NewsTabState extends State<NewsTab>
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 19),
                                 )
-                              : const Text(
-                                  "Error",
+                              : Text(
+                                  "${snapshot.error}",
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 19),
                                 ),
