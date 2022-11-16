@@ -11,7 +11,6 @@ import 'package:slide_to_act/slide_to_act.dart';
 import 'package:virtual_ranger/apis/permissionsapi.dart';
 import 'package:virtual_ranger/pages/Profile/textFieds.dart';
 import 'package:virtual_ranger/pages/prePage.dart';
-import 'package:virtual_ranger/pages/splash_screen.dart';
 import '../models/constants.dart';
 import '../models/user.dart';
 import '../services/page_service.dart';
@@ -351,16 +350,17 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
       child: GestureDetector(
         onTap: () async {
-          await Provider.of<PageProvider>(context)
-              .canDoOnline(context)
-              .then((value) {
-            print('value: $value');
-            if (value) {
-              (text == 'UPDATE PROFILE')
-                  ? onUpdateProfile(context)
-                  : onChangePassword(context);
-            }
-          });
+          print('That thing is pressed');
+          // await Provider.of<PageProvider>(context)
+          //     .canDoOnline(context)
+          //     .then((value) {
+          // print('value: $value');
+          // if (value) {
+          (text == 'UPDATE PROFILE')
+              ? onUpdateProfile(context)
+              : onChangePassword(context);
+          //   }
+          // });
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15),

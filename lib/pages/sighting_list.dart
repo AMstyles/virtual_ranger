@@ -258,39 +258,39 @@ class _SightingslistPageState extends State<SightingslistPage> {
   }
 
   void addMaker_(LatLng latLng, AnimalSight sighting) async {
-    await Provider.of<PageProvider>(context)
-        .canDoOnline(context)
-        .then((value) async {
-      if (value) {
-        final isAdded =
-            await Sightings.uploadMarker(latLng, context, currentAnimal!);
-        Marker marker = Marker(
-          flat: true,
-          markerId: MarkerId(latLng.toString()),
-          position: latLng,
-          infoWindow: InfoWindow(
-            title: getName(sighting.id),
-            snippet: TimeOfDay.now().format(context),
-          ),
-          icon: BitmapDescriptor.fromBytes(
-              await MapMarker.svgToPng(context, sighting.hexColor)),
-          //await setCustomMapPin(sighting.id),
-        );
+    // await Provider.of<PageProvider>(context)
+    //     .canDoOnline(context)
+    //     .then((value) async {
+    //   if (value) {
+    final isAdded =
+        await Sightings.uploadMarker(latLng, context, currentAnimal!);
+    Marker marker = Marker(
+      flat: true,
+      markerId: MarkerId(latLng.toString()),
+      position: latLng,
+      infoWindow: InfoWindow(
+        title: getName(sighting.id),
+        snippet: TimeOfDay.now().format(context),
+      ),
+      icon: BitmapDescriptor.fromBytes(
+          await MapMarker.svgToPng(context, sighting.hexColor)),
+      //await setCustomMapPin(sighting.id),
+    );
 
-        if (isAdded) {
-          setState(() {
-            markers.add(marker);
-          });
-        }
-        /*setState(() {
+    if (isAdded) {
+      setState(() {
+        markers.add(marker);
+      });
+    }
+    /*setState(() {
       markers.add(marker);
     });*/
-        //await Sightings.uploadMarker(latLng, context, currentAnimal!);
-        setState(() {
-          currentAnimal = null;
-        });
-      }
+    //await Sightings.uploadMarker(latLng, context, currentAnimal!);
+    setState(() {
+      currentAnimal = null;
     });
+    //   }
+    // });
   }
 
   Future<void> putLegend(BuildContext context) async {
