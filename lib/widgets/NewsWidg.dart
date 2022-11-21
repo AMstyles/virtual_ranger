@@ -98,10 +98,16 @@ class _NewsWidgState extends State<NewsWidg> {
                         imageUrl: NEWS_IMAGE_URL + widget.story.news_image,
                         fit: BoxFit.cover,
                       )
-                    : Image.file(
-                        File(
-                            '${UserData.path}/images/${widget.story.news_image}'),
-                        fit: BoxFit.cover,
+                    : Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: FileImage(
+                              File(
+                                  '${UserData.path}/images/${widget.story.news_image}'),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
 
                 Positioned(

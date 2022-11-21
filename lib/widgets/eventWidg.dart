@@ -30,6 +30,7 @@ class EventWidg extends StatelessWidget {
               children: [
                 Provider.of<UserProvider>(context).isOffLine ?? false
                     ? Image.file(
+                        height: MediaQuery.of(context).size.height * .35,
                         File('${UserData.path}/images/${event.event_image}'),
                         fit: BoxFit.cover,
                       )

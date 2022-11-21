@@ -20,11 +20,8 @@ class CategoryWidg extends StatefulWidget {
 }
 
 class _CategoryWidgState extends State<CategoryWidg> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  late File image =
+      File('${UserData.path}/images/${widget.category.backgroundImage}');
 
   @override
   Widget build(BuildContext context) {
@@ -38,22 +35,46 @@ class _CategoryWidgState extends State<CategoryWidg> {
       },
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-                image: Provider.of<UserProvider>(context).isOffLine ?? false
-                    ? FileImage(File(
-                            '${UserData.path}/images/${widget.category.backgroundImage}'))
-                        as ImageProvider
-                    : CachedNetworkImageProvider(
-                        CATEGORY_IMAGE_URL + widget.category.backgroundImage,
+        child: Stack(alignment: Alignment.center, children: [
+          Provider.of<UserProvider>(context).isOffLine ?? false
+              ? Container(
+                  height: 120,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: FileImage(image),
+                    ),
+                  ),
+                )
+              : CachedNetworkImage(
+                  imageUrl:
+                      CATEGORY_IMAGE_URL + widget.category.backgroundImage,
+                  fit: BoxFit.cover,
+                  progressIndicatorBuilder: (context, url, progress) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: progress.progress,
+                        semanticsValue:
+                            '${widget.category.name} ${progress.progress}',
                       ),
-                fit: BoxFit.cover),
-          ),
-          child: Center(
+                    );
+                  },
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+          Center(
               child: Text(
             widget.category.name.toUpperCase(),
             style: TextStyle(
@@ -62,7 +83,7 @@ class _CategoryWidgState extends State<CategoryWidg> {
                 fontSize: 20,
                 fontWeight: FontWeight.bold),
           )),
-        ),
+        ]),
       ),
     );
   }

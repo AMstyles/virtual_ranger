@@ -340,7 +340,7 @@ class _DownloadPageState extends State<DownloadPage> {
                   ? 'Download & Sync'
                   : 'Check for updates'),
               onPressed: () async {
-                await Provider.of<PageProvider>(context)
+                await Provider.of<PageProvider>(context, listen: false)
                     .canDoOnline(context)
                     .then(
                   (value) async {
