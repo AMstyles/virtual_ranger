@@ -34,14 +34,31 @@ class EventWidg extends StatelessWidget {
                         fit: BoxFit.cover,
                       )
                     : CachedNetworkImage(
-                        fadeInDuration: const Duration(milliseconds: 0),
-                        fit: BoxFit.cover,
+                        height: MediaQuery.of(context).size.height * .35,
+                        progressIndicatorBuilder: (context, url, progress) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                              semanticsValue:
+                                  '${event.title} ${progress.progress}',
+                            ),
+                          );
+                        },
                         imageUrl: NEWS_IMAGE_URL + event.event_image,
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                 Positioned(
                   bottom: 0,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
+                  child: Container(
                     padding:
                         const EdgeInsets.only(left: 5, bottom: 2, right: 12),
                     width: MediaQuery.of(context).size.width,

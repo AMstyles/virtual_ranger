@@ -65,6 +65,7 @@ class _DealsTabState extends State<DealsTab>
           } else {
             if (snapshot.hasData) {
               return ListView.builder(
+                cacheExtent: MediaQuery.of(context).size.height * 2,
                 addAutomaticKeepAlives: true,
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {

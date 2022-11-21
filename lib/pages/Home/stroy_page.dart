@@ -26,22 +26,32 @@ class NewsPage extends StatelessWidget {
         children: [
           Hero(
             tag: story.title,
-            child: (Provider.of<UserProvider>(context).isOffLine ?? false)
-                ? !Provider.of<PageProvider>(context).hasConnection
-                    ? Image.file(
-                        File('${UserData.path}/images/${story.news_image}'),
-                      )
-                    : CachedNetworkImage(
-                        progressIndicatorBuilder: (_, __, ___) => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        imageUrl: NEWS_IMAGE_URL + story.news_image,
-                      )
-                : CachedNetworkImage(
+            // child: (Provider.of<UserProvider>(context).isOffLine ?? false)
+            //     ? !Provider.of<PageProvider>(context).hasConnection
+            //         ? Image.file(
+            //             File('${UserData.path}/images/${story.news_image}'),
+            //           )
+            //         : CachedNetworkImage(
+            //             progressIndicatorBuilder: (_, __, ___) => const Center(
+            //               child: CircularProgressIndicator(),
+            //             ),
+            //             imageUrl: NEWS_IMAGE_URL + story.news_image,
+            //           )
+            //     : CachedNetworkImage(
+            //         progressIndicatorBuilder: (_, __, ___) => const Center(
+            //           child: CircularProgressIndicator(),
+            //         ),
+            //         imageUrl: NEWS_IMAGE_URL + story.news_image,
+            //       ),
+            child: !(Provider.of<UserProvider>(context).isOffLine ?? false)
+                ? CachedNetworkImage(
                     progressIndicatorBuilder: (_, __, ___) => const Center(
                       child: CircularProgressIndicator(),
                     ),
                     imageUrl: NEWS_IMAGE_URL + story.news_image,
+                  )
+                : Image.file(
+                    File('${UserData.path}/images/${story.news_image}'),
                   ),
           ),
           Padding(
